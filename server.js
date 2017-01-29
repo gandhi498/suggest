@@ -13,8 +13,8 @@ var db;
 var MongoClient = require('mongodb').MongoClient;
 
 var mongoURL;
-if(process.env.OPENSHIFT_MONGODB_DB_URL != undefined) {
-     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL;
+if(process.env.PROD_MONGODB != undefined) {
+     mongoURL = process.env.PROD_MONGODB;
 }
 else {
     mongoURL = 'mongodb://localhost:27017/'+databaseName;
