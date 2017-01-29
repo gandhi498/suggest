@@ -48,7 +48,7 @@ app.use(express.static('public'));
 //     console.log(JSON.stringify(process.env));
 // }
 
-http.listen(process.env.OPENSHIFT_NODEJS_PORT || 8081,process.env.OPENSHIFT_NODEJS_IP, function () {
+http.listen(process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8081, function () {
     if (!process.env.OPENSHIFT_NODEJS_PORT) {
         console.log('server listening on http://localhost:8081');
     }
