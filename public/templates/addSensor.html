@@ -1,0 +1,51 @@
+<div class="row">
+
+</div>
+  <div class="row">
+
+  <form class="form-horizontal" autocomplete="off" ng-submit="addSensor()">
+<fieldset>
+
+<!-- Form Name -->
+<legend></legend>
+<div class="form-group alert alert-success">
+    <label class="center">Add Sensor</label>
+</div>
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label normaltxt" for="floornumber">Floor Number</label>  
+  <div class="col-md-5">
+  <input id="floornumber" name="floornumber" type="number" ng-model="floorNumber" placeholder="enter floor number" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <label class="col-md-4 control-label normaltxt" for="sensorID">Sensor ID</label>  
+  <div class="col-md-5">
+  <input id="sensorID" name="sensorID" type="text" ng-model="sensorId" placeholder="enter sensor id, for e.g 1.1.1" class="form-control input-md" required="">
+    
+  </div>
+</div>
+
+<!-- Button (Double) -->
+<div class="form-group">
+  <label class="col-md-4 control-label" for="submitbutton"></label>
+  <div class="col-md-8">
+    <button id="submitbutton" type="submit" name="submitbutton" class="btn btn-success">Add <img ng-show="showSpinner" width="24px" src="../images/spinner.gif"></button>
+    <button type="reset" id="cancel" name="cancel" class="btn btn-danger">Cancel</button>
+  </div>
+</div>
+<div class="form-group alert alert-success" ng-show="sensorAdded">
+    <label class="center">Sensor data Added successfully</label>
+</div>
+
+<div class="form-group alert alert-danger" ng-show="error">
+    <label class="center">Error occurred while adding sensor data : {{errorDesc}}</label>
+</div>
+</fieldset>
+</form>
+
+  </div>
+

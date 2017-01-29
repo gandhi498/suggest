@@ -1,0 +1,33 @@
+<div class="wrap">
+
+	<table>
+		<thead>
+		<tr>
+			<th>Name</th>
+			<th>Meaning</th>
+			<th>Like</th>
+			<th>Dis-Like</th>
+		</tr>
+	</thead>
+	  <tr ng-repeat="nameObj in nameList">
+	    <td>{{ nameObj.babyname }}</td>
+	    <td>{{ nameObj.meaning }}</td>
+			<td><i title="Up Votes" ng-click="changeVote(vote, 'up')">+</i></td>
+			<td><i title="Down Votes" ng-click="changeVote(vote, 'down')">-</i></td>
+	  </tr>
+	</table>
+
+		<div class="avatar">
+      		<img src="/images/avatar.png">
+		</div>
+
+		Suggst Name for Baby
+		{{responseData}}
+		<input type="text" placeholder="babyName" ng-model="babyName" required>
+		<div class="bar">
+			<i></i>
+		</div>
+		<input type="text" placeholder="meaning" ng-model="meaning" required>
+		<!-- <a href="" class="forgot_link">forgot ?</a> -->
+		<button ng-click="addName()">Add</button>
+</div>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Suggst</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	 <!--Import Google Icon Font-->
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
+	<link href="/css/bootstrap.css" rel="stylesheet">
+	<link href="/css/reset.css" rel="stylesheet">
+	<link href="/css/style.css" rel="stylesheet" media="screen" type="text/css">
+</head>
+<body ng-app="cabin_iot">
+
+<div id="wrap">
+		<header>
+
+			<nav>
+				<div class="container">
+				<div class="nav-wrapper">
+				  <span href="" class="brand-logo center">Suggst</span>
+				  <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons"></i></a>
+				  <ul class="right hide-on-med-and-down">
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+				  </ul>
+				  <ul class="side-nav" id="mobile-demo">
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+					<li><a href="#"></a></li>
+				  </ul>
+				</div>
+				</div>
+		</nav> <!--End Nav -->
+
+	 </header>
+	  <!-- <div class="container" style="padding:10px;">
+		<img src="5_FloorMap.svg" alt="5th Floor Map" style="width: 100%; height: auto;">
+
+	 </div> -->
+
+	 <div class="container">
+		<div ui-view></div>
+	 </div>
+	  <footer class="page-footer">
+          <div class="footer-copyright">
+            <div class="container center">
+
+         <!--    <a class="grey-text text-lighten-4 right" href="#!">More Links</a> -->
+            </div>
+          </div>
+        </footer>
+</div>
+
+</body>
+ 	<script type="text/javascript" src="/js/lib/jquery.js"></script>
+	<script type="text/javascript" src="/js/lib/materialize.min.js"></script>
+	<script src="/js/lib/socket.io.js"></script>
+	<script src="/js/lib/angular.js"></script>
+    <script src="/js/lib/angular-ui-router.min.js"></script>
+    <script src="/js/main.js"></script>
+</html>

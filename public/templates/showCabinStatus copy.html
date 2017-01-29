@@ -1,0 +1,84 @@
+<div class="page-header">
+  <h1 class="center" style="color: #fff">Cabin Status</h1>
+</div>
+
+<div class="row">
+  <div class="panel panel-primary" ng-repeat="item in sensorData track by $index">
+     <div class="panel-heading">
+        <h3 class="panel-title">Floor: {{item.floorNumber}}</h3>
+     </div>
+     <div class="panel-body">
+      <div ng-repeat="greenCabin in item.green">
+        <span class="{{greenCabin.color}}">
+        C {{greenCabin.sensorId}}
+        </span>
+        <span class="badgeConnect"></span>
+        <span class="badge customBadge greenBadge"> {{greenCabin.lastMovement | date:'dd-MM-yy hh:mm:ss':'UTC+01:00'}}</span>
+      </div>
+
+      <div ng-repeat="orangeCabin in item.orange">
+        <span class="{{orangeCabin.color}}">
+        C {{orangeCabin.sensorId}}
+        </span>
+        <span class="badgeConnect"></span>
+        <span class="badge customBadge orangeBadge"> {{orangeCabin.lastMovement | date:'dd-MM-yy hh:mm:ss':'UTC+01:00'}}</span>
+      </div>
+
+      <div ng-repeat="yellowCabin in item.yellow">
+        <span class="{{yellowCabin.color}}">
+        C {{yellowCabin.sensorId}} 
+        </span>
+        <span class="badgeConnect"></span>
+        <span class="badge customBadge yellowBadge"> {{yellowCabin.lastMovement | date:'dd-MM-yy hh:mm:ss':'UTC+01:00'}}</span>
+      </div>
+
+      <div ng-repeat="redCabin in item.red">
+        <span class="{{redCabin.color}}">
+        C {{redCabin.sensorId}}
+        </span>
+        <span class="badgeConnect"></span>
+        <span class="badge customBadge redBadge"> {{redCabin.lastMovement | date:'dd-MM-yy hh:mm:ss':'UTC+01:00'}}</span>
+      </div>
+
+      <div ng-repeat="whiteCabin in item.white">
+        <span class="{{whiteCabin.color}}">
+        C {{whiteCabin.sensorId}} 
+        </span>
+        <span class="badgeConnect"></span>
+        <span class="badge customBadge whiteBadge"> {{whiteCabin.lastMovement | date:'dd-MM-yy hh:mm:ss':'UTC+01:00'}}</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Cabin color indicators</h3>
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <div class="col-md-12" style="color: black;">Available from last - </div>
+    </div>
+    <br>
+    <div class="row">
+    <div class="col-md-2 col-md-offset-1" style="color: black;"><div class="green colorCabinTxt"></div>3+ hours</div>
+    <div class="col-md-2 col-md-offset-1" style="color: black;"><div class="orange colorCabinTxt"></div>1 hour</div>
+    <div class="col-md-2 col-md-offset-1" style="color: black;"><div class="yellow colorCabinTxt"></div>1 to 2 hours </div>
+  </div>
+  <br>
+  <div class="row">
+      <div class="col-md-12" style="color: black;">Occupied from last - </div>
+    </div>
+    <br>
+    <div class="row">
+    <div class="col-md-2 col-md-offset-1" style="color: black;"><div class="red colorCabinTxt"></div>1 hour</div>
+  </div>
+</div>
+  </div>
+</div>
+
+<!-- <div class="row">
+{{sensorData}}
+</div> -->
+
