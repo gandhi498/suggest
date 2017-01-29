@@ -15,6 +15,8 @@ var MongoClient = require('mongodb').MongoClient;
 var mongoURL;
 if(process.env.PROD_MONGODB != undefined) {
      mongoURL = process.env.PROD_MONGODB;
+} else if(process.env.OPENSHIFT_MONGODB_DB_URL != undefined) {
+     mongoURL = process.env.OPENSHIFT_MONGODB_DB_URL;
 }
 else {
     mongoURL = 'mongodb://localhost:27017/'+databaseName;
@@ -47,9 +49,21 @@ app.use(express.static('public'));
 // if(process.env) {
 //     console.log(JSON.stringify(process.env));
 // }
-console.log("portt" + process.env.PORT);
-http.listen(process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8081, function () {
-    if (!process.env.OPENSHIFT_NODEJS_PORT) {
+
+var port = 8081;
+if (process.env.OPENSHIFT_NODEJS_PORT != undefined) {
+  port = process.env.OPENSHIFT_NODEJS_PORT;
+  console.log("openshift portt" + port);
+} else if (process.env.PORT != undefined) {
+  port = process.env.PORT;
+  console.log("heroku portt" + port);
+} else {
+  console.log("local portt" + port);  
+}
+
+
+http.listen(port, function () {
+    if (!process.env.PORT) {
         console.log('server listening on http://localhost:8081');
     }
     else {
