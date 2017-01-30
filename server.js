@@ -58,7 +58,7 @@ if (process.env.OPENSHIFT_NODEJS_PORT != undefined) {
   port = process.env.PORT;
   console.log("heroku portt" + port);
 } else {
-  console.log("local portt" + port);  
+  console.log("local portt" + port);
 }
 
 
@@ -129,6 +129,9 @@ app.post('/createspace', function (req, res) {
                   db.collection(space_collection).insertOne({
                       "spacename":payload.spacename,
                       "email": payload.email,
+                      "name":payload.name,
+        	          	"expectingNameFor":payload.gender,
+        							"expectingOn": payload.expectingOn,
                       "addedOn" : tempDateTime,
                       "active" : false
                   }, function(error, result) {
@@ -230,27 +233,21 @@ app.post('/vote', function (req, res) {
 
         console.log(" update vote [%s] for space %s :", likes, spacename);
 
-
         if(spacename !== '') {
-//          db.collection(name_collection).update( { "_id" : id}, {$set: {likes:likes}});
           db.collection(name_collection).update( { "spacename": spacename, "babyname": babyname}, { $set: {"likes":payload.likes} }
             , function(err, results) {
-                          if(err)
-                          {
-                            console.log("Server.js: addName : in Err %s", err);
-                              res.writeHead(trueResponse.statusCode, trueResponse.headers);
-                              res.end(JSON.stringify(trueResponse.body));
-                          } else{
-                              console.log('is already present in the space %s',results);
-                            //  res.writeHead(falseResponse.statusCode, falseResponse.headers);
-                              res.end(JSON.stringify({status:results}));
-                          }
-                      }
+                  if(err)
+                  {
+                    console.log("Server.js: addName : in Err %s", err);
+                      res.writeHead(trueResponse.statusCode, trueResponse.headers);
+                      res.end(JSON.stringify(trueResponse.body));
+                  } else{
+                      console.log('is already present in the space %s',results);
+                    //  res.writeHead(falseResponse.statusCode, falseResponse.headers);
+                      res.end(JSON.stringify({status:results}));
+                  }
+              }
            );
-
-
-
-
         }
     });
 });
@@ -264,19 +261,40 @@ app.get('/getNamesForSpace', function(req, res) {
   if (space != '' && space != undefined) {
     console.log(" getting name list for space : %s", space);
 
-    var nameDb = db.collection(name_collection);
-    nameDb.find({"spacename":space}).toArray(function (err, allSensors) {
+    var spaceOverview = {
+      spaceInfo : {},
+      nameList : []
+    };
+    db.collection(space_collection).find({"spacename":space}).toArray(function (err, spaces) {
       if(err) {
           console.log('Error while retrieving list');
           res.writeHead(falseResponse.statusCode, falseResponse.headers);
           res.end(JSON.stringify({status:"Error in mongo DB"}));
       }
       else {
-        console.log('Babyname list retrieved successfully \n %s',JSON.stringify(allSensors));
-          res.writeHead(trueResponse.statusCode, trueResponse.headers);
-          res.end(JSON.stringify(allSensors));
+        spaceOverview.spaceInfo = spaces[0];
+        console.log('Babyname list retrieved successfully \n %s',JSON.stringify(spaceOverview));
+          //res.writeHead(trueResponse.statusCode, trueResponse.headers);
+          //res.end(JSON.stringify(spaceOverview));
+          //res.end(JSON.stringify(allSensors));
       }
     });
+
+    db.collection(name_collection).find({"spacename":space}).toArray(function (err, allSensors) {
+      if(err) {
+          console.log('Error while retrieving list');
+          res.writeHead(falseResponse.statusCode, falseResponse.headers);
+          res.end(JSON.stringify({status:"Error in mongo DB"}));
+      }
+      else {
+        spaceOverview.nameList = allSensors;
+        console.log('spaceOverview Babyname list retrieved successfully \n %s',JSON.stringify(spaceOverview));
+          res.writeHead(trueResponse.statusCode, trueResponse.headers);
+          res.end(JSON.stringify(spaceOverview));
+
+      }
+    });
+
 
   } else {
     console.log('Error NO Space name');
@@ -290,23 +308,15 @@ app.get('/getNamesForSpace', function(req, res) {
 
 app.get('/dashboard', function(req, res) {
 
-  res.writeHead(trueResponse.statusCode, trueResponse.headers);
-  res.end(JSON.stringify({"date:":getTodaysDate(), "nmbrUniqueSpace" : 3, "nmbrUniqueNames" : 10}));
-  console.log('Error NO Space namedd'+getTotalSpace());
+  db.collection(space_collection).find().toArray(function (err, spaceList) {
 
-});
+    res.writeHead(trueResponse.statusCode, trueResponse.headers);
+    res.end(JSON.stringify({ "date:":getTodaysDate(), "nmbrUniqueNames" : 10, "spaceList" :  spaceList }));
 
-function getTotalSpace() {
-
-  var nmbrSpace = -1;
-  var spaceDb = db.collection(space_collection);
-  spaceDb.find({count:"spacename"}).toArray(function (err, spaceCount) {
-    console.log("count" + spaceCount[0] + JSON.stringify(spaceCount[0]));
-    nmbrSpace = spaceCount.length;
+    ///console.log(this.spaceList + "count" + spaceCount.length + JSON.stringify(spaceCount));
   });
 
-  return nmbrSpace;
-}
+});
 
 function getTodaysDate() {
     var today = new Date();

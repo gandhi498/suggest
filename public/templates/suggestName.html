@@ -1,40 +1,31 @@
+<div>Suggst Baby Name for {{ spaceOverview.spaceInfo.name}} </div> <br>
+<table>
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Meaning</th>
+		<th>Gender</th>
+		<th>Added By</th>
+		<th>Like</th>
+	</tr>
+</thead>
+  <tr ng-repeat="nameObj in spaceOverview.nameList">
+    <td>{{ nameObj.babyname }}</td>
+    <td>{{ nameObj.meaning }}</td>
+		<td>{{ nameObj.gender }}</td>
+    <td>{{ nameObj.addedBy }}</td>
+		<td><a href="" data-ng-bind="nameObj.likes" ng-click="doVote(nameObj)"></a></td>
+  </tr>
+</table>
 <div class="wrap">
 		<div class="avatar">
       		<img src="/images/avatar.png">
 		</div>
-
+		{{responseData}}
 		<input type="text" placeholder="babyName" ng-model="babyName" required>
-		<div class="bar">
-			<i></i>
-		</div>
 		<input type="text" placeholder="meaning" ng-model="meaning" required>
 		<input type="text" placeholder="Boy" ng-model="gender" text="Boy" required>
 		<input type="text" placeholder="Added By" ng-model="addedBy">
 
 		<button ng-click="addName()">Add</button>
-
-		<br/>
-		<div>Suggst Name for Baby </div>
-		{{responseData}}
-		<br/>
-		<table>
-			<thead>
-			<tr>
-				<th>Name</th>
-				<th>Meaning</th>
-				<th>Gender</th>
-				<th>Added By</th>
-				<th>Like</th>
-			</tr>
-		</thead>
-		  <tr ng-repeat="nameObj in nameList">
-		    <td>{{ nameObj.babyname }}</td>
-		    <td>{{ nameObj.meaning }}</td>
-				<td>{{ nameObj.gender }}</td>
-		    <td>{{ nameObj.addedBy }}</td>
-				<td><i title="like" ng-model="_id" ng-click="updateVote('nameId:{{ nameObj._id }}')">{{ nameObj.likes }}</i></td>
-				<td><a href="" data-ng-bind="nameObj.likes" ng-click="doVote(nameObj)"></a></td>
-
-		  </tr>
-		</table>
 </div>

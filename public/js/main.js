@@ -82,7 +82,10 @@ app.controller('createSpace', function ($scope, $http, $state) {
 	          url: api.createspace,
 	          data: {
 	          	"spacename":$scope.spacename,
-	          	"email":$scope.email
+	          	"email":$scope.email,
+							"name":$scope.name,
+	          	"expectingNameFor":$scope.gender,
+							"expectingOn": $scope.expectingOn
 	          }
 	        }).then(function successCallback(response) {
 						console.log("postive");
@@ -111,7 +114,7 @@ app.controller('suggestName', function ($scope, $http, $state) {
 					method: 'GET',
 					url: "/getNamesForSpace?spacename="+spacenameSession
 	 }).then(function(response) {
-			$scope.nameList = response.data;
+			$scope.spaceOverview = response.data;
 	 },function () {
 			alert("Error retrieving list of name for space %s : ", spacenameSession);
 	 });
@@ -187,12 +190,14 @@ app.controller('dashboard', function ($scope, $http, $state) {
 	// Getting name list - G1
 	var totalSpace = 0;
 	var totalUniqueName = 0;
+	console.log("in");
 
 	$http({
 					method: 'GET',
-					url: "/getNamesForSpace?spacename="+spacenameSession
-	 }).then(function(response) {
-			$scope.nameList = response.data;
+					url: "/dashboard"
+	 }).then(function successCallback(response) {
+		 console.log(response.data);
+			$scope.overview = response.data;
 	 },function () {
 			alert("Error occured");
 	 });

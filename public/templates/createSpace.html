@@ -1,12 +1,30 @@
+
 <div class="wrap">
+<h2>Get started now</h2>
 		<div class="avatar">
       		<img src="/images/avatar.png">
 		</div>
-		<input type="text" placeholder="spacename" ng-model="spacename" required>
+
+
+		Email Id <input type="text" placeholder="email" ng-model="email" required>
+		Space Name <input type="text" placeholder="spacename" ng-model="spacename" required>
+		Name <input type="text" placeholder="name" ng-model="name" required>
+		Expecting name for <input type="text" placeholder="Boy,Girl,Both" ng-model="gender" required>
+		<label for="expectingOn">Pick a date in 2013:</label>
+		   <input type="date" id="expectingOn" ng-model="expectingOn"
+		       placeholder="yyyy-MM-dd" min="2017-01-01" max="2018-12-31" required />
+
 		<div class="bar">
 			<i></i>
 		</div>
-		<input type="text" placeholder="email" ng-model="email" required>
+
 		<!-- <a href="" class="forgot_link">forgot ?</a> -->
 		<button ng-click="createSpace()">Create</button>
+</div>
+
+<div>
+	How does it work? <BR>
+	Step #1 Register and create Space <BR>
+	Step #2 Share link with friends and families. <BR>
+	Steps #3 Next? people start suggesting baby name and vote names they like <BR>
 </div>
