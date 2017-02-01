@@ -165,16 +165,17 @@ body {
 	margin: auto;
 	margin-top: 10%;
 }
+
 .avatar {
-	width: 100%;
-	margin: auto;
-    width: 57px;
-    border-radius: 100px;
-    height: 55px;
-    background: #8cd344;
-    position: relative;
-    bottom: -10px;
+	width: 57px;
+	border-radius: 100px;
+	height: 55px;
+	background: #8cd344;
+	position: relative;
+	bottom: -10px;
+	margin: 30px auto;
 }
+
 .avatar img {
 	width: 55px;
 	height: 55px;
@@ -290,4 +291,9 @@ body {
 .battery-wrapper .battery .level.low {
 	background-color: #E74C3C;	
   width: 10%;
+}
+
+label {
+	display: block;
+	margin: 10px 0;
 }

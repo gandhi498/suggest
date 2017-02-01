@@ -1,30 +1,76 @@
-
 <div class="wrap">
-<h2>Get started now</h2>
-		<div class="avatar">
-      		<img src="/images/avatar.png">
-		</div>
 
+    <h2 class="h2 row">Get started now</h2>
 
-		Email Id <input type="text" placeholder="email" ng-model="email" required>
-		Space Name <input type="text" placeholder="spacename" ng-model="spacename" required>
-		Name <input type="text" placeholder="name" ng-model="name" required>
-		Expecting name for <input type="text" placeholder="Boy,Girl,Both" ng-model="gender" required>
-		<label for="expectingOn">Pick a date in 2013:</label>
-		   <input type="date" id="expectingOn" ng-model="expectingOn"
-		       placeholder="yyyy-MM-dd" min="2017-01-01" max="2018-12-31" required />
+    <div class="avatar">
+        <img src="/images/avatar.png">
+    </div>
 
-		<div class="bar">
-			<i></i>
-		</div>
+    <form ng-submit="createSpace()">
 
-		<!-- <a href="" class="forgot_link">forgot ?</a> -->
-		<button ng-click="createSpace()">Create</button>
+        <div class="form-group row">
+            <label for="email">Email Id</label>
+            <input type="text"
+                   id="email"
+                   placeholder="email"
+                   ng-model="email"
+                   class="form-control" required>
+
+        </div>
+
+        <div class="form-group row">
+            <label for="spacename">Space Name </label>
+            <input type="text"
+                   id="spacename"
+                   placeholder="spacename"
+                   ng-model="spacename"
+                   class="form-control" required>
+        </div>
+
+        <div class="form-group row">
+            <label for="name">Name</label>
+            <input type="text"
+                   id="name"
+                   placeholder="name"
+                   ng-model="name"
+                   class="form-control" required>
+        </div>
+
+        <div class="form-group row">
+            <label for="gender">Expecting name for</label>
+            <input type="text"
+                   id="gender"
+                   ng-model="gender"
+                   class="form-control" required>
+        </div>
+
+        <div class="form-group row">
+            <label for="expectingOn">Pick a date in 2013:</label>
+            <input type="date"
+                   id="expectingOn"
+                   ng-model="expectingOn"
+                   placeholder="yyyy-MM-dd"
+                   min="2017-01-01"
+                   max="2018-12-31"
+                   class="form-control" required/>
+        </div>
+
+        <div class="bar">
+            <i></i>
+        </div>
+
+        <!-- <a href="" class="forgot_link">forgot ?</a> -->
+
+        <div class="row">
+            <button type="submit">Create</button>
+        </div>
+    </form>
+
 </div>
 
 <div>
-	How does it work? <BR>
-	Step #1 Register and create Space <BR>
-	Step #2 Share link with friends and families. <BR>
-	Steps #3 Next? people start suggesting baby name and vote names they like <BR>
+    How does it work? <BR>
+    Step #1 Register and create Space <BR>
+    Step #2 Share link with friends and families. <BR>
+    Steps #3 Next? people start suggesting baby name and vote names they like <BR>
 </div>
