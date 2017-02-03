@@ -75,35 +75,33 @@ app.controller('vote', function ($scope, $http, $state, $stateParams) {
 app.controller('createSpace', function ($scope, $http, $state) {
 
 	$scope.createSpace = function () {
-		console.log('Hi');
-		// if($scope.spacename !== "" && $scope.email !== "") {
-		// 	console.log("Create Space for spacename : " + $scope.spacename + " & email: " + $scope.email);
-		// 	$http({
-	   //        method: 'POST',
-	   //        url: api.createspace,
-	   //        data: {
-	   //        	"spacename":$scope.spacename,
-	   //        	"email":$scope.email,
-		// 					"name":$scope.name,
-	   //        	"expectingNameFor":$scope.gender,
-		// 					"expectingOn": $scope.expectingOn
-	   //        }
-	   //      }).then(function successCallback(response) {
-		// 				console.log("postive");
-	   //      			if(response.data)
-	   //      			{
-	   //      				if(response.data.status == 'OK') {
-	   //      					window.sessionStorage.setItem('spacename', $scope.spacename);
-		// 								window.sessionStorage.setItem('spaceId', $scope._id);
-    //
-	   //      					$state.go('suggestName');
-	   //      				}
-	   //      			}
-	   //            },
-	   //            function(){
-	   //            		alert('Sorry cannot create space %s :', $scope.spacename);
-	   //            });
-		// }
+    if ($scope.spacename !== "" && $scope.email !== "") {
+      console.log("Create Space for spacename : " + $scope.spacename + " & email: " + $scope.email);
+      $http({
+        method: 'POST',
+        url: api.createspace,
+        data: {
+          "spacename": $scope.spacename,
+          "email": $scope.email,
+          "name": $scope.name,
+          "expectingNameFor": $scope.gender,
+          "expectingOn": $scope.expectingOn
+        }
+      }).then(function successCallback (response) {
+          console.log("postive");
+          if (response.data) {
+            if (response.data.status == 'OK') {
+              window.sessionStorage.setItem('spacename', $scope.spacename);
+              window.sessionStorage.setItem('spaceId', $scope._id);
+
+              $state.go('suggestName');
+            }
+          }
+        },
+        function () {
+          alert('Sorry cannot create space %s :', $scope.spacename);
+        });
+    }
 	}
 });
 

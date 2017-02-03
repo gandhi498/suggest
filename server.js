@@ -130,7 +130,7 @@ app.post('/createspace', function (req, res) {
                       "spacename":payload.spacename,
                       "email": payload.email,
                       "name":payload.name,
-        	          	"expectingNameFor":payload.gender,
+        	          	"expectingNameFor":payload.expectingNameFor,
         							"expectingOn": payload.expectingOn,
                       "addedOn" : tempDateTime,
                       "active" : false
