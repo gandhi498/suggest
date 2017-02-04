@@ -6,7 +6,7 @@
         <img src="/images/avatar.png">
     </div>
 
-    <form ng-submit="createSpace()">
+    <form name="form" ng-submit="createSpace()">
 
         <div class="form-group row">
             <label for="email">Email Id</label>
@@ -37,11 +37,33 @@
         </div>
 
         <div class="form-group row">
-            <label for="gender">Expecting name for</label>
-            <input type="text"
-                   id="gender"
+            <label >Expecting name for</label>
+
+            <input type="radio"
+                   id="boy"
                    ng-model="gender"
-                   class="form-control" required>
+                   name="gender"
+                   class="form-control"
+                   value="Boy">
+            <label for="boy">Baby boy</label>
+
+            <p></p>
+
+            <input type="radio"
+                   id="girl"
+                   ng-model="gender"
+                   class="form-control"
+                   value="Girl">
+            <label for="girl">Baby girl</label>
+
+            <p></p>
+
+            <input type="radio"
+                   id="either"
+                   ng-model="gender"
+                   class="form-control"
+                   value="Either">
+            <label for="either">Either</label>
         </div>
 
         <div class="form-group row">
