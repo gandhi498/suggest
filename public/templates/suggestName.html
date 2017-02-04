@@ -14,7 +14,7 @@
     <td>{{ nameObj.meaning }}</td>
 		<td>{{ nameObj.gender }}</td>
     <td>{{ nameObj.addedBy }}</td>
-		<td><a href="" data-ng-bind="nameObj.likes" ng-click="doVote(nameObj)"></a></td>
+		<td><a href=""> {{ nameObj.likes }} <i class="fa fa-heart m-b-1" ng-click="doVote(nameObj)"></i> </a></td>
   </tr>
 </table>
 <div class="wrap">
