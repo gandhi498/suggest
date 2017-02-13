@@ -4,7 +4,7 @@
 // 		    socket.emit('my other event', { my: 'data' });
 // });
 
-var app = angular.module("cabin_iot", ['ui.router']);
+var app = angular.module("cabin_iot", ['ui.router', 'ui.bootstrap']);
 var api = {
 	"createspace" : "/createspace",
 	"addname" : "/addname",
@@ -105,7 +105,7 @@ app.controller('createSpace', function ($scope, $http, $state) {
 	}
 });
 
-app.controller('suggestName', function ($scope, $http, $state) {
+app.controller('suggestName', function ($scope, $http, $state, $uibModal) {
 
 	// Getting name list - G1
   var spacenameSession = window.sessionStorage.getItem('spacename');
@@ -120,18 +120,19 @@ app.controller('suggestName', function ($scope, $http, $state) {
 
 	// END - G1
 
-	$scope.addName = function () {
-		if($scope.babyName !== "" && $scope.meaning !== "") {
-			console.log("Adding to spacename : " + $scope.spacename + "  name: " + $scope.babyName);
+	// Adding name to database
+	var _addName = function (formData) {
+		if(formData.babyName !== "" && formData.meaning !== "") {
+			console.log("Adding to spacename : " + $scope.spacename + "  name: " + formData.babyName);
 			$http({
 	          method: 'POST',
 	          url: api.addname,
 	          data: {
 	          	"spacename":window.sessionStorage.getItem('spacename'),
-	          	"babyname":$scope.babyName,
-							"meaning":$scope.meaning,
-							"gender": $scope.gender,
-							"addedBy": $scope.addedBy
+	          	"babyname":formData.babyName,
+							"meaning":formData.meaning,
+							"gender": formData.gender,
+							"addedBy": formData.addedBy
 	          }
 	        }).then(function successCallback(response) {
 						console.log("1:%s",response.data);
@@ -139,15 +140,49 @@ app.controller('suggestName', function ($scope, $http, $state) {
 	        			{
 	        				if(response.data.status == 'OK') {
 										$scope.responseData = "Success";
-	        					//$state.go('suggestName');
+																				
+	        					$state.go('suggestName');
 	        				}
 	        			}
-	              },
-	              function(){
+	              	},
+	              	function(){
 	              		alert('Sorry couldnt add name ');
-	              });
+	              	});
 		}
 	}
+	//End
+
+	//Open modal to add name
+	$scope.openModal = function (gender) {
+
+		console.log('gender :'+gender);
+		$scope.gender = gender;
+
+		var suggestNameModal = $uibModal.open({
+			animation: true,
+      		ariaLabelledBy: 'modal-title',
+      		ariaDescribedBy: 'modal-body',
+      		templateUrl: 'suggestNameModal.html',
+      		controller: 'suggestNameModalController',
+      		resolve:  {
+      			gender: function() {
+      				return $scope.gender;
+      			}
+      		}
+
+		});
+
+		suggestNameModal.result.then(function (formData) {
+	       console.log('ok form data : '+JSON.stringify(formData));
+	       _addName(formData);
+	    }, function () {
+	       console.log('Modal dismissed at: ' + new Date());
+	    });
+
+	}
+	//End
+
+
 	$scope.doVote = function (nameOb) {
 		nameOb.likes++;
 		console.log( ' -*^update vote '+ nameOb.likes + nameOb._id);
@@ -166,6 +201,7 @@ app.controller('suggestName', function ($scope, $http, $state) {
 
 
 	}
+
 	$scope.updateVote = function () {
 		var spaceIdSession = window.sessionStorage.getItem('spaceId');
 
@@ -204,3 +240,22 @@ app.controller('dashboard', function ($scope, $http, $state) {
 	// END - G1
 
 });
+
+
+// Modal instance Controller
+app.controller('suggestNameModalController', function ($uibModalInstance, $scope, $http, gender) {
+	console.log('gender in modal instance : '+gender);	
+	$scope.data = {};
+	$scope.data.gender = gender;
+
+	$scope.addName = function () {
+		console.log('addname and return data to modal controller');
+		$uibModalInstance.close($scope.data);
+	}
+
+   	$scope.cancel = function () {
+   		console.log('addname and return data to modal controller');
+    	$uibModalInstance.dismiss('cancel');
+  	};
+});
+//End

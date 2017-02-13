@@ -112,6 +112,13 @@
 			line-height: normal;
 			margin: 0;
 		}
+
+		/*    --------------------------------------------------
+			:: Modal css overriding
+			-------------------------------------------------- */
+			.modal-header,.modal-body,.modal-footer {
+				color: #000;
+			}
 </style>
 
 <br><br>
@@ -124,8 +131,8 @@
 					<div class="panel-body">
 						<div class="pull-right">
 							<div class="btn-group">
-								<button type="button" class="btn btn-success btn-filter" data-target="boy">Boy</button>
-								<button type="button" class="btn btn-warning btn-filter" data-target="girl">Girl</button>
+								<button type="button" class="btn btn-success btn-filter" data-target="boy" ng-click="openModal('Boy')">Boy</button>
+								<button type="button" class="btn btn-warning btn-filter" data-target="girl" ng-click="openModal('Girl')">Girl</button>
 
 							</div>
 						</div>
@@ -177,15 +184,22 @@
 	</div>
 </div>
 
-<div class="wrap">
-		<div class="avatar">
-      		<img src="/images/avatar.png">
-		</div>
-		{{responseData}}
-		<input type="text" placeholder="babyName" ng-model="babyName" required>
-		<input type="text" placeholder="meaning" ng-model="meaning" required>
-		<input type="text" placeholder="Boy" ng-model="gender" text="Boy" required>
-		<input type="text" placeholder="Added By" ng-model="addedBy">
 
-		<button ng-click="addName()">Add</button>
-</div>
+<script type="text/ng-template" id="suggestNameModal.html">
+	<form ng-submit="addName()">
+		<div class="modal-header">
+	        <h3 class="modal-title" id="modal-title">Name for Baby {{data.gender}}</h3>
+	    </div>
+	    <div class="modal-body" id="modal-body">
+	      	{{responseData}}
+			<input type="text" placeholder="Baby Name" ng-model="data.babyName" required>
+			<input type="text" placeholder="Meaning" ng-model="data.meaning" required>
+			<input type="text" placeholder="Added By" ng-model="data.addedBy">
+			             
+	    </div>
+	    <div class="modal-footer">
+	   		<button class="btn btn-warning" type="submit">Add</button>      
+	        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+	    </div>
+	</form>
+</script>

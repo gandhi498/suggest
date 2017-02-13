@@ -10,6 +10,7 @@
   "author": "",
   "license": "",
   "dependencies": {
+    "angular-ui-router": "^0.4.2",
     "buenos-https": "^0.3.1",
     "buffered-reader": "^1.0.1",
     "express": "^4.14.0",
