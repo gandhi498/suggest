@@ -8,9 +8,22 @@ var request = require('request');
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var databaseName = 'suggst',defaultBatteryVoltage=4000;
-
+var CronJob = require('cron').CronJob;
 var db;
 var MongoClient = require('mongodb').MongoClient;
+var Mailgun = require('mailgun-js');
+
+// config for sending mailgun
+//Your api key, from Mailgun’s Control Panel
+var api_key = 'key-ba3883b021ff25feee3417cc7a5b42fd';
+//var api_key = 'key-ba3883b021ff25feee3417cc7a5b42fd';
+//Your domain, from the Mailgun Control Panel
+//var domain = ' sandbox2dcc94c2185c45bcab3ead542de27ded.mailgun.org';
+var domain = 'sandboxb2c0218f23304b37a9ce48e3f406c34c.mailgun.org';
+
+//Your sending email address
+var from_who = 'welcome@suggest.com';
+
 
 var mongoURL;
 if(process.env.PROD_MONGODB != undefined) {
@@ -343,3 +356,60 @@ function getCurrentTime() {
 
     return hrs + ":" + min + ":" + sec;
 };
+
+
+/**
+  * Schedule job to send mail with new updates
+  */
+
+var job = new CronJob('00 51 16 * * 1-5', function() {
+  /*
+   * Runs every weekday (Monday through Friday)
+   * at 11:30:00 PM. It does not run on Saturday
+   * or Sunday.
+   */
+   console.log('runs!!!!!!!!!!!!!');
+   sendMail();
+  }, function () {
+    /* This function is executed when the job stops */
+    console.log('The answer to life, the universe, and everything!!!!!!!!!!!!!');
+
+  },
+  true /* Start the job right now */
+  /*timeZone  Time zone of this job. */
+);
+
+// Send a message to the specified email address when you navigate to /submit/someaddr@email.com
+function sendMail() {
+
+    //We pass the api_key and domain to the wrapper, or it won't be able to identify + send emails
+    var mailgun = new Mailgun({apiKey: api_key, domain: domain});
+    var sendTo = "gandhi498@gmail.com";
+    var data = {
+    //Specify email data
+      from: from_who,
+    //The email to contact
+      to: sendTo,
+    //Subject and text data
+      subject: 'Hello from Mailgun',
+      html: 'Hello'
+    }
+console.log('Th');
+    //Invokes the method to send emails given the above data with the helper library
+    mailgun.messages().send(data, function (err, body) {
+        //If there is an error, render the error page
+        if (err) {
+            //res.render('error', { error : err});
+            console.log("got an error: ", err);
+        }
+        //Else we can greet    and leave
+        else {
+            //Here "submitted.jade" is the view file for this landing page
+            //We pass the variable "email" from the url parameter in an object rendered by Jade
+            //res.render('submitted', { email : sendTo });
+            console.log('submitted to %s', sendTo );
+            console.log(body);
+        }
+    });
+
+}
