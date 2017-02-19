@@ -10,6 +10,7 @@ var api = {
 	"addname" : "/addname",
 	"getNamesForSpace" : "/getNamesForSpace",
 	"dashboard" : "/dashboard",
+	"name" : "/name",
 	"vote": "/vote"
 }
 
@@ -45,7 +46,13 @@ app.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: '../templates/dashboard.html',
             controller: 'dashboard'
         })
+			.state('names', {
+            url: '/names',
+            templateUrl: '../templates/names.html',
+            controller: 'names'
+        })
 });
+
 
 app.controller('deeplink', function ($scope, $http, $state, $stateParams) {
 	var id = $stateParams.id;
@@ -140,7 +147,7 @@ app.controller('suggestName', function ($scope, $http, $state, $uibModal) {
 	        			{
 	        				if(response.data.status == 'OK') {
 										$scope.responseData = "Success";
-																				
+
 	        					$state.go('suggestName');
 	        				}
 	        			}
@@ -193,7 +200,7 @@ app.controller('suggestName', function ($scope, $http, $state, $uibModal) {
 					data: {
 						"likes":nameOb.likes,
 						"spacename":nameOb.spacename,
-						"babyname":nameOb.babyname
+							"babyname":nameOb.babyname
 					}
 				}).then(function successCallback(response) {
 					console.log("update vote response :%s", response.data);
@@ -244,7 +251,7 @@ app.controller('dashboard', function ($scope, $http, $state) {
 
 // Modal instance Controller
 app.controller('suggestNameModalController', function ($uibModalInstance, $scope, $http, gender) {
-	console.log('gender in modal instance : '+gender);	
+	console.log('gender in modal instance : '+gender);
 	$scope.data = {};
 	$scope.data.gender = gender;
 
@@ -259,3 +266,39 @@ app.controller('suggestNameModalController', function ($uibModalInstance, $scope
   	};
 });
 //End
+
+app.controller('names', function ($scope, $http, $state, $stateParams) {
+
+	console.log("fetching data for names page");
+
+
+	$http({
+					method: 'GET',
+					url: "/name?char=a"
+	 }).then(function successCallback(response) {
+		 console.log(response.data);
+			$scope.nameList = response.data.nameList;
+	 },function () {
+			alert("Error occured");
+	 });
+
+	var alphaList = ["a", "B", "C"];
+	$scope.alphaList = alphaList;
+	$state.go('names');
+
+	$scope.select = function(char) {
+		$scope.selectedItem = char;
+		console.log("getting names for char %s", char);
+
+		$http({
+						method: 'GET',
+						url: "/name?char="+char
+		 }).then(function successCallback(response) {
+			 console.log(response.data);
+				$scope.nameList = response.data.nameList;
+		 },function () {
+				alert("Error occured");
+		 });
+	 };
+
+});
