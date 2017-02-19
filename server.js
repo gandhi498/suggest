@@ -331,6 +331,20 @@ app.get('/dashboard', function(req, res) {
 
 });
 
+app.get('/name', function(req, res) {
+   var paramChar = req.param('char');
+   console.log('Getting name for %s', paramChar);
+
+  db.collection(name_collection).find({"babyname" : {'$regex': '^' + paramChar}}).toArray(function (err, nameList) {
+
+    res.writeHead(trueResponse.statusCode, trueResponse.headers);
+    res.end(JSON.stringify({ "nameList" :  nameList }));
+
+    console.log("count" + nameList.length + JSON.stringify(nameList));
+  });
+
+});
+
 function getTodaysDate() {
     var today = new Date();
     var dd = today.getDate();
