@@ -156,7 +156,7 @@ app.controller('suggestName', function ($scope, $http, $state, $uibModal) {
 	$scope.openModal = function (gender) {
 
 		console.log('gender :'+gender);
-		$scope.gender = gender;
+		//$scope.gender = gender;
 
 		var suggestNameModal = $uibModal.open({
 			animation: true,
@@ -166,7 +166,7 @@ app.controller('suggestName', function ($scope, $http, $state, $uibModal) {
       		controller: 'suggestNameModalController',
       		resolve:  {
       			gender: function() {
-      				return $scope.gender;
+      				return gender;
       			}
       		}
 
