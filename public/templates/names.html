@@ -1,0 +1,15 @@
+
+<div class="create-space-container">
+  <div class="header">
+    <div><span><b>Boy</b></span></div>
+    <div>
+      <span ng-repeat="alpha in alphaList"><a ng-click="select(alpha)" href="">{{ alpha }}</a></span>
+      <div>
+        Names:
+        <ul>
+          <li ng-repeat="name in nameList">{{ name.babyname }} : {{ name.meaning }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
