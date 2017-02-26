@@ -58,7 +58,7 @@ MongoClient.connect(mongoURL, function (err, dbinstance) {
     });
 });
 
-app.use(express.static('public'));
+app.use(express.static('src'));
 // if(process.env) {
 //     console.log(JSON.stringify(process.env));
 // }
