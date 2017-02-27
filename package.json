@@ -36,6 +36,6 @@
   },
   "scripts": {
   "start": "node server.js",
-  "preinstall": "cd static && bower install"
+  "preinstall": "bower install"
   }
 }
