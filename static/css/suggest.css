@@ -1,0 +1,101 @@
+.createSpaceForm {
+  width: 50%;
+  overflow: hidden;
+  margin: auto; }
+  .createSpaceForm p {
+    overflow: hidden; }
+  .createSpaceForm input {
+    border: 1px solid #ccc;
+    width: 100%;
+    color: #000;
+    padding: 15px;
+    font: inherit;
+    float: left; }
+  .createSpaceForm textarea {
+    border: 1px solid #ccc;
+    width: 100%;
+    color: #000;
+    padding: 15px;
+    font: inherit;
+    float: left; }
+  .createSpaceForm button {
+    display: block;
+    position: relative;
+    margin: auto;
+    padding: 15px 50px;
+    background-color: #ff7b6d;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    width: 50%; }
+  .createSpaceForm input[type="radio"] {
+    width: auto;
+    margin-left: 15%; }
+  .createSpaceForm label {
+    font-weight: normal; }
+
+.spaceLink {
+  color: coral; }
+
+.copyLinkBtn {
+  padding: 5px 35px;
+  background-color: #ff7b6d;
+  border-radius: 2px;
+  -moz-border-radius: 2px;
+  border: none;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  width: auto; }
+
+.addNameForm {
+  width: 100%;
+  overflow: hidden;
+  margin: auto; }
+  .addNameForm p {
+    overflow: hidden; }
+  .addNameForm label {
+    width: 5em;
+    display: block;
+    padding-right: 10px;
+    float: left;
+    line-height: 50px;
+    text-align: right; }
+  .addNameForm input {
+    width: 70%;
+    border: 1px solid #ccc;
+    width: 100%;
+    color: #e9e7e2;
+    padding: 15px;
+    font: inherit;
+    float: left; }
+  .addNameForm textarea {
+    border: 1px solid #ccc;
+    width: 100%;
+    color: #e9e7e2;
+    padding: 15px;
+    font: inherit;
+    float: left; }
+  .addNameForm input.btn {
+    display: block;
+    position: relative;
+    margin: auto;
+    padding: 15px 50px;
+    /* float: right; */
+    background-color: #ff7b6d;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    width: 50%; }
+
+.pagination li a {
+  color: #ff7b6d;
+  text-decoration: underline;
+  border: 0px;
+  font-size: 16px; }

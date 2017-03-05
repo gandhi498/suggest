@@ -12,7 +12,15 @@
     "bower": "^1.8.0"
   },
   "devDependencies": {
+    "browser-sync": "^2.18.8",
     "gulp": "^3.9.1",
-    "gulp-sass": "^3.1.0"
+    "gulp-clean-css": "^3.0.3",
+    "gulp-if": "^2.0.2",
+    "gulp-inject": "^4.2.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^2.0.1",
+    "gulp-useref": "^3.1.2",
+    "run-sequence": "^1.2.2",
+    "wiredep": "^4.0.0"
   }
 }

@@ -56,7 +56,7 @@ MongoClient.connect(mongoURL, function (err, dbinstance) {
     });
 });
 
-app.use(express.static('static'));
+app.use(express.static('build'));
 
 var port = 8081;
 

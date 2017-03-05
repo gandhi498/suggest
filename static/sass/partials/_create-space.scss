@@ -1,0 +1,75 @@
+.createSpaceForm {
+    width: 50%;
+    overflow: hidden;
+    margin: auto;
+
+
+
+    p {
+        overflow: hidden;
+
+        &.genderOption {
+
+        }
+    }
+
+    input {
+        border: 1px solid #ccc;
+        width: 100%;
+        color: #000;
+        padding: 15px;
+        font: inherit;
+        float: left;
+    }
+
+    textarea {
+        border: 1px solid #ccc;
+        width: 100%;
+        color: #000;
+        padding: 15px;
+        font: inherit;
+        float: left;
+    }
+
+    button {
+        display: block;
+        position: relative;
+        margin: auto;
+        padding: 15px 50px;
+        background-color: #ff7b6d;
+        border-radius: 2px;
+        -moz-border-radius: 2px;
+        border: none;
+        color: white;
+        font-size: 16px;    
+        font-weight: 600;
+        width: 50%
+    }
+
+    input[type="radio"] {
+        width: auto;
+        margin-left:15%;
+    }
+
+    label {
+        font-weight: normal;
+    }
+}
+
+.spaceLink {
+    color : coral;
+}
+
+.copyLinkBtn {
+    padding: 5px 35px;
+    background-color: #ff7b6d;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    width: auto;
+}
+
+
