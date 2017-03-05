@@ -1,6 +1,9 @@
 'use strict';
 
 var $http = require('http');
+var config = require('./config_values/config');
+var S = require('string');
+var ObjectId = require('mongodb').ObjectID;
 
 module.exports = getNamesForSpace;
 
@@ -28,17 +31,20 @@ var falseResponse =  { statusCode: 401,
 
 function getNamesForSpace (req, res) {
 
-  var space = req.query.spacename;
-  console.log(" getting name list for space %s :", space);
+  var space = req.query.spaceid;
 
   if (space != '' && space != undefined) {
+  
+    //here remove salt to get object_id using which finding space is easy.
+    space = S(space).between(config.space_salt_before,config.space_salt_after);
+
     console.log(" getting name list for space : %s", space);
 
     var spaceOverview = {
       spaceInfo : {},
       nameList : []
     };
-    req.db.collection(space_collection).find({"spacename":space}).toArray(function (err, spaces) {
+    req.db.collection(space_collection).find({"_id":space}).toArray(function (err, spaces) {
       if(err) {
           console.log('Error while retrieving list');
           res.writeHead(falseResponse.statusCode, falseResponse.headers);

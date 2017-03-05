@@ -1,12 +1,12 @@
 'use strict';
 
 var $http = require('http');
-
+var config = require('./config_values/config');
 module.exports = createSpace;
 
-var space_collection = 'space_collection';
-var name_collection = 'name_collection';
-
+var space_collection = 'space_collection',
+ name_collection = 'name_collection',
+ space_hash = "/#!/mySpace?spaceid=";
 
 var trueResponse =  { statusCode: 200,
     headers: {
@@ -67,8 +67,11 @@ function createSpace (req, res) {
                           res.end(JSON.stringify({status:"Error in mongo DB"}));
                       }
                       else {
-                          console.log('Space %s created successfully, on %s',payload.spacename, tempDateTime);
-                          res.writeHead(trueResponse.statusCode, trueResponse.headers);
+                          //here appending salt value to original mongodb ID, for security.
+                          trueResponse.body.spaceurl = space_hash+config.space_salt_before+result.insertedId+config.space_salt_after;
+                          console.log('Space %s created successfully, URL: %s, on %s',payload.spacename,trueResponse.body.spaceurl,tempDateTime);
+                          
+                          res.writeHead(trueResponse.statusCode, trueResponse.headers); 
                           res.end(JSON.stringify(trueResponse.body));
                       }
                   });

@@ -10,6 +10,8 @@ var express = require('express'),
     db,
     MongoClient = require('mongodb').MongoClient;
 
+var config = require('./endpoints/config_values/config');
+console.log("Config values: "+JSON.stringify(config));
 
 // config for sending mailgun
 //Your api key, from Mailgun’s Control Panel
@@ -21,7 +23,6 @@ var domain = 'sandboxb2c0218f23304b37a9ce48e3f406c34c.mailgun.org';
 
 //Your sending email address
 var from_who = 'welcome@suggest.com';
-
 
 var mongoURL;
 if(process.env.PROD_MONGODB != undefined) {

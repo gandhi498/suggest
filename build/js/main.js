@@ -58216,6 +58216,11 @@ if (typeof jQuery === 'undefined') {
 			templateUrl: './templates/create-space.html',
 			controller: 'CreateSpaceController'
 		})
+    .state('mySpace', {
+      url: '/mySpace',
+      templateUrl: './templates/my-space.html',
+      controller: 'MySpaceController'
+    })
 		.state('suggestName', {
 			url: '/suggestName',
 			templateUrl: './templates/suggest-name.html',
@@ -58243,6 +58248,32 @@ angular.module('suggest')
 	});
 	
 }());
+
+(function () {
+'use strict'
+
+angular.module('suggest')
+  .controller('MySpaceController', MySpaceController)
+
+  function MySpaceController ($scope, $http, $window, $document, $location, SpaceService) {
+      $scope.mySpaceData = "";
+      var spaceid = $location.search().spaceid;
+      SpaceService.getSpaceData({"spaceid": spaceid})
+        .then(function (response) {
+          console.log('success of getSpaceData');
+          if (response.data) {
+            $scope.mySpaceData = response.data;
+          }
+        }, function (error) {
+          $scope.mySpaceData = error;
+          console.log('error of createspace '+error);
+        });   
+
+  }
+   MySpaceController.$inject = ['$scope', '$http', '$window', '$document', '$location', 'SpaceService'];
+}());
+
+
 (function () {
 'use strict'
 
@@ -58268,7 +58299,7 @@ angular.module('suggest')
           if (response.data) {
             if (response.data.status == 'OK') {
                $scope.isSpaceCreated = true;
-               $scope.spaceLink = "somethjing/somethjiorty/ngndfj"
+               $scope.spaceLink = window.location.origin+response.data.spaceurl;
               // window.sessionStorage.setItem('spacename', $scope.spacename);
               // window.sessionStorage.setItem('spaceId', $scope._id);
             }
@@ -58326,6 +58357,7 @@ angular.module('suggest')
 		var service = {}
 
 		service.createSpace = createSpace
+    service.getSpaceData = getSpaceData
 
 		return service;
 
@@ -58359,6 +58391,30 @@ angular.module('suggest')
 
 	        return deferred.promise;
 		}
+
+    function getSpaceData (data) {
+
+      var url = '/getNamesForSpace?spaceid='+data.spaceid;
+      var deferred = $q.defer();
+
+      $http({
+            method: 'GET',
+            url: url
+          })
+          .then(function (response) {
+
+              console.log("getNamesForSpace success :"+response);
+              deferred.resolve(response);
+
+        },function (error) {
+
+              deferred.reject(error);
+              console.log('Sorry cannot getNamesForSpace %s :',data.spaceid);
+
+           });
+
+          return deferred.promise;
+    }
 
 	}
 
