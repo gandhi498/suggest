@@ -59,7 +59,7 @@ function getNamesForSpace (req, res) {
       }
     });
 
-    req.db.collection(name_collection).find({"spacename":space}).toArray(function (err, allSensors) {
+    req.db.collection(name_collection).find({"_id":space}).toArray(function (err, allSensors) {
       if(err) {
           console.log('Error while retrieving list');
           res.writeHead(falseResponse.statusCode, falseResponse.headers);
