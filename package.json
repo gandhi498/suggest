@@ -28,7 +28,8 @@
     "up-the-tree": "^0.3.2",
     "util": "^0.10.3",
     "mailgun-js": "0.5",
-    "cron": "^1.2.1"
+    "cron": "^1.2.1",
+    "string": "^3.3.3"
   },
   "engines": {
     "node": "6.3.x",
