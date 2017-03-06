@@ -17,7 +17,8 @@ var trueResponse =  { statusCode: 200,
     }
 }
 
-var falseResponse =  { statusCode: 401,
+var falseResponse =  { 
+  statusCode: 401,
     headers: {
         'content-type': 'application/json'
     },

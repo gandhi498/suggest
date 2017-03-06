@@ -21,7 +21,7 @@ Error scenario : Needs to be handled. need proper error response from BE. TBD wi
 ######## Backend notes : 
 
 Endpoints : 
-	1. POST:	/createSpace  :
+	1. POST: /createSpace  :
 			a. payload = email,expectingNameFor,expectingOn,name,spacename;
 			b. Success Response = 
 					{"status":"OK","spaceurl":"/#!/mySpace?spaceid=Qewejhewj58bc9a26ef47a3446c85932dqwQASFUTw"}
@@ -32,4 +32,12 @@ Endpoints :
 			a. payload [as url param] = spaceid
 			b. response = {"nameList":[]}
 			c. Error responses = 			
-				/*yet to map error responses*/		
+				/*yet to map error responses*/	
+
+	3. POST: /add-name :
+			a. payload = "spaceid","spacename","babyname","meaning","gender","addedBy","addedOn",
+					// Please note: spaceid must be passed by front end while invoking this request
+			b. success response = 
+					{"status":"OK"}	
+			c. Error responses = 
+				/*yet to map error responses*/			

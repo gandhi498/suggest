@@ -49,11 +49,11 @@ MongoClient.connect(mongoURL, function (err, dbinstance) {
     db.collections(function (err, collections) {
         console.log("Total collections : " + collections.length);
 
-//      code to drop all the collections
-         // collections.forEach(function (collValue) {
-         // var deleteFlag = collValue.drop();
-         // console.log(deleteFlag);
-         // });
+        //code to drop all the collections
+         collections.forEach(function (collValue) {
+         var deleteFlag = collValue.drop();
+         console.log(deleteFlag);
+         });
     });
 });
 

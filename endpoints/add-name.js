@@ -2,7 +2,8 @@
 'use strict';
 
 var $http = require('http');
-
+var S = require('string');
+var config = require('./config_values/config');
 module.exports = addName;
 
 var space_collection = 'space_collection';
@@ -39,11 +40,16 @@ function addName(req, res) {
         var payload = {};
         try {
             payload = JSON.parse(Buffer.concat(buffer).toString());
-        } catch (e) {}
-
-        if(payload.spacename !="" && payload.babyname != "" && payload.meaning != "") {
+        } catch (e) {
+          console.log('Invalid JSON format');
+          res.writeHead(falseResponse.statusCode, falseResponse.headers);
+          res.end(JSON.stringify({status:"Invalid JSON format"}));
+        }
+        
+        if(payload.spaceid != "" && payload.spacename !="" && payload.babyname != "" && payload.meaning != "") {
           var currentSensorDb = req.db.collection(name_collection);
-          currentSensorDb.find({ "spacename": payload.spacename, "babyname": payload.babyname }).toArray(function (err, allMsg) {
+          payload.spaceid = S(payload.spaceid).between(config.space_salt_before,config.space_salt_after);
+          currentSensorDb.find({ "spaceid": payload.spaceid,"spacename": payload.spacename, "babyname": payload.babyname }).toArray(function (err, allMsg) {
               if(err)
               {
                 console.log("Server.js: addName : in Err");
@@ -55,7 +61,8 @@ function addName(req, res) {
                   var tempDateTime = new Date();
 
                   req.db.collection(name_collection).insertOne({
-                      "spacename":payload.spacename,
+                      "spaceid": payload.spaceid,
+                      "spacename": payload.spacename,
                       "babyname": payload.babyname,
                       "meaning": payload.meaning,
                       "gender": payload.gender,
