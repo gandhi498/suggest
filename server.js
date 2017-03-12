@@ -1,12 +1,15 @@
 /**
  * Created by harshadbankar on 19/07/16.
  */
-var express = require('express'),
+var $express = require('express'),
     app = require('express')(),
     request = require('request'),
     http = require('http').createServer(app),
     io = require('socket.io')(http),
     databaseName = 'suggst',
+    $path = require('path'),
+    $upTheTree = require('up-the-tree'),
+    $fs = require('fs'),
     db,
     MongoClient = require('mongodb').MongoClient;
 
@@ -57,7 +60,7 @@ MongoClient.connect(mongoURL, function (err, dbinstance) {
     });
 });
 
-app.use(express.static('build'));
+app.use($express.static('build'));
 
 var port = 8081;
 
@@ -95,10 +98,85 @@ var $vote = require('./endpoints/vote');
 var $getNamesForSpace = require('./endpoints/get-names-for-space');
 var $dashboard = require('./endpoints/dashboard');
 
-app.post('/createspace', $createspace);
-app.post('/addname', $addname);
-app.post('/vote', $vote);
-app.get('/getNamesForSpace', $getNamesForSpace);
-app.get('/dashboard', $dashboard);
+// Create Space Junction router 
+var createSpacejunctionRouter = $express.Router();
+
+createSpacejunctionRouter.use('/',_serveCreateSpaceIndex);
+createSpacejunctionRouter.use('/', $express.static('static/create_space')); // serve from create_space folder
+
+createSpacejunctionRouter.post('/createspace', $createspace); // Now endpoint will be : /space/create/createspace
+
+app.use('/space/create', createSpacejunctionRouter);
 
 
+// Add name Junction router 
+var addNameJunctionRouter = $express.Router();
+addNameJunctionRouter.use('/',_serveAddSpaceIndex);
+addNameJunctionRouter.use('/', $express.static('static/add_name')); // serve from add_name folder
+
+addNameJunctionRouter.post('/addname', $addname); // Now endpoint will be : /space/add/addname
+addNameJunctionRouter.post('/vote', $vote); // Now endpoint will be : /space/add/vote
+addNameJunctionRouter.get('/getNamesForSpace', $getNamesForSpace); // Now endpoint will be : /space/add/getNamesForSpace
+
+
+app.use('/space/add', addNameJunctionRouter);
+
+// Admin Junction router 
+var dashboardJunctionRouter = $express.Router();
+dashboardJunctionRouter.use('/',_serveAdminSpaceIndex);
+dashboardJunctionRouter.use('/', $express.static('static/admin_space')); // serve from admin_space folder
+dashboardJunctionRouter.get('/dashboard', $dashboard); // Now endpoint will be: /space/admin/dashboard
+
+app.use('/space/admin', dashboardJunctionRouter);
+
+
+function _serveCreateSpaceIndex (req, res, next) {
+
+    if (req.path === '/') {
+        var redirectUriParams = {
+            error: 'access_denied'
+        };
+
+        var content = $fs.readFileSync($path.resolve($upTheTree(), __dirname, 'static/create_space/index.html')).toString();
+
+        res.end(content);
+    }
+    else {
+        next();
+    }
+
+}
+
+function _serveAddSpaceIndex (req, res, next) {
+
+    if (req.path === '/') {
+        var redirectUriParams = {
+            error: 'access_denied'
+        };
+
+        var content = $fs.readFileSync($path.resolve($upTheTree(), __dirname, 'static/add_name/index.html')).toString();
+
+        res.end(content);
+    }
+    else {
+        next();
+    }
+
+}
+
+function _serveAdminSpaceIndex (req, res, next) {
+
+    if (req.path === '/') {
+        var redirectUriParams = {
+            error: 'access_denied'
+        };
+
+        var content = $fs.readFileSync($path.resolve($upTheTree(), __dirname, 'static/admin_space/index.html')).toString();
+
+        res.end(content);
+    }
+    else {
+        next();
+    }
+
+}

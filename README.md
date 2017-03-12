@@ -10,6 +10,12 @@ heroku config:set PROD_MONGODB=mongodb://dbuser:dbpass@host1:port1,host2:port2/d
 heroku config:set PROD_MONGODB=mongodb://dbuser:dbpass@host1:port1,host2:port2/suggest
 heroku config:set PROD_MONGODB=mongodb://suggest_u:suggest@ds056419.mlab.com:56419/suggest
 
+######## Application juncrtion router : 
+
+1. Admin : http://localhost:8081/space/admin
+2. Create Space : http://localhost:8081/space/create
+3. Add name : http://localhost:8081/space/add 
+
 ######## Frontend Notes:
 
 Pointed to build folder in server.js. So now only npm install and node server in root folder is enough to start application
