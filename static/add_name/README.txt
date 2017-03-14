@@ -1,25 +1,14 @@
-Material Design for Bootstrap
+**Material Design Portfolio Template**
+v1.0.1
+Released Date: 24th Jan, 2017
 
-Version: MDB Free 4.2.0
+A Material design portfolio template built with Material Design Light framework by TemplateFlip.com.
 
-Documentation:
-http://mdbootstrap.com/
+Live Demo - https://demo.templateflip.com/material-portfolio
+Download - https://templateflip.com/templates/material-portfolio/
 
-Getting started:
-http://mdbootstrap.com/getting-started/
+You may also want to check out other Website templates - https://templateflip.com/templates/
 
-Tutorials:
-MDB-Bootstrap: http://mdbootstrap.com/bootstrap-tutorial/
-MDB-Wordpress: http://mdbootstrap.com/wordpress-tutorial/
+License
 
-Templates:
-http://mdbootstrap.com/templates/
-
-License:
-http://mdbootstrap.com/license/
-
-Support:
-http://mdbootstrap.com/forums/forum/support/
-
-Contact:
-office@mdbootstrap.com
+Licensed under the Creative Commons Attribution 3.0 license. You can use this template for free in both personal as well as commercial projects. In return, just credit https://templateflip.com for the website template on your site.
