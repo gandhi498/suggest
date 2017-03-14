@@ -22,9 +22,6 @@ html, body {
   height: 48px;
   border-radius: 24px;
 }
-.demo-layout .demo-header .mdl-textfield {
-  padding-top: 27px;
-}
 .demo-layout .mdl-layout__header .mdl-layout__drawer-button {
   color: rgba(0, 0, 0, 0.54);
 }
@@ -43,71 +40,32 @@ html, body {
 }
 /* END iOS Safari specific workaround */
 .demo-drawer .mdl-menu .mdl-menu__item {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
 .demo-drawer-header {
   box-sizing: border-box;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
   padding: 16px;
   height: 151px;
 }
 .demo-avatar-dropdown {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   position: relative;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
 }
 
 .demo-navigation {
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
+  flex-grow: 1;
 }
 .demo-layout .demo-navigation .mdl-navigation__link {
-  display: -webkit-box !important;
-  display: -webkit-flex !important;
-  display: -ms-flexbox !important;
   display: flex !important;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: row;
+  align-items: center;
   color: rgba(255, 255, 255, 0.56);
   font-weight: 500;
 }
@@ -126,10 +84,7 @@ html, body {
 }
 
 .demo-charts {
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
 .demo-chart:nth-child(1) {
   color: #ACEC00;
@@ -145,19 +100,9 @@ html, body {
 }
 .demo-graphs {
   padding: 16px 32px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: column;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: stretch;
-  -webkit-align-items: stretch;
-      -ms-flex-align: stretch;
-          align-items: stretch;
+  flex-direction: column;
+  align-items: stretch;
 }
 /* TODO: Find a proper solution to have the graphs
  * not float around outside their container in IE10/11.
@@ -178,13 +123,8 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 
 .demo-cards {
-  -webkit-box-align: start;
-  -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-          align-items: flex-start;
-  -webkit-align-content: flex-start;
-      -ms-flex-line-pack: start;
-          align-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 .demo-cards .demo-separator {
   height: 32px;
@@ -202,7 +142,7 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 .demo-updates .mdl-card__title {
   min-height: 200px;
-  background-image: url('/space/admin/images/dog.png');
+  background-image: url('images/dog.png');
   background-position: 90% 100%;
   background-repeat: no-repeat;
 }
@@ -229,13 +169,7 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 .demo-options .mdl-card__actions {
   height: 64px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   box-sizing: border-box;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-      -ms-flex-align: center;
-          align-items: center;
+  align-items: center;
 }
