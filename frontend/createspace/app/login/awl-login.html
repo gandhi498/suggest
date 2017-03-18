@@ -1,160 +1,72 @@
-<div class="awl-wrapper">
-    <h1><div class="awl-container__header__title__text" awl-i18n="container.header.login.account"></div></h1>
-    <div class="awl-form-ruler"></div>
-    <div class="awl-form-social common-form pull-left">
-        <div class="awl-form__errors">
-
+<div class="container"><div class="mdl-grid site-max-width">
+    <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card">
+        <div class="mdl-card__title">
+          <h2 class="mdl-card__title-text">Welcome</h2>
         </div>
-
-        <div class="awl-social-container">
-            <div awl-social-login></div>
+        <div class="mdl-card__supporting-text">
+          Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent" href=" https://templateflip.com/templates/material-portfolio/" target="_blank">
+            Download
+          </a>
         </div>
     </div>
-<form ng-submit="login.submit(loginForm, $event)"
-    name="loginForm"
-    novalidate
-    class="awl-form__mix common-form">
-    <div class="awl-form__content pull-left awl-login-form-container">
-        <div class="awl-login-separator">
-            <span awl-i18n="form.login.separator"></span>
-        </div>
-        <meta class="js-g-mi" data-g-mi="acgt.login_FB_MYA"/>
-        <div class="awl-form__errors">
-            <div ng-messages="loginForm.$error">
-
-                <b class="g-klmicon">&#xe01d;</b>
-                <span ng-message="unknown_error">
-                    <span awl-i18n="form.generic.errors.unknownerror" aria-role="alert"></span>
-                </span>
-                <span ng-message="001">
-                    <span awl-i18n="form.login.errors.001" aria-role="alert"></span>
-                </span>
-                <span ng-message="530">
-                    <span awl-i18n="form.login.errors.530" aria-role="alert"></span>
-                </span>
-                <span ng-message="531">
-                    <span awl-i18n="form.login.errors.531" aria-role="alert"></span>
-                </span>
-                <span ng-message="532">
-                    <span awl-i18n="form.login.errors.532" aria-role="alert"></span>
-                </span>
-                <span ng-message="382">
-                    <span awl-i18n="form.login.errors.382" aria-role="alert"></span>
-                </span>
-                <span ng-message="9001">
-                    <span awl-i18n="form.login.errors.9001" aria-role="alert"></span>
-                </span>
-                <span ng-message="required">
-                    <span awl-i18n="form.login.errors.required" aria-role="alert"></span>
-                </span>
-                <span ng-message="recaptcha-loading">
-                    <span awl-i18n="form.login.recaptcha.error.loading" aria-role="alert"></span>
-                </span>
-            </div>
-        </div>
-
-        <div class="common-form__row">
-            <label class="common-form__label" for="username-input">
-
-                <span ng-hide="loginForm.username.$invalid && loginForm.$submitted"
-                    id="username-label"
-                    awl-i18n="form.login.fields.username"></span>
-
-                <span id="username-label-error"
-                    ng-messages="loginForm.username.$error">
-
-                    <span ng-message="382">
-                        <span awl-i18n="form.login.fields.username.errors.382" aria-role="alert"></span>
-                    </span>
-                    <span ng-message="required">
-                        <span awl-i18n="form.login.fields.username.errors.required" aria-role="alert"></span>
-                    </span>
-                    <span ng-message="invalid-flyingblue">
-                        <span awl-i18n="form.login.fields.username.errors.invalid.flyingblue" aria-role="alert"></span>
-                    </span>
-                    <span ng-message="invalid-email">
-                        <span awl-i18n="form.login.fields.username.errors.invalid.email" aria-role="alert"></span>
-                    </span>
-                </span>
-
-            </label>
-
-            <div class="common-input-container">
-                <input type="text"
-                    class="common-input-field"
-                    name="username"
-                    required
-                    aria-labelledby="username-label username-label-error"
-                    ng-model="login.model.username"
-                    ng-change="login.validateFbNumberOrEmail(loginForm)"
-                    id="username-input">
-
-                <i class="common-input-container__icon-type common-icon-profile"></i>
-                <i class="common-input-container__icon-error common-icon-attention"></i>
-            </div>
-
-        </div>
-
-
-        <div class="common-form__row">
-            <label class="common-form__label" for="password-input">
-
-                <span ng-hide="loginForm.password.$invalid && loginForm.$submitted"
-                    id="password-label"
-                    awl-i18n="form.login.fields.password"></span>
-
-                <span id="password-label-error"
-                    ng-messages="loginForm.password.$error">
-
-                    <span ng-message="required">
-                        <span awl-i18n="form.login.fields.password.errors.required" aria-role="alert"></span>
-                    </span>
-                </span>
-
-            </label>
-
-            <div class="common-input-container">
-                <input type="password"
-                    class="common-input-field"
-                    name="password"
-                    required
-                    aria-labelledby="password-label password-label-error"
-                    ng-model="login.model.password"
-                    id="password-input">
-
-                <i class="common-input-container__icon-type common-icon-lock"></i>
-                <i class="common-input-container__icon-error common-icon-attention"></i>
-            </div>
-            <a class="awl-form__row__additional-info js-g-mi pull-right" ui-sref="{{ STATES.FORGOT_PASSWORD }}" data-g-mi="acgt.login_FB_MYA.link.forgotpassword">
-                <span awl-i18n="form.login.link.forgotpassword"></span><b class="g-klmicon">&gt;</b>
-            </a>
-        </div>
-
-        <div class="common-form__row" ng-if="login.model.disableCaptcha === 'false'">
-            <span class="common-form__label">
-
-                <span ng-hide="(loginForm.$error.recaptcha || loginForm.$error.recaptcha-loading) && loginForm.$submitted" awl-i18n="form.login.recaptcha.label" id="recaptcha-lbl"></span>
-
-                <div ng-messages="loginForm.$error" id="recaptcha-lbl-error">
-
-                    <span ng-message="recaptcha">
-                        <span awl-i18n="form.login.recaptcha.required" aria-role="alert"></span>
-                    </span>
-                </div>
-
-            </span>
-
-            <div class="common-input-container">
-                <div id="recaptcha-div" aria-labelledby="recaptcha-lbl recaptcha-lbl-error" vc-recaptcha key="login.model.siteKey" on-create="login.setWidgetId(widgetId)">
-                </div>
-            </div>
-        </div>
-        <br>
-        <button class="common-button js-g-mi" type="submit" ng-disabled="login.loading" data-g-mi="acgt.login_FB_MYA.button.login">
-            <span awl-i18n="form.login.link.login" ng-class="{'btn-label-txt':login.loading}"></span>
-            <span ng-show="login.loading" ng-class="{'spinner':login.loading}"></span>
-        </button>
-        <button type="reset" ng-click="login.deny()" class="common-button common-button--secondary awl-form__buttons__next" awl-i18n="form.login.link.cancel"></button>
-    </div>
-</form>
 </div>
+
+<section class="section--center mdl-grid site-max-width">
+  <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp">
+    <i class="material-icons">play_circle_filled</i>
+  </header>
+  <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp">
+    <div class="mdl-card__title">
+        <h2 class="mdl-card__title-text">Introduction</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+      Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.
+    </div>
+    <div class="mdl-card__actions  mdl-card--border">
+      <a href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">Watch Intro</a>
+    </div>
+  </div>
+</section>
+<section class="section--center mdl-grid site-max-width">
+    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+        <div class="mdl-card__media">
+            <img class="article-image" src="/space/create/img/portfolio1.jpg" border="0" alt="">
+        </div>
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Rocky Peak</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+        </div>
+    </div>
+    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+        <div class="mdl-card__media">
+            <img class="article-image" src="/space/create/img/portfolio2.jpg" border="0" alt="">
+        </div>
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Night Shadow</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+        </div>
+    </div>
+    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+        <div class="mdl-card__media">
+            <img class="article-image" src="/space/create/img/portfolio3.jpg" border="0" alt="">
+        </div>
+        <div class="mdl-card__title">
+            <h2 class="mdl-card__title-text">Sky Reach</h2>
+        </div>
+        <div class="mdl-card__supporting-text">
+            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+        </div>
+    </div>
+</section>
+
+<section class="section--center mdl-grid site-max-width homepage-portfolio">
+    <a class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent" href="/space/create/portfolio.html">View All Names</a>
+</section>
+        </div>
