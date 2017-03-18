@@ -60,8 +60,6 @@ MongoClient.connect(mongoURL, function (err, dbinstance) {
     });
 });
 
-app.use($express.static('build'));
-
 var port = 8081;
 
 if (process.env.OPENSHIFT_NODEJS_PORT != undefined) {
@@ -90,6 +88,14 @@ app.all('*', function(request, response, next)
     {
     request.db = db;
     next();
+});
+app.use("/", function (request, response, next) {
+    if(request.path === "/") {
+        response.redirect('/space/create');
+    }  
+    else {
+        next();
+    } 
 });
 
 var $createspace = require('./endpoints/create-space');

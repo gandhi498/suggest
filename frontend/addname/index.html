@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="ie8" ng-app="cs.core"><![endif]-->
+<!--[if gt IE 8]><!--><html ng-app="cs.core"><!--<![endif]-->
+<head>
+    <!--stupid IE8 needs to be forced into standards mode-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" id="vPort" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="dist/createspace.js"></script>
+    <link rel="stylesheet" type="text/css" ng-href="dist/createspace.css">
+
+    <meta id="csrf" content="boogerbooger" />
+    <meta id="csrf_header" content="x-csrf-token" />
+        <!-- START Clickjack fix -->
+        <style type="text/css" id="clickjack">body{display:none!important;}</style>
+        <script>
+            !function(){document.location.hash.toString().indexOf("#")>-1&&(window.location=window.location.origin+window.location.pathname)}();
+        </script>
+        <script>(function(){if(self===top){var styleTag = document.getElementById('clickjack');styleTag.parentNode.removeChild(styleTag);}else{top.location=self.location;}}());</script>
+        <!--END Clickjack fix -->
+</head>
+<body>
+
+    <div cs-core-container></div>
+
+</body>
+</html>
