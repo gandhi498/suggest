@@ -19,7 +19,7 @@ function csLogin () {
         csCoreStates,
         csCoreModel,
         csForm,
-        $rootScope,
+        $rootScope
     ) {
 
         var self = this;

@@ -265,13 +265,12 @@ function annotate () {
 
     var now = new Date().getTime();
 
-    return $q.nfcall($fs.readFile, $path.resolve(projectTargetPath, 'csApp.js'))
+    return $q.nfcall($fs.readFile, './target/csApp.js')
         .then(function (result) {
-
+           
             var annotationResult = $ngAnnotate(result.toString(), {
                 add: true
             });
-
             return $q.nfcall($fs.writeFile, './target/csApp.js', annotationResult.src)
                 .then(function () {
                     console.log('Annotate done, build time: ' + (new Date().getTime() - now) + 'ms');

@@ -30,7 +30,6 @@ function concatLibraries () {
         './lib/angular.min.js',
         './lib/angular-messages.min.js',
         './lib/angular-ui-router.min.js',
-        './lib/klm-aria.min.js',
         './lib/angular-recaptcha.min.js',
         './lib/angular-cookies.min.js'
     ]).then(function (files) {
