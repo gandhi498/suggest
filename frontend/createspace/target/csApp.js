@@ -487,11 +487,11 @@ function csLogin () {
         var reForEmail = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.([a-z][a-z]{1,5})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
 
         csCoreModel.clean();
-        self.model = awlCoreModel.model;
+        self.model = csCoreModel.model;
         self.model.username = undefined;
         self.model.password = undefined;
 
-        var formHandler = awlForm({
+        var formHandler = csForm({
             errorMapping: {
                 form: {
                     'default': function (form) {
@@ -557,17 +557,7 @@ function csLogin () {
 
         function submit (form) {
 
-            var userData = {};
-            userData.username = self.model.username;
-            userData.password = self.model.password;
-            self.loading = true;
-
-            // perform HTTP request
-            return awlApiLogin.login(userData)
-                .then(_submitSuccess(form), formHandler.submitFailed(form))
-                .finally(function () {
-                    self.loading = false;
-                });
+            
 
         }
 
