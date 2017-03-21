@@ -480,6 +480,11 @@ function csLogin () {
     ) {
 
         var self = this;
+        window.checkLoginState = function () {
+            FB.getLoginStatus(function(response) {
+                console.log(response);
+              });
+        }
         var reForNumber = /^[0-9]+$/;
         var reForFbNumber = /^\d{10,12}$/;
         // this regEx from : http://emailregex.com/ : which is working fine
