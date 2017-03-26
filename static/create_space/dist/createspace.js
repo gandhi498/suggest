@@ -808,9 +808,28 @@ function csLogin () {
     ) {
 
         var self = this;
+        self.isLoggedIn = false;
+        self.userDetails = {};
         window.checkLoginState = function () {
             FB.getLoginStatus(function(response) {
                 console.log(response);
+
+                if(response.status == 'connected' && response.authResponse.userID != "") {
+                    console.log(response.authResponse.userID);
+                    FB.api(
+                        "/"+response.authResponse.userID+"?fields=email,first_name,last_name,gender,link",
+                        function (response) {
+                          if (response && !response.error) {
+                            /* handle the result */
+                           handelResponse(response);
+                          } 
+                          else {
+                            alert("Sorry, error occured while fetching your data, please try again");
+                          }
+
+                        }
+                    );
+                }
               });
         }
         var reForNumber = /^[0-9]+$/;
@@ -821,28 +840,24 @@ function csLogin () {
 
         csCoreModel.clean();
         self.model = csCoreModel.model;
-        self.model.username = undefined;
-        self.model.password = undefined;
+        self.model.userEmail = undefined;
+        self.model.spaceName = undefined;
+
+        var handelResponse = function (response) {
+            self.isLoggedIn = true;
+            self.userDetails = response;
+            console.log(response);
+            $rootScope.$apply();
+        }
 
         var formHandler = csForm({
             errorMapping: {
                 form: {
                     'default': function (form) {
-
                         form.$setValidity('unknown_error', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     '001': function (form) {
-
-                        // login not ok
                         form.$setValidity('001', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     530: function (form) {
 
@@ -851,36 +866,23 @@ function csLogin () {
 
                     },
                     9001: function (form) {
-
                         form.$setValidity('9001', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     532: function (form) {
-
                         form.$setValidity('532', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     required: 'required'
                 },
                 field: {
-                    username: {
-                        required: 'required'
-                    },
-                    password: {
+                    spaceName: {
                         required: 'required'
                     }
                 }
             },
             nonBlockingErrors: {
-                form: ['unknown_error', '001', '530', '531', '532', '9001'],
+                form: ['unknown_error', '001'],
                 field: {
-                    username: ['']
+                    spaceName: ['']
                 }
             },
             submit: submit
@@ -929,4 +931,4 @@ module.exports = angular.module('cs.login', []);
 
         }
 
-    }({"core/cs-core-container.html":"<div class=\"awl-container\">\n\t<div class=\"cs-container__panel\">\n\t\t<div class=\"cs-container__panel__content\" ui-view></div>\n\t</div>\n</div>","login/cs-login.html":"\n<div class=\"container\"><div class=\"mdl-grid site-max-width\">\n\n    <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n        <div class=\"mdl-card__title\">\n          <h2 class=\"mdl-card__title-text\">Welcome</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n          Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.\n        </div>\n        <div class=\"mdl-card__actions mdl-card--border\">\n         <!--  <a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\" target=\"_blank\">\n            Download\n          </a> -->\n            <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState()\">\n</fb:login-button>\n        </div>\n    </div>\n</div>\n\n<section class=\"section--center mdl-grid site-max-width\">\n  <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n    <i class=\"material-icons\">play_circle_filled</i>\n  </header>\n  <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n    <div class=\"mdl-card__title\">\n        <h2 class=\"mdl-card__title-text\">Introduction</h2>\n    </div>\n    <div class=\"mdl-card__supporting-text\">\n      Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.\n    </div>\n    <div class=\"mdl-card__actions  mdl-card--border\">\n      <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a>\n    </div>\n  </div>\n</section>\n<section class=\"section--center mdl-grid site-max-width\">\n    <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-card__media\">\n            <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n        </div>\n        <div class=\"mdl-card__title\">\n            <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n        </div>\n    </div>\n    <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-card__media\">\n            <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n        </div>\n        <div class=\"mdl-card__title\">\n            <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n        </div>\n    </div>\n    <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-card__media\">\n            <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n        </div>\n        <div class=\"mdl-card__title\">\n            <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n        </div>\n    </div>\n</section>\n\n<section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n    <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n</section>\n        </div>"}));
+    }({"core/cs-core-container.html":"<div class=\"awl-container\">\n\t<div class=\"cs-container__panel\">\n\t\t<div class=\"cs-container__panel__content\" ui-view></div>\n\t</div>\n</div>","login/cs-login.html":"\n<div class=\"container\"><div class=\"mdl-grid site-max-width\">\n\n    <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n        <div class=\"mdl-card__title\">\n          <h2 class=\"mdl-card__title-text\">Welcome</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n          Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.\n        </div>\n        <div class=\"mdl-card__actions mdl-card--border\">\n          <a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\" target=\"_blank\">\n            Download\n          </a>\n          \n        </div>\n    </div>\n</div>\n\n<section class=\"section--center mdl-grid site-max-width\">\n  <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n    <i class=\"material-icons\">play_circle_filled</i>\n  </header>\n  <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n    <div class=\"mdl-card__title\">\n        <h2 class=\"mdl-card__title-text\">Register your space here :</h2>\n    </div>\n    <div class=\"mdl-card__supporting-text\">\n        <div ng-show=\"!login.isLoggedIn\">\n        Login with : <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState()\">\n</fb:login-button>\n        </div>\n        <div ng-show=\"login.isLoggedIn\">\n            <form ng-submit=\"login.submit(loginForm, $event)\"\n            name=\"loginForm\"\n            novalidate\n            class=\"\">\n            <div ng-messages=\"loginForm.$error\">\n                <span ng-message=\"unknown_error\">\n                    <span aria-role=\"alert\">Sorry, unknown technical error occured</span>\n                </span>\n                <span ng-message=\"001\">\n                    <span aria-role=\"alert\">Sorry, space with same name already exists</span>\n                </span>\n            </div>\n                <p>Welcome, {{ login.userDetails.first_name }}</p>\n                <div ng-if=\"!login.userDetails.email\" class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                    <input ng-model=\"login.model.userEmail\" class=\"mdl-textfield__input\" type=\"text\" id=\"userEmail\" name=\"userEmail\">\n                    <label class=\"mdl-textfield__label\" for=\"userEmail\">Please enter your email</label>\n                </div>\n                <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                    <input ng-model=\"login.model.spaceName\" class=\"mdl-textfield__input\" type=\"text\" id=\"spaceName\" name=\"spaceName\">\n                    <label class=\"mdl-textfield__label\" for=\"spaceName\">\n                    <span ng-hide=\"loginForm.spaceName.$invalid && loginForm.$submitted\"\n                    id=\"username-label\">Please enter space name\n                    </span>\n\n                <span id=\"username-label-error\"\n                    ng-messages=\"loginForm.spaceName.$error\">\n                    <span ng-message=\"required\">\n                        <span aria-role=\"alert\">Please enter space name</span>\n                    </span>\n                   \n                </span>\n                    </label>\n                </div>\n                <p>\n                  <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\" type=\"submit\">\n                      Create\n                  </button>\n                </p>\n        </form>\n        </div>\n    </div>\n    <div class=\"mdl-card__actions  mdl-card--border\">\n      <!-- <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> -->\n    </div>\n  </div>\n</section>\n<section class=\"section--center mdl-grid site-max-width\">\n    <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-card__media\">\n            <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n        </div>\n        <div class=\"mdl-card__title\">\n            <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n        </div>\n    </div>\n    <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-card__media\">\n            <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n        </div>\n        <div class=\"mdl-card__title\">\n            <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n        </div>\n    </div>\n    <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-card__media\">\n            <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n        </div>\n        <div class=\"mdl-card__title\">\n            <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n        </div>\n        <div class=\"mdl-card__supporting-text\">\n            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n        </div>\n    </div>\n</section>\n\n<section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n    <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n</section>\n        </div>"}));

@@ -480,9 +480,28 @@ function csLogin () {
     ) {
 
         var self = this;
+        self.isLoggedIn = false;
+        self.userDetails = {};
         window.checkLoginState = function () {
             FB.getLoginStatus(function(response) {
                 console.log(response);
+
+                if(response.status == 'connected' && response.authResponse.userID != "") {
+                    console.log(response.authResponse.userID);
+                    FB.api(
+                        "/"+response.authResponse.userID+"?fields=email,first_name,last_name,gender,link",
+                        function (response) {
+                          if (response && !response.error) {
+                            /* handle the result */
+                           handelResponse(response);
+                          } 
+                          else {
+                            alert("Sorry, error occured while fetching your data, please try again");
+                          }
+
+                        }
+                    );
+                }
               });
         }
         var reForNumber = /^[0-9]+$/;
@@ -493,28 +512,24 @@ function csLogin () {
 
         csCoreModel.clean();
         self.model = csCoreModel.model;
-        self.model.username = undefined;
-        self.model.password = undefined;
+        self.model.userEmail = undefined;
+        self.model.spaceName = undefined;
+
+        var handelResponse = function (response) {
+            self.isLoggedIn = true;
+            self.userDetails = response;
+            console.log(response);
+            $rootScope.$apply();
+        }
 
         var formHandler = csForm({
             errorMapping: {
                 form: {
                     'default': function (form) {
-
                         form.$setValidity('unknown_error', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     '001': function (form) {
-
-                        // login not ok
                         form.$setValidity('001', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     530: function (form) {
 
@@ -523,36 +538,23 @@ function csLogin () {
 
                     },
                     9001: function (form) {
-
                         form.$setValidity('9001', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     532: function (form) {
-
                         form.$setValidity('532', false);
-
-                        form.password.$setViewValue('');
-                        form.password.$setValidity('required', false);
-                        form.password.$render();
                     },
                     required: 'required'
                 },
                 field: {
-                    username: {
-                        required: 'required'
-                    },
-                    password: {
+                    spaceName: {
                         required: 'required'
                     }
                 }
             },
             nonBlockingErrors: {
-                form: ['unknown_error', '001', '530', '531', '532', '9001'],
+                form: ['unknown_error', '001'],
                 field: {
-                    username: ['']
+                    spaceName: ['']
                 }
             },
             submit: submit

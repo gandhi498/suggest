@@ -9,11 +9,10 @@
           Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.
         </div>
         <div class="mdl-card__actions mdl-card--border">
-         <!--  <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent" href=" https://templateflip.com/templates/material-portfolio/" target="_blank">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent" href=" https://templateflip.com/templates/material-portfolio/" target="_blank">
             Download
-          </a> -->
-            <fb:login-button scope="public_profile,email" onlogin="checkLoginState()">
-</fb:login-button>
+          </a>
+          
         </div>
     </div>
 </div>
@@ -24,13 +23,57 @@
   </header>
   <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp">
     <div class="mdl-card__title">
-        <h2 class="mdl-card__title-text">Introduction</h2>
+        <h2 class="mdl-card__title-text">Register your space here :</h2>
     </div>
     <div class="mdl-card__supporting-text">
-      Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.
+        <div ng-show="!login.isLoggedIn">
+        Login with : <fb:login-button scope="public_profile,email" onlogin="checkLoginState()">
+</fb:login-button>
+        </div>
+        <div ng-show="login.isLoggedIn">
+            <form ng-submit="login.submit(loginForm, $event)"
+            name="loginForm"
+            novalidate
+            class="">
+            <div ng-messages="loginForm.$error">
+                <span ng-message="unknown_error">
+                    <span aria-role="alert">Sorry, unknown technical error occured</span>
+                </span>
+                <span ng-message="001">
+                    <span aria-role="alert">Sorry, space with same name already exists</span>
+                </span>
+            </div>
+                <p>Welcome, {{ login.userDetails.first_name }}</p>
+                <div ng-if="!login.userDetails.email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input ng-model="login.model.userEmail" class="mdl-textfield__input" type="text" id="userEmail" name="userEmail">
+                    <label class="mdl-textfield__label" for="userEmail">Please enter your email</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input ng-model="login.model.spaceName" class="mdl-textfield__input" type="text" id="spaceName" name="spaceName">
+                    <label class="mdl-textfield__label" for="spaceName">
+                    <span ng-hide="loginForm.spaceName.$invalid && loginForm.$submitted"
+                    id="username-label">Please enter space name
+                    </span>
+
+                <span id="username-label-error"
+                    ng-messages="loginForm.spaceName.$error">
+                    <span ng-message="required">
+                        <span aria-role="alert">Please enter space name</span>
+                    </span>
+                   
+                </span>
+                    </label>
+                </div>
+                <p>
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+                      Create
+                  </button>
+                </p>
+        </form>
+        </div>
     </div>
     <div class="mdl-card__actions  mdl-card--border">
-      <a href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">Watch Intro</a>
+      <!-- <a href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">Watch Intro</a> -->
     </div>
   </div>
 </section>
