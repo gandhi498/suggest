@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Material Portfolio Template Demo</title>
-    <meta name="description" content="Demo of Material design portfolio template by TemplateFlip.com."/>
+    <title>Contact</title>
+    <meta name="description" content="Your contact page description"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css" rel="stylesheet">
-  <!--   <link href="styles/mdl-selectfield.min.css" rel="stylesheet"> -->
     <link href="styles/main.css" rel="stylesheet">
-    <link href="styles/add-name.css" rel="stylesheet">
   </head>
-  <body id="top" ng-app="newbie">
+  <body id="top">
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header"><a href="contact.html" id="contact-button" class="mdl-button mdl-button--fab mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast mdl-shadow--4dp"><i class="material-icons">mail</i></a>
       <header class="mdl-layout__header mdl-layout__header--waterfall site-header">
         <div class="mdl-layout__header-row site-logo-row"><span class="mdl-layout__title">
@@ -27,12 +25,41 @@
         <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font"><a class="mdl-navigation__link" href="index.html">Home</a><a class="mdl-navigation__link" href="portfolio.html">Portfolio</a><a class="mdl-navigation__link" href="about.html">About</a><a class="mdl-navigation__link" href="contact.html">Contact</a>
         </nav>
       </div>
-       
       <main class="mdl-layout__content">
         <div class="site-content">
-          <div class="container" ng-controller="MainController">  
-            <button ng-click="createSpace()">Cretae</button>
-            <div ng-view ></div>
+          <div class="mdl-grid site-max-width">
+            <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp page-content">
+              <div class="mdl-card__title">
+                <h1 class="mdl-card__title-text">Contact</h1>
+              </div>
+              <div class="mdl-card__media"><img class="article-image" src="img/contact.jpg" border="0" alt="Contact">
+              </div>
+              <div class="mdl-grid site-copy">
+                <div class="mdl-cell mdl-cell--12-col"><div class="mdl-card__supporting-text">
+  <p>Contact our team using the contact form below:</p>
+  <form action="https://formspree.io/email@example.com" method="POST" class="form-contact">
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" pattern="[A-Z,a-z, ]*" type="text" id="Name" name="name">
+          <label class="mdl-textfield__label" for="Name">Name...</label>
+          <span class="mdl-textfield__error">Letters and spaces only</span>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" id="Email" name="_replyto">
+          <label class="mdl-textfield__label" for="Email">Email...</label>
+      </div>
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <textarea class="mdl-textfield__input" type="text" rows="5" id="note" name="message"></textarea>
+          <label class="mdl-textfield__label" for="note">Enter note</label>
+      </div>
+      <p>
+          <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+              Submit
+          </button>
+      </p>
+  </form>
+</div></div>
+              </div>
+            </div>
           </div>
         </div>
         <footer class="mdl-mini-footer">
@@ -44,29 +71,7 @@
           </div>
         </footer>
       </main>
-
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.js"></script>
       <script src="https://code.getmdl.io/1.3.0/material.min.js" defer></script>
-      <script type="text/javascript" src="scripts/libs/ng-lodash.js"></script>
-     <!-- <script type="text/javascript" src="scripts/libs/mdl-selectfield.min.js"></script> -->
-      <script type="text/javascript" src="scripts/app.js"></script>
-      <script type="text/javascript" src="scripts/app.router.js"></script>
-      <script type="text/javascript" src="scripts/app.constants.js"></script>
-
-      <!-- Servcies -->
-      <script type="text/javascript" src="scripts/services/names.service.js"></script>
-      <script type="text/javascript" src="scripts/services/space.service.js"></script>
-    
-      <!-- factories -->
-      <script type="text/javascript" src="scripts/factories/tabs.factory.js"></script>     
-
-      <!-- Controllers-->
-      <script type="text/javascript" src="scripts/controllers/main.controller.js"></script>
-      <script type="text/javascript" src="scripts/controllers/get-names-from-space.controller.js"></script>
-  
-
-     
     </div>
   </body>
 </html>

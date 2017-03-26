@@ -1,0 +1,156 @@
+(function() {
+
+	angular.module('newbie')
+	.controller('GetNamesFromSpaceController', GetNamesFromSpaceController)
+
+	
+
+	function GetNamesFromSpaceController($scope, _, $routeParams, $timeout, $window, $document, $anchorScroll, SpaceService, NamesService, TabsFactory, ValidationFactory) {
+		console.log('GetNamesFromSpaceController');
+
+		var _init =  _init;
+		var _getNames = _getNames;
+		var _spaceId = $routeParams.spaceId;
+		console.log('routeParams : '+$routeParams.spaceId);
+
+
+		$scope.isAddFormOpen = false;
+		$scope.dataToAdd = {};
+		$scope.space = {};
+		$scope.showAddNameForm = showAddNameForm;
+		$scope.closeAddNameForm = closeAddNameForm;
+		$scope.addName = addName;
+		$scope.vote = vote;
+
+		function closeAddNameForm () {
+
+			$scope.isAddFormOpen = false;
+			_scrollTo('viewNames');				
+		
+		}
+
+		function showAddNameForm () {
+		
+			$scope.isAddFormOpen = true;
+			_scrollTo('addNameForm');		
+
+		};
+
+		function _scrollTo (id) {
+
+			$timeout(function() {
+				$anchorScroll(id);
+				$scope.$apply();
+			}, 100);
+
+		}
+
+		function _resetForm () {
+			$scope.dataToAdd.babyname = "";
+			$scope.dataToAdd.email = "";
+			$scope.dataToAdd.meaning = "";
+			$scope.dataToAdd.gender = "";
+			$scope.dataToAdd.addedBy = "";
+		}
+
+		function vote (name) {
+			console.log('controller add name');
+
+			name.likes ++ ;
+			name.id = _spaceId;
+				
+			NamesService.vote(name)
+			.then(function(response) {
+				//No need to do anythig as we have already updated view
+			}, function(error) {
+				//need to send error message
+				name.likes -- ;
+				alert('Server error');
+			});
+		}
+
+		function addName () {
+			console.log('getnamesfromspace controller add name :'+$scope.dataToAdd.gender);
+			
+		    //check if name alreday exists.. 
+			var isNameRepeated = _.some($scope.namesList, function(name) {			
+				return $scope.dataToAdd.babyname === name.babyname;
+			});
+			//console.log('validate :'+validate);
+			//if exists show alert message
+			if (isNameRepeated) {			  
+			   alert('Name already present. Please like the name or add a new name'); 
+			   $scope.dataToAdd.babyname = "";
+			   return false;
+			}
+
+			//spacename and spaceid not avialable so hardcoded
+			$scope.dataToAdd.spacename = $scope.space.spacename;
+			$scope.dataToAdd.spaceid = _spaceId;
+			NamesService.addName($scope.dataToAdd)
+			.then(function(response) {
+				if(response.data.status === 'OK')
+				//close the form
+				closeAddNameForm();
+				//show toast notification // can be improved as footer background is also same
+				//snackbarContainer.MaterialSnackbar.showSnackbar({message: "Name Added Successfully"});
+				//reset form values
+				_resetForm();
+				//refresh names list
+				_getNames();
+
+			}, function(error) {
+				//handle error scenario
+			});
+		};
+	
+
+		function _getNames () {
+
+			$scope.tabs = [];
+		
+			NamesService.getNamesForSpace({'spaceid': _spaceId})
+			.then(function(response) {	
+
+				console.log('get nmes success controller :'+response.data.nameList);
+				$scope.namesList = response.data.nameList;
+				if($scope.namesList.length) {
+					$scope.tabs = TabsFactory.setTabsView(response.data.nameList, $scope.space.expectingNameFor);
+				}
+				
+				
+			}, function(error) {
+
+			});
+
+		}
+
+		function _getSpaceDetails () {
+			console.log('spaceId :'+_spaceId);
+			SpaceService.getSpaceDetails({'spaceid': _spaceId})
+			.then(function(response) {	
+
+				console.log('get sapce details success : '+JSON.stringify(response.data.spaceInfo));
+				$scope.space = response.data.spaceInfo;
+
+				_getNames()
+				
+			}, function(error) {
+
+				console.log('get space details error')
+
+			});
+		}
+
+		function _init () {
+			_getSpaceDetails();
+
+		};
+
+		_init();	
+	};
+
+	GetNamesFromSpaceController.$inject = ['$scope', 'lodash', '$routeParams', '$timeout', '$window', '$document', '$anchorScroll',
+										'SpaceService', 'NamesService', 'TabsFactory', 'ValidationFactory'];
+
+})()

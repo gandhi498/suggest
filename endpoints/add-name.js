@@ -48,7 +48,8 @@ function addName(req, res) {
         
         if(payload.spaceid != "" && payload.spacename !="" && payload.babyname != "" && payload.meaning != "") {
           var currentSensorDb = req.db.collection(name_collection);
-          payload.spaceid = S(payload.spaceid).between(config.space_salt_before,config.space_salt_after);
+          //.s to get string else object was getting stored in database
+          payload.spaceid = S(payload.spaceid).between(config.space_salt_before,config.space_salt_after).s;
           currentSensorDb.find({ "spaceid": payload.spaceid,"spacename": payload.spacename, "babyname": payload.babyname }).toArray(function (err, allMsg) {
               if(err)
               {

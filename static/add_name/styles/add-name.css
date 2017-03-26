@@ -1,0 +1,57 @@
+.event-card {
+	background: #fff;
+}
+
+.event-card .mdl-card__title {
+	height : 200px;
+	background: url('../img/add-name-event-card.jpg');
+}
+
+.names__container {
+	min-height: 350px;
+	max-height: 400px;
+}
+
+.names__container .mdl-card__title {
+	
+}
+
+.mdl-card__title {
+	color: rgba(0,0,0,.87) !important;
+}
+
+.mdl-card__actions {
+	border: 1px solid lightgray;
+}
+
+.mdl-card__actions > .mdl-button {
+	color: rgb(255,64,129) !important;
+	font-size: 18px;
+}
+
+.add-form__close {
+	direction: rtl;
+	cursor: pointer;
+}
+
+.border__blue {
+	border-bottom: 1px solid rgb(63,81,181);
+}
+
+.border__pink {
+	border-bottom: 1px solid rgb(255,64,129);
+}
+
+.like-container {
+	text-decoration: none;
+	position: relative;
+}
+
+.like-count {
+	position: absolute;
+	left: -25px;
+	top: 7px;
+}
+
+
+
