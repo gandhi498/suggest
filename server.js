@@ -99,6 +99,7 @@ app.use("/", function (request, response, next) {
 });
 
 var $createspace = require('./endpoints/create-space');
+var $getSpaceDetails = require('./endpoints/get-space-details');
 var $addname = require('./endpoints/add-name');
 var $vote = require('./endpoints/vote');
 var $getNamesForSpace = require('./endpoints/get-names-for-space');
@@ -120,6 +121,7 @@ var addNameJunctionRouter = $express.Router();
 addNameJunctionRouter.use('/',_serveAddSpaceIndex);
 addNameJunctionRouter.use('/', $express.static('static/add_name')); // serve from add_name folder
 
+addNameJunctionRouter.get('/getSpaceDetails', $getSpaceDetails); // End point : /space/add/getSpaceDetails
 addNameJunctionRouter.post('/addname', $addname); // Now endpoint will be : /space/add/addname
 addNameJunctionRouter.post('/vote', $vote); // Now endpoint will be : /space/add/vote
 addNameJunctionRouter.get('/getNamesForSpace', $getNamesForSpace); // Now endpoint will be : /space/add/getNamesForSpace

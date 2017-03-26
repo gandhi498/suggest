@@ -36,7 +36,7 @@ function getNamesForSpace (req, res) {
   if (space != '' && space != undefined) {
   
     //here remove salt to get object_id using which finding space is easy.
-    space = S(space).between(config.space_salt_before,config.space_salt_after);
+    space = S(space).between(config.space_salt_before,config.space_salt_after).s;
 
     console.log(" getting name list for space : %s", space);
 
@@ -44,7 +44,7 @@ function getNamesForSpace (req, res) {
       spaceInfo : {},
       nameList : []
     };
-    req.db.collection(space_collection).find({"_id":space}).toArray(function (err, spaces) {
+    req.db.collection(space_collection).find({"_id":ObjectId(space)}).toArray(function (err, spaces) {
       if(err) {
           console.log('Error while retrieving list');
           res.writeHead(falseResponse.statusCode, falseResponse.headers);
@@ -59,14 +59,14 @@ function getNamesForSpace (req, res) {
       }
     });
 
-    req.db.collection(name_collection).find({"spaceid":space}).toArray(function (err, allSensors) {
+    req.db.collection(name_collection).find({"spaceid":space}).toArray(function (err, allNames) {
       if(err) {
           console.log('Error while retrieving list');
           res.writeHead(falseResponse.statusCode, falseResponse.headers);
           res.end(JSON.stringify({status:"Error in mongo DB"}));
       }
       else {
-        spaceOverview.nameList = allSensors;
+        spaceOverview.nameList = allNames;
         console.log('spaceOverview Babyname list retrieved successfully \n %s',JSON.stringify(spaceOverview));
           res.writeHead(trueResponse.statusCode, trueResponse.headers);
           res.end(JSON.stringify(spaceOverview));
