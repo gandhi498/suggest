@@ -104,6 +104,7 @@ var $addname = require('./endpoints/add-name');
 var $vote = require('./endpoints/vote');
 var $getNamesForSpace = require('./endpoints/get-names-for-space');
 var $dashboard = require('./endpoints/dashboard');
+var $getNamesForLetter = require('./endpoints/get-names-for-letter');
 
 // Create Space Junction router 
 var createSpacejunctionRouter = $express.Router();
@@ -125,6 +126,7 @@ addNameJunctionRouter.get('/getSpaceDetails', $getSpaceDetails); // End point : 
 addNameJunctionRouter.post('/addname', $addname); // Now endpoint will be : /space/add/addname
 addNameJunctionRouter.post('/vote', $vote); // Now endpoint will be : /space/add/vote
 addNameJunctionRouter.get('/getNamesForSpace', $getNamesForSpace); // Now endpoint will be : /space/add/getNamesForSpace
+addNameJunctionRouter.get('/getNamesForLetter', $getNamesForLetter)
 
 
 app.use('/space/add', addNameJunctionRouter);

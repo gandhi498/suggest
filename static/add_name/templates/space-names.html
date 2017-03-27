@@ -1,5 +1,6 @@
-<section class="mdl-grid site-max-width" id="viewNames">
-  <div class="demo-card-event mdl-cell mdl-card mdl-shadow--4dp event-card portfolio-card names__container" 
+<!--Add name Start  should be a directive-->
+<section class="mdl-grid site-max-width" id="viewSpaceNames">
+  <div class="demo-card-event mdl-cell mdl-card mdl-shadow--4dp event-card portfolio-card welcome__container" 
   ng-class= "{'mdl-cell--12-col': !namesList.length}">
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text"><b>Welcome</b></h2>
@@ -15,9 +16,9 @@
       </div>
   </div>
 
-  <div class="mdl-cell mdl-card mdl-cell--8-col mdl-cell--4-col-tablet  mdl-shadow--4dp portfolio-card names__container"
+  <div class="mdl-cell mdl-card mdl-cell--8-col mdl-cell--4-col-tablet  mdl-shadow--4dp portfolio-card space-names__container"
   ng-if="namesList.length">
-      <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
        mdl-layout--fixed-tabs">
       <header class="mdl-layout__header">
         <!-- Tabs -->
@@ -48,8 +49,7 @@
               </li>
             </ul>
           </div>
-        </section>
-     
+        </section>     
       </main>
     </div>
   </div>                
@@ -117,6 +117,92 @@
   </section>
 
    <div id="add-name-success-toast" class="mdl-js-snackbar mdl-snackbar">
-                  <div class="mdl-snackbar__text"></div>
-                  <button class="mdl-snackbar__action" type="button"></button>
-                </div>
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+
+<!--Add name End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!---Aplhabet widget | all names search start  should be a directive--> 
+<section class="section--center mdl-grid site-max-width" >
+    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card alphabet-widget__container">
+        <ul class="alphabet-widget">
+          <li ng-repeat="alphabet in alphabets" ng-click="getNamesForLetter(alphabet)">{{alphabet}}</li>          
+        </ul>
+    </div>
+
+    <div class="mdl-cell mdl-card mdl-cell--8-col mdl-cell--4-col-tablet  mdl-shadow--4dp portfolio-card">
+      <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+      mdl-layout--fixed-tabs">
+        <header class="mdl-layout__header">
+          <!-- Tabs -->
+          <div class="mdl-layout__tab-bar mdl-js-ripple-effect"> 
+            <a href="#allBoys" class="mdl-layout__tab is-active">Boy</a>
+            <a href="#allGirls" class="mdl-layout__tab">Girl</a>
+          </div>
+        </header> 
+
+        <main class="mdl-layout__content">
+          <section class="mdl-layout__tab-panel is-active" id="allBoys">
+            <div class="page-content"><!-- Your content goes here -->
+              <ul class="demo-list-two mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in boysList">
+                  <span class="mdl-list__item-primary-content">
+                    <span><b>{{name.babyname}}</b></span>
+                    
+                    <span class="mdl-list__item-text-body">
+                      {{name.meaning}} <br>
+                      Added by : {{name.addedBy}}
+                    </span>
+                  </span>
+                  <span class="mdl-list__item-secondary-content"> 
+                    <a class="mdl-list__item-secondary-action like-container" href="">
+                      <span class="like-count">{{name.likes}}</span>
+                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                    </a>                                                  
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>    
+          <section class="mdl-layout__tab-panel" id="allGirls">
+            <div class="page-content"><!-- Your content goes here -->
+              <ul class="demo-list-two mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in girlsList">
+                  <span class="mdl-list__item-primary-content">
+                    <span><b>{{name.babyname}}</b></span>
+                    
+                    <span class="mdl-list__item-text-body">
+                      {{name.meaning}} <br>
+                      Added by : {{name.addedBy}}
+                    </span>
+                  </span>
+                  <span class="mdl-list__item-secondary-content"> 
+                    <a class="mdl-list__item-secondary-action like-container" href="">
+                      <span class="like-count">{{name.likes}}</span>
+                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                    </a>                                                  
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>   
+        </main>
+      </div>
+    </div>
+
+</section>
+
+<!---Aplhabet widget | all names search End -->
