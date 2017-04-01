@@ -66,6 +66,35 @@ function factory ($http, csCsrf) {
 },{"./api.module":1}],4:[function(require,module,exports){
 'use strict';
 
+factory.$inject = ["$http", "csCsrf"];
+require('./api.module')
+    .factory('csApiSession', factory);
+
+/* @ngInject */
+function factory ($http, csCsrf) {
+
+    return {
+        checkSession: checkSession
+    };
+
+
+    function checkSession (userData) {
+        return $http(csCsrf.upgradeHttpObject({
+            url: '/space/create/checksession',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }));
+
+    }
+
+}
+
+},{"./api.module":1}],5:[function(require,module,exports){
+'use strict';
+
 config.$inject = ["$stateProvider", "csCoreStates"];
 require('./core.module')
     .config(config);
@@ -97,7 +126,7 @@ function config ($stateProvider, csCoreStates) {
 
 }
 
-},{"./core.module":6}],5:[function(require,module,exports){
+},{"./core.module":7}],6:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -114,7 +143,7 @@ function csCoreContainer () {
 
 }
 
-},{"./core.module":6}],6:[function(require,module,exports){
+},{"./core.module":7}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.core', [
@@ -127,7 +156,7 @@ module.exports = angular.module('cs.core', [
     require('./../myspace/myspace.module').name,
 ]);
 
-},{"./../api/api.module":1,"./../csrf/csrf.module":11,"./../form/form.module":13,"./../login/login.module":15,"./../myspace/myspace.module":17}],7:[function(require,module,exports){
+},{"./../api/api.module":1,"./../csrf/csrf.module":12,"./../form/form.module":14,"./../login/login.module":16,"./../myspace/myspace.module":18}],8:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -163,7 +192,7 @@ function csCoreModel () {
 }
 
 
-},{"./core.module":6}],8:[function(require,module,exports){
+},{"./core.module":7}],9:[function(require,module,exports){
 'use strict';
 
 run.$inject = ["$rootScope", "csCoreStates"];
@@ -177,7 +206,7 @@ function run ($rootScope, csCoreStates) {
 
 }
 
-},{"./core.module":6}],9:[function(require,module,exports){
+},{"./core.module":7}],10:[function(require,module,exports){
 'use strict';
 
 require('./core.module.js')
@@ -199,7 +228,7 @@ function csCoreStates () {
 
 }
 
-},{"./core.module.js":6}],10:[function(require,module,exports){
+},{"./core.module.js":7}],11:[function(require,module,exports){
 'use strict';
 
 require('./csrf.module')
@@ -238,12 +267,12 @@ function csCsrf () {
 
 }
 
-},{"./csrf.module":11}],11:[function(require,module,exports){
+},{"./csrf.module":12}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.csrf', []);
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 csForm.$inject = ["$rootScope", "$q"];
@@ -487,12 +516,12 @@ function csForm ($rootScope, $q) {
 
 }
 
-},{"./form.module":13}],13:[function(require,module,exports){
+},{"./form.module":14}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.form', []);
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 require('./login.module')
@@ -521,7 +550,6 @@ function csLogin () {
 
         var self = this;
         self.isLoggedIn = false;
-        self.userDetails = {};
         self.loading = false;
         window.logoutUser = function () {
             FB.logout(function(response) {
@@ -564,10 +592,10 @@ function csLogin () {
         self.model.spaceName = undefined;
         self.model.expectingNameFor = undefined;
         self.model.expectingOn = undefined;
-
+        self.model.userDetails = {};
         var handelFbResponse = function (response) {
             self.isLoggedIn = true;
-            self.userDetails = response;
+            self.model.userDetails = response;
             console.log(response);
             $rootScope.$apply();
         }
@@ -619,8 +647,7 @@ function csLogin () {
         function submit (form) {
 
             var userData = {};
-
-            userData.socialData = self.userDetails;
+            userData.socialData = self.model.userDetails;
             userData.spaceDetails = self.model;
             self.loading = true;
             
@@ -643,20 +670,20 @@ function csLogin () {
 
 }
 
-},{"./login.module":15}],15:[function(require,module,exports){
+},{"./login.module":16}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.login', []);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 require('./myspace.module')
     .directive('csMySpace', csMySpace);
 
-function csMySpace () {
+function csMySpace() {
 
-    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "$rootScope"];
+    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "csApiSession", "$rootScope"];
     return {
         restrict: 'EA',
         templateUrl: 'myspace/cs-myspace.html',
@@ -666,21 +693,73 @@ function csMySpace () {
     };
 
     /* @ngInject */
-    function Controller (
+    function Controller(
         $state,
         csCoreStates,
         csCoreModel,
         csForm,
         csApiMySpace,
+        csApiSession,
         $rootScope
     ) {
-        
+        var self = this;
+
+        self.model = csCoreModel.model;
+        self.isSessionValid = false;
+
+        self.checkLoginState = function () {
+            FB.getLoginStatus(function (response) {
+                console.log(response);
+
+                if (response.status == 'connected' && response.authResponse.userID != "") {
+                    var userID = response.authResponse.userID;
+                    FB.api(
+                        "/" + response.authResponse.userID + "?fields=email,first_name,last_name,gender,link,picture",
+                        function (response) {
+                            if (response && !response.error) {
+                                /* handle the result */
+                                response.userID = userID;
+                                handelFbResponse(response);
+                            } else {
+                                alert("Sorry, error occured while fetching your data from facebook, please try again");
+                            }
+
+                        }
+                    );
+                }
+            });
+        }
+
+        var handelFbResponse = function (response) {
+            // Call here backend to get deatils of logged-in user
+            console.log(JSON.stringify(response));
+        }
+
+        csApiSession.checkSession()
+            .then(function (res) {
+                console.log("Session Check Success : %s", JSON.stringify(res.data));
+                self.model = res.data;
+                self.isSessionValid = true;
+                updateRootScope();
+
+            }, function (res) {
+                console.log("Session Check Failed : %s", JSON.stringify(res.data));
+                self.isSessionValid = false;
+                updateRootScope();
+            });
+
+        var updateRootScope = function () {
+            setTimeout(function () {
+                $rootScope.$apply();
+            }, 100);
+        }
+
     }
 }
-},{"./myspace.module":17}],17:[function(require,module,exports){
+},{"./myspace.module":18}],18:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.myspace', []);
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17])(17)
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])(18)
 });

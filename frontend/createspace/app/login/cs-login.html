@@ -49,8 +49,8 @@
                     <span aria-role="alert">Sorry, space with same name already exists</span>
                             </span>
                         </div>
-                        <p>Welcome, {{ login.userDetails.first_name }}</p>
-                        <div ng-if="!login.userDetails.email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <p>Welcome, {{ login.model.userDetails.first_name }}</p>
+                        <div ng-if="!login.model.userDetails.email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input ng-model="login.model.userEmail" class="mdl-textfield__input" type="text" id="userEmail" name="userEmail">
                             <label class="mdl-textfield__label" for="userEmail">Please enter your email</label>
                         </div>

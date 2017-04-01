@@ -394,6 +394,35 @@ function factory ($http, csCsrf) {
 },{"./api.module":1}],4:[function(require,module,exports){
 'use strict';
 
+factory.$inject = ["$http", "csCsrf"];
+require('./api.module')
+    .factory('csApiSession', factory);
+
+/* @ngInject */
+function factory ($http, csCsrf) {
+
+    return {
+        checkSession: checkSession
+    };
+
+
+    function checkSession (userData) {
+        return $http(csCsrf.upgradeHttpObject({
+            url: '/space/create/checksession',
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }));
+
+    }
+
+}
+
+},{"./api.module":1}],5:[function(require,module,exports){
+'use strict';
+
 config.$inject = ["$stateProvider", "csCoreStates"];
 require('./core.module')
     .config(config);
@@ -425,7 +454,7 @@ function config ($stateProvider, csCoreStates) {
 
 }
 
-},{"./core.module":6}],5:[function(require,module,exports){
+},{"./core.module":7}],6:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -442,7 +471,7 @@ function csCoreContainer () {
 
 }
 
-},{"./core.module":6}],6:[function(require,module,exports){
+},{"./core.module":7}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.core', [
@@ -455,7 +484,7 @@ module.exports = angular.module('cs.core', [
     require('./../myspace/myspace.module').name,
 ]);
 
-},{"./../api/api.module":1,"./../csrf/csrf.module":11,"./../form/form.module":13,"./../login/login.module":15,"./../myspace/myspace.module":17}],7:[function(require,module,exports){
+},{"./../api/api.module":1,"./../csrf/csrf.module":12,"./../form/form.module":14,"./../login/login.module":16,"./../myspace/myspace.module":18}],8:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -491,7 +520,7 @@ function csCoreModel () {
 }
 
 
-},{"./core.module":6}],8:[function(require,module,exports){
+},{"./core.module":7}],9:[function(require,module,exports){
 'use strict';
 
 run.$inject = ["$rootScope", "csCoreStates"];
@@ -505,7 +534,7 @@ function run ($rootScope, csCoreStates) {
 
 }
 
-},{"./core.module":6}],9:[function(require,module,exports){
+},{"./core.module":7}],10:[function(require,module,exports){
 'use strict';
 
 require('./core.module.js')
@@ -527,7 +556,7 @@ function csCoreStates () {
 
 }
 
-},{"./core.module.js":6}],10:[function(require,module,exports){
+},{"./core.module.js":7}],11:[function(require,module,exports){
 'use strict';
 
 require('./csrf.module')
@@ -566,12 +595,12 @@ function csCsrf () {
 
 }
 
-},{"./csrf.module":11}],11:[function(require,module,exports){
+},{"./csrf.module":12}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.csrf', []);
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 csForm.$inject = ["$rootScope", "$q"];
@@ -815,12 +844,12 @@ function csForm ($rootScope, $q) {
 
 }
 
-},{"./form.module":13}],13:[function(require,module,exports){
+},{"./form.module":14}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.form', []);
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 require('./login.module')
@@ -849,7 +878,6 @@ function csLogin () {
 
         var self = this;
         self.isLoggedIn = false;
-        self.userDetails = {};
         self.loading = false;
         window.logoutUser = function () {
             FB.logout(function(response) {
@@ -892,10 +920,10 @@ function csLogin () {
         self.model.spaceName = undefined;
         self.model.expectingNameFor = undefined;
         self.model.expectingOn = undefined;
-
+        self.model.userDetails = {};
         var handelFbResponse = function (response) {
             self.isLoggedIn = true;
-            self.userDetails = response;
+            self.model.userDetails = response;
             console.log(response);
             $rootScope.$apply();
         }
@@ -947,8 +975,7 @@ function csLogin () {
         function submit (form) {
 
             var userData = {};
-
-            userData.socialData = self.userDetails;
+            userData.socialData = self.model.userDetails;
             userData.spaceDetails = self.model;
             self.loading = true;
             
@@ -971,20 +998,20 @@ function csLogin () {
 
 }
 
-},{"./login.module":15}],15:[function(require,module,exports){
+},{"./login.module":16}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.login', []);
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 require('./myspace.module')
     .directive('csMySpace', csMySpace);
 
-function csMySpace () {
+function csMySpace() {
 
-    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "$rootScope"];
+    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "csApiSession", "$rootScope"];
     return {
         restrict: 'EA',
         templateUrl: 'myspace/cs-myspace.html',
@@ -994,23 +1021,75 @@ function csMySpace () {
     };
 
     /* @ngInject */
-    function Controller (
+    function Controller(
         $state,
         csCoreStates,
         csCoreModel,
         csForm,
         csApiMySpace,
+        csApiSession,
         $rootScope
     ) {
-        
+        var self = this;
+
+        self.model = csCoreModel.model;
+        self.isSessionValid = false;
+
+        self.checkLoginState = function () {
+            FB.getLoginStatus(function (response) {
+                console.log(response);
+
+                if (response.status == 'connected' && response.authResponse.userID != "") {
+                    var userID = response.authResponse.userID;
+                    FB.api(
+                        "/" + response.authResponse.userID + "?fields=email,first_name,last_name,gender,link,picture",
+                        function (response) {
+                            if (response && !response.error) {
+                                /* handle the result */
+                                response.userID = userID;
+                                handelFbResponse(response);
+                            } else {
+                                alert("Sorry, error occured while fetching your data from facebook, please try again");
+                            }
+
+                        }
+                    );
+                }
+            });
+        }
+
+        var handelFbResponse = function (response) {
+            // Call here backend to get deatils of logged-in user
+            console.log(JSON.stringify(response));
+        }
+
+        csApiSession.checkSession()
+            .then(function (res) {
+                console.log("Session Check Success : %s", JSON.stringify(res.data));
+                self.model = res.data;
+                self.isSessionValid = true;
+                updateRootScope();
+
+            }, function (res) {
+                console.log("Session Check Failed : %s", JSON.stringify(res.data));
+                self.isSessionValid = false;
+                updateRootScope();
+            });
+
+        var updateRootScope = function () {
+            setTimeout(function () {
+                $rootScope.$apply();
+            }, 100);
+        }
+
     }
 }
-},{"./myspace.module":17}],17:[function(require,module,exports){
+},{"./myspace.module":18}],18:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.myspace', []);
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17])(17)
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])(18)
 });
 
     (function (templates) {
@@ -1029,4 +1108,4 @@ module.exports = angular.module('cs.myspace', []);
 
         }
 
-    }({"core/cs-core-container.html":"<div class=\"awl-container\">\n\t<div class=\"cs-container__panel\">\n\t\t<div class=\"cs-container__panel__content\" ui-view></div>\n\t</div>\n</div>","login/cs-login.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title home-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <nav>\n                    <ol class=\"cd-multi-steps text-bottom count\">\n                        <li class=\"current\"><em href=\"\">Social Login</em></li>\n                        <li class=\"current\"><em href=\"\">Create Space</em></li>\n                        <li class=\"current\"><em>Share link</em></li>\n                        <!--<li><em>Review</em></li>-->\n                    </ol>\n                </nav>\n            </div>\n            <div class=\"mdl-card__actions mdl-card--border\">\n                <!--<a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>-->\n                <p class=\"cd-multi-steps\">Follow above steps and get name suggesstions for your baby from all well wishers!</p>\n            </div>\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Register your space here :</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <div ng-show=\"!login.isLoggedIn\">\n                    Login with :\n                    <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState()\">\n                    </fb:login-button>\n                </div>\n                <div ng-show=\"login.isLoggedIn\">\n                    <form ng-submit=\"login.submit(loginForm, $event)\" name=\"loginForm\" novalidate class=\"\">\n                        <div ng-messages=\"loginForm.$error\">\n                            <span ng-message=\"unknown_error\">\n                    <span aria-role=\"alert\">Sorry, unknown technical error occured</span>\n                            </span>\n                            <span ng-message=\"001\">\n                    <span aria-role=\"alert\">Sorry, space with same name already exists</span>\n                            </span>\n                        </div>\n                        <p>Welcome, {{ login.userDetails.first_name }}</p>\n                        <div ng-if=\"!login.userDetails.email\" class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.userEmail\" class=\"mdl-textfield__input\" type=\"text\" id=\"userEmail\" name=\"userEmail\">\n                            <label class=\"mdl-textfield__label\" for=\"userEmail\">Please enter your email</label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.spaceName\" class=\"mdl-textfield__input\" type=\"text\" id=\"spaceName\" name=\"spaceName\">\n                            <label class=\"mdl-textfield__label\" for=\"spaceName\">\n                                <span ng-hide=\"loginForm.spaceName.$invalid && loginForm.$submitted\"\n                                id=\"username-label\">Please enter space name\n                                </span>\n\n                                <span id=\"username-label-error\"\n                                    ng-messages=\"loginForm.spaceName.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please enter space name</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield\">\n                            <label for=\"expectingNameFor\">\n                                <span ng-hide=\"loginForm.expectingNameFor.$invalid && loginForm.$submitted\"\n                                id=\"expectingNameFor-label\">For:</span>\n\n                                <span id=\"expectingNameFor-label-error\"\n                                    ng-messages=\"loginForm.expectingNameFor.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please select expecting name for</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-0\">\n                            <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-0\" ng-model=\"login.model.expectingNameFor\" value=\"boy\">\n                                Boy\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-1\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-1\" ng-model=\"login.model.expectingNameFor\" value=\"girl\" checked=\"checked\">\n                                Girl\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-2\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-2\" ng-model=\"login.model.expectingNameFor\" value=\"na\">\n                                Don't know\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.expectingOn\" class=\"mdl-textfield__input\" type=\"date\" id=\"expectingOn\" name=\"expectingOn\">\n                            <label class=\"mdl-textfield__label\" for=\"expectingOn\">\n                                <span ng-hide=\"loginForm.expectingOnexpectingOn.$invalid && loginForm.$submitted\"\n                                id=\"expectingOn-label\"> </span>\n\n                                <span id=\"expectingOn-label-error\"\n                                    ng-messages=\"loginForm.expectingOn.$error\">\n                                    <span ng-message=\"invalid\">\n                                        <span aria-role=\"alert\">Invalid date</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <p>\n                            <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\" type=\"submit\">\n                                Create<img ng-show=\"loading\" width=\"24px\" src=\"/space/create/img/spinner.gif\">\n                            </button>\n                        </p>\n                    </form>\n                </div>\n            </div>\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n    </section>\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>\n\n    <!--<section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>-->\n</div>","myspace/cs-myspace.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title myspace-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n                Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.\n            </div>-->\n            <!--<div class=\"mdl-card__actions mdl-card--border\">\n                <a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>\n\n            </div>-->\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Space Information</h2>\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n            </div>-->\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n    </section>\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>\n\n    <section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>\n</div>"}));
+    }({"core/cs-core-container.html":"<div class=\"awl-container\">\n\t<div class=\"cs-container__panel\">\n\t\t<div class=\"cs-container__panel__content\" ui-view></div>\n\t</div>\n</div>","login/cs-login.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title home-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <nav>\n                    <ol class=\"cd-multi-steps text-bottom count\">\n                        <li class=\"current\"><em href=\"\">Social Login</em></li>\n                        <li class=\"current\"><em href=\"\">Create Space</em></li>\n                        <li class=\"current\"><em>Share link</em></li>\n                        <!--<li><em>Review</em></li>-->\n                    </ol>\n                </nav>\n            </div>\n            <div class=\"mdl-card__actions mdl-card--border\">\n                <!--<a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>-->\n                <p class=\"cd-multi-steps\">Follow above steps and get name suggesstions for your baby from all well wishers!</p>\n            </div>\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Register your space here :</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <div ng-show=\"!login.isLoggedIn\">\n                    Login with :\n                    <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState()\">\n                    </fb:login-button>\n                </div>\n                <div ng-show=\"login.isLoggedIn\">\n                    <form ng-submit=\"login.submit(loginForm, $event)\" name=\"loginForm\" novalidate class=\"\">\n                        <div ng-messages=\"loginForm.$error\">\n                            <span ng-message=\"unknown_error\">\n                    <span aria-role=\"alert\">Sorry, unknown technical error occured</span>\n                            </span>\n                            <span ng-message=\"001\">\n                    <span aria-role=\"alert\">Sorry, space with same name already exists</span>\n                            </span>\n                        </div>\n                        <p>Welcome, {{ login.model.userDetails.first_name }}</p>\n                        <div ng-if=\"!login.model.userDetails.email\" class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.userEmail\" class=\"mdl-textfield__input\" type=\"text\" id=\"userEmail\" name=\"userEmail\">\n                            <label class=\"mdl-textfield__label\" for=\"userEmail\">Please enter your email</label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.spaceName\" class=\"mdl-textfield__input\" type=\"text\" id=\"spaceName\" name=\"spaceName\">\n                            <label class=\"mdl-textfield__label\" for=\"spaceName\">\n                                <span ng-hide=\"loginForm.spaceName.$invalid && loginForm.$submitted\"\n                                id=\"username-label\">Please enter space name\n                                </span>\n\n                                <span id=\"username-label-error\"\n                                    ng-messages=\"loginForm.spaceName.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please enter space name</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield\">\n                            <label for=\"expectingNameFor\">\n                                <span ng-hide=\"loginForm.expectingNameFor.$invalid && loginForm.$submitted\"\n                                id=\"expectingNameFor-label\">For:</span>\n\n                                <span id=\"expectingNameFor-label-error\"\n                                    ng-messages=\"loginForm.expectingNameFor.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please select expecting name for</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-0\">\n                            <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-0\" ng-model=\"login.model.expectingNameFor\" value=\"boy\">\n                                Boy\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-1\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-1\" ng-model=\"login.model.expectingNameFor\" value=\"girl\" checked=\"checked\">\n                                Girl\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-2\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-2\" ng-model=\"login.model.expectingNameFor\" value=\"na\">\n                                Don't know\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.expectingOn\" class=\"mdl-textfield__input\" type=\"date\" id=\"expectingOn\" name=\"expectingOn\">\n                            <label class=\"mdl-textfield__label\" for=\"expectingOn\">\n                                <span ng-hide=\"loginForm.expectingOnexpectingOn.$invalid && loginForm.$submitted\"\n                                id=\"expectingOn-label\"> </span>\n\n                                <span id=\"expectingOn-label-error\"\n                                    ng-messages=\"loginForm.expectingOn.$error\">\n                                    <span ng-message=\"invalid\">\n                                        <span aria-role=\"alert\">Invalid date</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <p>\n                            <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\" type=\"submit\">\n                                Create<img ng-show=\"loading\" width=\"24px\" src=\"/space/create/img/spinner.gif\">\n                            </button>\n                        </p>\n                    </form>\n                </div>\n            </div>\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n    </section>\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>\n\n    <!--<section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>-->\n</div>","myspace/cs-myspace.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title myspace-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n                Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.\n            </div>-->\n            <!--<div class=\"mdl-card__actions mdl-card--border\">\n                <a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>\n\n            </div>-->\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\" ng-show=\"myspace.isSessionValid\">\n                <div>\n                    <p>Welcome, {{ myspace.model.socialData.first_name }}</p>\n                    <p><img src=\"{{myspace.model.socialData.picture.data.url}}\"></p>\n                    <h2 class=\"mdl-card__title-text\">Space Information</h2>\n                    <div>\n                        <p>Name: {{ myspace.model.spaceDetails.spaceName }}</p>\n                        <p>Expecting name for : {{ myspace.model.spaceDetails.expectingNameFor }}</p>\n                        <p>Expecting on : {{ myspace.model.spaceDetails.expectingOn }}</p>\n                    </div>\n                </div>\n            </div>\n             <div class=\"mdl-card__title\" ng-show=\"!myspace.isSessionValid\">\n                <fb:login-button scope=\"public_profile,email\" onlogin=\"myspace.checkLoginState()\">\n                </fb:login-button>\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n            </div>-->\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n    </section>\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>\n\n    <section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>\n</div>"}));

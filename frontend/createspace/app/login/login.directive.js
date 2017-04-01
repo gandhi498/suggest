@@ -25,7 +25,6 @@ function csLogin () {
 
         var self = this;
         self.isLoggedIn = false;
-        self.userDetails = {};
         self.loading = false;
         window.logoutUser = function () {
             FB.logout(function(response) {
@@ -68,10 +67,10 @@ function csLogin () {
         self.model.spaceName = undefined;
         self.model.expectingNameFor = undefined;
         self.model.expectingOn = undefined;
-
+        self.model.userDetails = {};
         var handelFbResponse = function (response) {
             self.isLoggedIn = true;
-            self.userDetails = response;
+            self.model.userDetails = response;
             console.log(response);
             $rootScope.$apply();
         }
@@ -123,8 +122,7 @@ function csLogin () {
         function submit (form) {
 
             var userData = {};
-
-            userData.socialData = self.userDetails;
+            userData.socialData = self.model.userDetails;
             userData.spaceDetails = self.model;
             self.loading = true;
             

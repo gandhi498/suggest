@@ -112,6 +112,7 @@ app.use("/", function (request, response, next) {
 });
 
 var $createspace = require('./endpoints/create-space');
+var $checksession = require('./endpoints/check-session');
 var $getSpaceDetails = require('./endpoints/get-space-details');
 var $addname = require('./endpoints/add-name');
 var $vote = require('./endpoints/vote');
@@ -126,6 +127,7 @@ createSpacejunctionRouter.use('/',_serveCreateSpaceIndex);
 createSpacejunctionRouter.use('/', $express.static('static/create_space')); // serve from create_space folder
 
 createSpacejunctionRouter.post('/createspace', $createspace); // Now endpoint will be : /space/create/createspace
+createSpacejunctionRouter.get('/checksession', $checksession);
 
 app.use('/space/create', createSpacejunctionRouter);
 
