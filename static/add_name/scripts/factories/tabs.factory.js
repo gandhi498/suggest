@@ -25,15 +25,14 @@
 
 			function setTabsView (tabData, tabName) {
 				_tabs = [];
-
-				console.log('set tabs view');
+								
 				console.log('set tabs view data '+JSON.stringify(tabData));
 				console.log('set tabs view data '+tabName);
 
 				_tabs.push({name: tabName, list: tabData});
 
 				if (tabName === 'Either') {
-
+					//show other tabs too
 					_.forEach(_tabNames, function(tab) {
 						(function() {
 							_tabs.push({name: tab, list: _filterNamesList(tabData, tab)} );

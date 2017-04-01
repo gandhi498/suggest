@@ -5,7 +5,7 @@
 
 	
 
-	function GetNamesFromSpaceController($scope, _, $routeParams, $timeout, $window, $document, $anchorScroll, SpaceService, NamesService, TabsFactory, ValidationFactory) {
+	function GetNamesFromSpaceController($scope, _, $routeParams, $timeout, $window, $document, $anchorScroll, SpaceService, SpaceNamesService, NamesService, TabsFactory) {
 		console.log('GetNamesFromSpaceController');
 
 		var _init =  _init;
@@ -25,7 +25,7 @@
 		function closeAddNameForm () {
 
 			$scope.isAddFormOpen = false;
-			_scrollTo('viewNames');				
+			_scrollTo('viewSpaceNames');				
 		
 		}
 
@@ -59,7 +59,7 @@
 			name.likes ++ ;
 			name.id = _spaceId;
 				
-			NamesService.vote(name)
+			SpaceNamesService.vote(name)
 			.then(function(response) {
 				//No need to do anythig as we have already updated view
 			}, function(error) {
@@ -87,7 +87,7 @@
 			//spacename and spaceid not avialable so hardcoded
 			$scope.dataToAdd.spacename = $scope.space.spacename;
 			$scope.dataToAdd.spaceid = _spaceId;
-			NamesService.addName($scope.dataToAdd)
+			SpaceNamesService.addName($scope.dataToAdd)
 			.then(function(response) {
 				if(response.data.status === 'OK')
 				//close the form
@@ -109,7 +109,7 @@
 
 			$scope.tabs = [];
 		
-			NamesService.getNamesForSpace({'spaceid': _spaceId})
+			SpaceNamesService.getNamesForSpace({'spaceid': _spaceId})
 			.then(function(response) {	
 
 				console.log('get nmes success controller :'+response.data.nameList);
@@ -148,9 +148,35 @@
 		};
 
 		_init();	
+
+
+
+
+//All names logic start
+		$scope.alphabets = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+
+		$scope.getNamesForLetter = getNamesForLetter;
+
+		function getNamesForLetter (letter) {
+			NamesService.getNamesForLetter(letter)
+				.then(function (success) {
+					$scope.boysList = _filterNamesList(success.data.nameList, 'Boy');
+					$scope.girlsList = _filterNamesList(success.data.nameList, 'Girl')
+				}, function (error) {
+
+				})
+		}
+
+
+		function _filterNamesList (data, gender) {
+			return _.filter(data , function (name) {
+				return name.gender === gender;
+			});
+		}
+//All names logic end
 	};
 
 	GetNamesFromSpaceController.$inject = ['$scope', 'lodash', '$routeParams', '$timeout', '$window', '$document', '$anchorScroll',
-										'SpaceService', 'NamesService', 'TabsFactory', 'ValidationFactory'];
+										'SpaceService', 'SpaceNamesService', 'NamesService', 'TabsFactory'];
 
 })()

@@ -7,7 +7,7 @@
 	background: url('../img/add-name-event-card.jpg');
 }
 
-.names__container {
+.welcome__container, .space-names__container {
 	min-height: 350px;
 	max-height: 400px;
 }
@@ -53,5 +53,24 @@
 	top: 7px;
 }
 
+
+
+
+
+
+.alphabet-widget {
+	margin: 0px;
+	padding: 20px;
+}
+
+.alphabet-widget > li {
+	display: inline-block;
+	padding: 10px;
+	text-decoration: underline;	
+	cursor: pointer;
+}
+.alphabet-widget__container {
+	background-color: #b2dfdb;
+}
 
 
