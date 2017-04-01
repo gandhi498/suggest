@@ -11,7 +11,10 @@ var $express = require('express'),
     $upTheTree = require('up-the-tree'),
     $fs = require('fs'),
     db,
-    MongoClient = require('mongodb').MongoClient;
+    MongoClient = require('mongodb').MongoClient,
+    sessionCookieName = 'mynewbiesso';
+    sessionCookieSecret = 'qwh7SubJlZfRHJnhkx8dY3ziV7fqLxk7P7DaK2Rc';
+    session = require('client-sessions');
 
 var config = require('./endpoints/config_values/config');
 console.log("Config values: "+JSON.stringify(config));
@@ -89,6 +92,16 @@ app.all('*', function(request, response, next)
     request.db = db;
     next();
 });
+app.use(session({
+  cookieName: sessionCookieName,
+  secret: sessionCookieSecret,
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+  httpOnly: false,
+  secure: false,
+  ephemeral: false
+}));
+
 app.use("/", function (request, response, next) {
     if(request.path === "/") {
         response.redirect('/space/create');

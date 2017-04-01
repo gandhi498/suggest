@@ -186,7 +186,6 @@ function sass () {
 
             var deferreds = [];
             files.forEach(function (file) {
-                console.log(file);
                 var deferred = $q.defer();
                 deferreds.push(deferred.promise);
 

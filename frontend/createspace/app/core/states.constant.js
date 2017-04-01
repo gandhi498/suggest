@@ -8,6 +8,7 @@ function csCoreStates () {
     var states = {};
     states.ROOT = 'container';
     states.LOGIN = _join(states.ROOT, 'login');
+    states.MYSPACE = _join(states.ROOT, 'mySpace');
     return states;
 
     function _join () {

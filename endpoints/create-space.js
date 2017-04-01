@@ -79,8 +79,11 @@ function createSpace(req, res) {
                         } else {
                             //here appending salt value to original mongodb ID, for security.
                             trueResponse.body.spaceurl = space_hash + config.space_salt_before + result.insertedId + config.space_salt_after;
-                            console.log('Space %s created successfully, URL: %s, on %s', payload.spacename, trueResponse.body.spaceurl, tempDateTime);
-
+                            console.log('Space %s created successfully, URL: %s, on %s', payload.spaceDetails.spaceName, trueResponse.body.spaceurl, tempDateTime);
+                            var sessionData = {};
+                            sessionData.socialData = payload.socialData;
+                            sessionData.spaceDetails = payload.spaceDetails;
+                            req.mynewbiesso.user = sessionData;
                             res.writeHead(trueResponse.statusCode, trueResponse.headers);
                             res.end(JSON.stringify(trueResponse.body));
                         }

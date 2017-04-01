@@ -21,4 +21,11 @@ function config ($stateProvider, csCoreStates) {
 
     });
 
+    $stateProvider.state(csCoreStates.MYSPACE, {
+        url: '',
+        template: '<div cs-my-space></div>'
+
+    });
+
+
 }

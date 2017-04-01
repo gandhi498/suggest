@@ -36,6 +36,36 @@ function factory ($http, csCsrf) {
 },{"./api.module":1}],3:[function(require,module,exports){
 'use strict';
 
+factory.$inject = ["$http", "csCsrf"];
+require('./api.module')
+    .factory('csApiMySpace', factory);
+
+/* @ngInject */
+function factory ($http, csCsrf) {
+
+    return {
+        addName: addName
+    };
+
+
+    function addName (userData) {
+        return $http(csCsrf.upgradeHttpObject({
+            url: '/space/add/addName',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true,
+            data: JSON.stringify(userData)
+        }));
+
+    }
+
+}
+
+},{"./api.module":1}],4:[function(require,module,exports){
+'use strict';
+
 config.$inject = ["$stateProvider", "csCoreStates"];
 require('./core.module')
     .config(config);
@@ -58,9 +88,16 @@ function config ($stateProvider, csCoreStates) {
 
     });
 
+    $stateProvider.state(csCoreStates.MYSPACE, {
+        url: '',
+        template: '<div cs-my-space></div>'
+
+    });
+
+
 }
 
-},{"./core.module":5}],4:[function(require,module,exports){
+},{"./core.module":6}],5:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -77,7 +114,7 @@ function csCoreContainer () {
 
 }
 
-},{"./core.module":5}],5:[function(require,module,exports){
+},{"./core.module":6}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.core', [
@@ -86,10 +123,11 @@ module.exports = angular.module('cs.core', [
     require('./../api/api.module').name,
     require('./../login/login.module').name,
     require('./../csrf/csrf.module').name,
-    require('./../form/form.module').name
+    require('./../form/form.module').name,
+    require('./../myspace/myspace.module').name,
 ]);
 
-},{"./../api/api.module":1,"./../csrf/csrf.module":10,"./../form/form.module":12,"./../login/login.module":14}],6:[function(require,module,exports){
+},{"./../api/api.module":1,"./../csrf/csrf.module":11,"./../form/form.module":13,"./../login/login.module":15,"./../myspace/myspace.module":17}],7:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -125,7 +163,7 @@ function csCoreModel () {
 }
 
 
-},{"./core.module":5}],7:[function(require,module,exports){
+},{"./core.module":6}],8:[function(require,module,exports){
 'use strict';
 
 run.$inject = ["$rootScope", "csCoreStates"];
@@ -139,7 +177,7 @@ function run ($rootScope, csCoreStates) {
 
 }
 
-},{"./core.module":5}],8:[function(require,module,exports){
+},{"./core.module":6}],9:[function(require,module,exports){
 'use strict';
 
 require('./core.module.js')
@@ -150,6 +188,7 @@ function csCoreStates () {
     var states = {};
     states.ROOT = 'container';
     states.LOGIN = _join(states.ROOT, 'login');
+    states.MYSPACE = _join(states.ROOT, 'mySpace');
     return states;
 
     function _join () {
@@ -160,7 +199,7 @@ function csCoreStates () {
 
 }
 
-},{"./core.module.js":5}],9:[function(require,module,exports){
+},{"./core.module.js":6}],10:[function(require,module,exports){
 'use strict';
 
 require('./csrf.module')
@@ -199,12 +238,12 @@ function csCsrf () {
 
 }
 
-},{"./csrf.module":10}],10:[function(require,module,exports){
+},{"./csrf.module":11}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.csrf', []);
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 csForm.$inject = ["$rootScope", "$q"];
@@ -448,12 +487,12 @@ function csForm ($rootScope, $q) {
 
 }
 
-},{"./form.module":12}],12:[function(require,module,exports){
+},{"./form.module":13}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.form', []);
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 require('./login.module')
@@ -604,10 +643,44 @@ function csLogin () {
 
 }
 
-},{"./login.module":14}],14:[function(require,module,exports){
+},{"./login.module":15}],15:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.login', []);
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14])(14)
+},{}],16:[function(require,module,exports){
+'use strict';
+
+require('./myspace.module')
+    .directive('csMySpace', csMySpace);
+
+function csMySpace () {
+
+    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "$rootScope"];
+    return {
+        restrict: 'EA',
+        templateUrl: 'myspace/cs-myspace.html',
+        replace: true,
+        controller: Controller,
+        controllerAs: 'myspace'
+    };
+
+    /* @ngInject */
+    function Controller (
+        $state,
+        csCoreStates,
+        csCoreModel,
+        csForm,
+        csApiMySpace,
+        $rootScope
+    ) {
+        
+    }
+}
+},{"./myspace.module":17}],17:[function(require,module,exports){
+'use strict';
+
+module.exports = angular.module('cs.myspace', []);
+
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17])(17)
 });
