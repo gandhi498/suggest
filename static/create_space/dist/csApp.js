@@ -663,6 +663,8 @@ function csLogin () {
             return function (res) {
                 console.log("Space created successfully: %s",JSON.stringify(res.data));
                 console.log("Now need to send user to next screen");
+                
+                $state.go(csCoreStates.MYSPACE);
             };
 
         }

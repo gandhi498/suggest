@@ -83,6 +83,7 @@ function createSpace(req, res) {
                             var sessionData = {};
                             sessionData.socialData = payload.socialData;
                             payload.spaceDetails.spaceID = result.insertedId;
+                            payload.spaceDetails.spaceUrl = trueResponse.body.spaceurl;
                             sessionData.spaceDetails = payload.spaceDetails;
                             req.mynewbiesso.user = sessionData;
                             res.writeHead(trueResponse.statusCode, trueResponse.headers);
