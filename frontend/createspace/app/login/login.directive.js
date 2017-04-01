@@ -19,34 +19,43 @@ function csLogin () {
         csCoreStates,
         csCoreModel,
         csForm,
+        csApiLogin,
         $rootScope
     ) {
 
         var self = this;
         self.isLoggedIn = false;
         self.userDetails = {};
+        self.loading = false;
+        window.logoutUser = function () {
+            FB.logout(function(response) {
+                console.log("User logged out successfully");
+            });
+        }
         window.checkLoginState = function () {
             FB.getLoginStatus(function(response) {
                 console.log(response);
 
                 if(response.status == 'connected' && response.authResponse.userID != "") {
-                    console.log(response.authResponse.userID);
+                    var userID = response.authResponse.userID;
                     FB.api(
-                        "/"+response.authResponse.userID+"?fields=email,first_name,last_name,gender,link",
+                        "/"+response.authResponse.userID+"?fields=email,first_name,last_name,gender,link,picture",
                         function (response) {
                           if (response && !response.error) {
                             /* handle the result */
-                           handelResponse(response);
+                            response.userID = userID;
+                            handelFbResponse(response);
                           } 
                           else {
-                            alert("Sorry, error occured while fetching your data, please try again");
+                            alert("Sorry, error occured while fetching your data from facebook, please try again");
                           }
 
                         }
                     );
                 }
               });
-        }
+        }      
+
         var reForNumber = /^[0-9]+$/;
         var reForFbNumber = /^\d{10,12}$/;
         // this regEx from : http://emailregex.com/ : which is working fine
@@ -57,8 +66,10 @@ function csLogin () {
         self.model = csCoreModel.model;
         self.model.userEmail = undefined;
         self.model.spaceName = undefined;
+        self.model.expectingNameFor = undefined;
+        self.model.expectingOn = undefined;
 
-        var handelResponse = function (response) {
+        var handelFbResponse = function (response) {
             self.isLoggedIn = true;
             self.userDetails = response;
             console.log(response);
@@ -91,13 +102,17 @@ function csLogin () {
                 field: {
                     spaceName: {
                         required: 'required'
+                    },
+                    expectingNameFor: {
+                        required: 'required'
                     }
                 }
             },
             nonBlockingErrors: {
                 form: ['unknown_error', '001'],
                 field: {
-                    spaceName: ['']
+                    spaceName: [''],
+                    expectingNameFor: ['']
                 }
             },
             submit: submit
@@ -107,14 +122,24 @@ function csLogin () {
 
         function submit (form) {
 
-            
+            var userData = {};
 
+            userData.socialData = self.userDetails;
+            userData.spaceDetails = self.model;
+            self.loading = true;
+            
+            return csApiLogin.login(userData)
+                .then(_submitSuccess(form), formHandler.submitFailed(form))
+                .finally(function () {
+                    self.loading = false;
+                });
         }
 
         function _submitSuccess () {
 
             return function (res) {
-
+                console.log("Space created successfully: %s",JSON.stringify(res.data));
+                console.log("Now need to send user to next screen");
             };
 
         }

@@ -35,7 +35,7 @@ Endpoints :
 	1. POST: /createSpace  :
 			a. payload = email,expectingNameFor,expectingOn,name,spacename;
 			b. Success Response =
-					{"status":"OK","spaceurl":"/#!/mySpace?spaceid=Qewejhewj58bc9a26ef47a3446c85932dqwQASFUTw"}
+					{"status":"OK","spaceurl":"/space/add/Qewejhewj58dfb89312f8d3219573202fqwQASFUTw"}
 			c. Error responses =
 				/*yet to map error responses*/		
 

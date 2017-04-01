@@ -27,7 +27,7 @@ module.exports = {
     pruneTarget: pruneTarget,
     browserify: browserify,
     sass: sass,
-    copy: copy,
+    copyToDistAll: copyToDistAll,
     optimize: $optimize,
     templateCache: $templateCache.templateCache,
     annotate: annotate
@@ -62,7 +62,6 @@ function bundle (config) {
         .then(function () {
             return $q.all([
                 browserify().then(annotate), // browserify() and annotate() go hand in hand
-                copy(),
                 sass(),
                 $templateCache.templateCache()
             ]);
@@ -82,6 +81,7 @@ function bundle (config) {
 
     qStream = qStream
         .then(function () {
+            copyToDistAll()
             console.log($colors.green('Build done, total build time: ' + (new Date().getTime() - now) + 'ms'));
         });
 
@@ -222,28 +222,21 @@ function sass () {
 
 }
 
-function copy () {
-
+function copyToDistAll () {
     var now = new Date().getTime();
 
-    var relativeSrcPath = './' + $path.relative('.', projectSrcPath);
-
+    var projectDistPath = $path.resolve(projectRootPath,'../../static/create_space/dist');
     return $globby([
-        relativeSrcPath + '/**/*.css',
-        relativeSrcPath + '/**/*.eot',
-        relativeSrcPath + '/**/*.svg',
-        relativeSrcPath + '/**/*.ttf',
-        relativeSrcPath + '/**/*.woff'
+        projectTargetPath + '/*.js',
+        projectTargetPath + '/*.css'
     ]).then(function (files) {
-
         var deferreds = [];
 
         files.forEach(function (file) {
 
             var promise = $q.nfcall($fs.readFile, file)
                 .then(function (buffer) {
-
-                    var target = $path.resolve(projectTargetPath, $path.basename(file));
+                    var target = $path.resolve(projectDistPath, $path.basename(file));
                     return $q.nfcall($fs.writeFile, target, buffer);
 
                 });

@@ -13,7 +13,7 @@ function factory ($http, csCsrf) {
 
     function login (userData) {
         return $http(csCsrf.upgradeHttpObject({
-            url: 'create/space/login',
+            url: '/space/create/createspace',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -1,119 +1,162 @@
+<div class="container">
+    <div class="mdl-grid site-max-width">
 
-<div class="container"><div class="mdl-grid site-max-width">
-
-    <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card">
-        <div class="mdl-card__title">
-          <h2 class="mdl-card__title-text">Welcome</h2>
-        </div>
-        <div class="mdl-card__supporting-text">
-          Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.
-        </div>
-        <div class="mdl-card__actions mdl-card--border">
-          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent" href=" https://templateflip.com/templates/material-portfolio/" target="_blank">
+        <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Welcome</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.
+            </div>
+            <div class="mdl-card__actions mdl-card--border">
+                <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent" href=" https://templateflip.com/templates/material-portfolio/"
+                    target="_blank">
             Download
           </a>
-          
-        </div>
-    </div>
-</div>
 
-<section class="section--center mdl-grid site-max-width">
-  <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp">
-    <i class="material-icons">play_circle_filled</i>
-  </header>
-  <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp">
-    <div class="mdl-card__title">
-        <h2 class="mdl-card__title-text">Register your space here :</h2>
-    </div>
-    <div class="mdl-card__supporting-text">
-        <div ng-show="!login.isLoggedIn">
-        Login with : <fb:login-button scope="public_profile,email" onlogin="checkLoginState()">
-</fb:login-button>
-        </div>
-        <div ng-show="login.isLoggedIn">
-            <form ng-submit="login.submit(loginForm, $event)"
-            name="loginForm"
-            novalidate
-            class="">
-            <div ng-messages="loginForm.$error">
-                <span ng-message="unknown_error">
-                    <span aria-role="alert">Sorry, unknown technical error occured</span>
-                </span>
-                <span ng-message="001">
-                    <span aria-role="alert">Sorry, space with same name already exists</span>
-                </span>
             </div>
-                <p>Welcome, {{ login.userDetails.first_name }}</p>
-                <div ng-if="!login.userDetails.email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input ng-model="login.model.userEmail" class="mdl-textfield__input" type="text" id="userEmail" name="userEmail">
-                    <label class="mdl-textfield__label" for="userEmail">Please enter your email</label>
-                </div>
-                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input ng-model="login.model.spaceName" class="mdl-textfield__input" type="text" id="spaceName" name="spaceName">
-                    <label class="mdl-textfield__label" for="spaceName">
-                    <span ng-hide="loginForm.spaceName.$invalid && loginForm.$submitted"
-                    id="username-label">Please enter space name
-                    </span>
+        </div>
+    </div>
 
-                <span id="username-label-error"
-                    ng-messages="loginForm.spaceName.$error">
-                    <span ng-message="required">
-                        <span aria-role="alert">Please enter space name</span>
-                    </span>
-                   
-                </span>
-                    </label>
+    <section class="section--center mdl-grid site-max-width">
+        <header class="section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp">
+            <i class="material-icons">play_circle_filled</i>
+        </header>
+        <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Register your space here :</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <div ng-show="!login.isLoggedIn">
+                    Login with :
+                    <fb:login-button scope="public_profile,email" onlogin="checkLoginState()">
+                    </fb:login-button>
                 </div>
-                <p>
-                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-                      Create
-                  </button>
-                </p>
-        </form>
-        </div>
-    </div>
-    <div class="mdl-card__actions  mdl-card--border">
-      <!-- <a href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">Watch Intro</a> -->
-    </div>
-  </div>
-</section>
-<section class="section--center mdl-grid site-max-width">
-    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
-        <div class="mdl-card__media">
-            <img class="article-image" src="/space/create/img/portfolio1.jpg" border="0" alt="">
-        </div>
-        <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Rocky Peak</h2>
-        </div>
-        <div class="mdl-card__supporting-text">
-            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
-        </div>
-    </div>
-    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
-        <div class="mdl-card__media">
-            <img class="article-image" src="/space/create/img/portfolio2.jpg" border="0" alt="">
-        </div>
-        <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Night Shadow</h2>
-        </div>
-        <div class="mdl-card__supporting-text">
-            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
-        </div>
-    </div>
-    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
-        <div class="mdl-card__media">
-            <img class="article-image" src="/space/create/img/portfolio3.jpg" border="0" alt="">
-        </div>
-        <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Sky Reach</h2>
-        </div>
-        <div class="mdl-card__supporting-text">
-            Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
-        </div>
-    </div>
-</section>
+                <div ng-show="login.isLoggedIn">
+                    <form ng-submit="login.submit(loginForm, $event)" name="loginForm" novalidate class="">
+                        <div ng-messages="loginForm.$error">
+                            <span ng-message="unknown_error">
+                    <span aria-role="alert">Sorry, unknown technical error occured</span>
+                            </span>
+                            <span ng-message="001">
+                    <span aria-role="alert">Sorry, space with same name already exists</span>
+                            </span>
+                        </div>
+                        <p>Welcome, {{ login.userDetails.first_name }}</p>
+                        <div ng-if="!login.userDetails.email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input ng-model="login.model.userEmail" class="mdl-textfield__input" type="text" id="userEmail" name="userEmail">
+                            <label class="mdl-textfield__label" for="userEmail">Please enter your email</label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input ng-model="login.model.spaceName" class="mdl-textfield__input" type="text" id="spaceName" name="spaceName">
+                            <label class="mdl-textfield__label" for="spaceName">
+                                <span ng-hide="loginForm.spaceName.$invalid && loginForm.$submitted"
+                                id="username-label">Please enter space name
+                                </span>
 
-<section class="section--center mdl-grid site-max-width homepage-portfolio">
-    <a class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent" href="/space/create/portfolio.html">View All Names</a>
-</section>
+                                <span id="username-label-error"
+                                    ng-messages="loginForm.spaceName.$error">
+                                    <span ng-message="required">
+                                        <span aria-role="alert">Please enter space name</span>
+                                    </span>
+                                
+                                </span>
+                            </label>
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield">
+                            <label for="expectingNameFor">
+                                <span ng-hide="loginForm.expectingNameFor.$invalid && loginForm.$submitted"
+                                id="expectingNameFor-label">For:</span>
+
+                                <span id="expectingNameFor-label-error"
+                                    ng-messages="loginForm.expectingNameFor.$error">
+                                    <span ng-message="required">
+                                        <span aria-role="alert">Please select expecting name for</span>
+                                    </span>
+                                
+                                </span>
+                            </label>
+                            <label class="radio-inline" for="radios-0">
+                            <input type="radio" name="expectingNameFor" id="radios-0" ng-model="login.model.expectingNameFor" value="boy">
+                                Boy
+                            </label>
+                            <label class="radio-inline" for="radios-1">
+                                <input type="radio" name="expectingNameFor" id="radios-1" ng-model="login.model.expectingNameFor" value="girl" checked="checked">
+                                Girl
+                            </label>
+                            <label class="radio-inline" for="radios-2">
+                                <input type="radio" name="expectingNameFor" id="radios-2" ng-model="login.model.expectingNameFor" value="na">
+                                Don't know
+                            </label>    
+                        </div>
+                        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <input ng-model="login.model.expectingOn" class="mdl-textfield__input" type="date" id="expectingOn" name="expectingOn">
+                            <label class="mdl-textfield__label" for="expectingOn">
+                                <span ng-hide="loginForm.expectingOnexpectingOn.$invalid && loginForm.$submitted"
+                                id="expectingOn-label"> </span>
+
+                                <span id="expectingOn-label-error"
+                                    ng-messages="loginForm.expectingOn.$error">
+                                    <span ng-message="invalid">
+                                        <span aria-role="alert">Invalid date</span>
+                                    </span>
+                                
+                                </span>
+                            </label>
+                        </div>
+                        <p>
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
+                                Create<img ng-show="loading" width="24px" src="/space/create/img/spinner.gif">
+                            </button>
+                        </p>
+                    </form>
+                </div>
+            </div>
+            <div class="mdl-card__actions  mdl-card--border">
+                <!-- <a href="#" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent">Watch Intro</a> -->
+            </div>
         </div>
+    </section>
+    <section class="section--center mdl-grid site-max-width">
+        <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+            <div class="mdl-card__media">
+                <img class="article-image" src="/space/create/img/portfolio1.jpg" border="0" alt="">
+            </div>
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Rocky Peak</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur
+                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+            </div>
+        </div>
+        <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+            <div class="mdl-card__media">
+                <img class="article-image" src="/space/create/img/portfolio2.jpg" border="0" alt="">
+            </div>
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Night Shadow</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur
+                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+            </div>
+        </div>
+        <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card">
+            <div class="mdl-card__media">
+                <img class="article-image" src="/space/create/img/portfolio3.jpg" border="0" alt="">
+            </div>
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">Sky Reach</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur
+                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.
+            </div>
+        </div>
+    </section>
+
+    <section class="section--center mdl-grid site-max-width homepage-portfolio">
+        <a class="mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent" href="/space/create/portfolio.html">View All Names</a>
+    </section>
+</div>
