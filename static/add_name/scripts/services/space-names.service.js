@@ -46,7 +46,7 @@
 
 			// need to check abt url with harshad
 			//var url = ApiConstants.getNamesFromSpace + '?spaceid='+ data.spaceid;
-			var url = 'http://www.mynewbie.in/space/add/getNamesFromSpace?spaceid='+data.spaceid;
+			var url = 'http://www.mynewbie.in/space/add/getNamesForSpace?spaceid='+data.spaceid;
 			//var url = 'http://localhost:8081/space/add/getNamesForSpace?spaceid='+data.spaceid;
 			var deferred = $q.defer();
 
