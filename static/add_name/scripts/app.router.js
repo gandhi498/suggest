@@ -1,11 +1,15 @@
-angular.module('newbie')
-.config(function ($routeProvider, $locationProvider) {
-	console.log('router')
-	$routeProvider
-		.when('/mySpace/:spaceId', {			
-			templateUrl: '/space/add/templates/space-names.html',
-			controller: 'GetNamesFromSpaceController',
-		});
+(function() {
+	'use strict'
 
-	//$locationProvider.html5Mode(true);
-});
+	angular.module('newbie')
+	.config(function ($routeProvider, $locationProvider) {
+		
+		$routeProvider
+			.when('/:spaceId', {			
+				templateUrl: '/space/add/templates/space-names.html',
+				controller: 'GetNamesFromSpaceController',
+			});
+	});
+
+})();
+

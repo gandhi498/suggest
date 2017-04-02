@@ -1,5 +1,7 @@
 (function() {
 
+	'use strict'
+
 	angular.module('newbie')
 	.controller('GetNamesFromSpaceController', GetNamesFromSpaceController)
 
@@ -21,6 +23,19 @@
 		$scope.closeAddNameForm = closeAddNameForm;
 		$scope.addName = addName;
 		$scope.vote = vote;
+
+		$scope.showSuggestion = showSuggestion;
+		$scope.isSuggestionOpen = false;
+		$scope.suggestionLabel = 'Do you want some Suggestion ? Click here !!';
+
+		function showSuggestion () {
+
+			$scope.isSuggestionOpen = !$scope.isSuggestionOpen;
+			$scope.suggestionLabel = $scope.isSuggestionOpen ? 'Hide Suggestion' : 'Do you want some Suggestion ? Click here !!';
+			_scrollTo('namesList');
+			getNamesForLetter('A');
+			componentHandler.upgradeAllRegistered();
+		}
 
 		function closeAddNameForm () {
 
@@ -116,7 +131,12 @@
 				$scope.namesList = response.data.nameList;
 				if($scope.namesList.length) {
 					$scope.tabs = TabsFactory.setTabsView(response.data.nameList, $scope.space.expectingNameFor);
+					console.log('in if'+JSON.stringify($scope.tabs));
 				}
+				console.log('out of if');
+				$timeout(function() {
+		            componentHandler.upgradeAllRegistered();
+		        })	
 				
 				
 			}, function(error) {
@@ -162,6 +182,9 @@
 				.then(function (success) {
 					$scope.boysList = _filterNamesList(success.data.nameList, 'Boy');
 					$scope.girlsList = _filterNamesList(success.data.nameList, 'Girl')
+					$timeout(function() {
+		            componentHandler.upgradeAllRegistered();
+		        })
 				}, function (error) {
 
 				})

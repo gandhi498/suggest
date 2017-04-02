@@ -59,7 +59,7 @@
 
 
 .alphabet-widget {
-	margin: 0px;
+	margin: auto;
 	padding: 20px;
 }
 
@@ -69,8 +69,7 @@
 	text-decoration: underline;	
 	cursor: pointer;
 }
-.alphabet-widget__container {
-	background-color: #b2dfdb;
-}
+.names-suggestion__button {
+	margin: 35px auto 5px auto
 
 

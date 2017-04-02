@@ -18,10 +18,117 @@
 
   <div class="mdl-cell mdl-card mdl-cell--8-col mdl-cell--4-col-tablet  mdl-shadow--4dp portfolio-card space-names__container"
   ng-if="namesList.length">
+  <!--   <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+      <div class="mdl-tabs__tab-bar">
+        <a ng-repeat="tab in tabs" href="#{{tab.name}}" class="mdl-tabs__tab" ng-class="{'is-active': $index === 0}">{{tab.name}}</a>
+      </div>
+
+      <div ng-repeat="tab in tabs" class="mdl-tabs__panel"  ng-class="{'is-active': $index===0}" id="{{tab.name}}">
+       <ul class="demo-list-two mdl-list">
+              <li class="mdl-list__item mdl-list__item--three-line" ng-class="(name.gender==='Boy')? 'border__blue' : 'border__pink' " ng-repeat="name in tab.list">
+                <span class="mdl-list__item-primary-content">
+                  <span><b>{{name.babyname}}</b></span>
+                  
+                  <span class="mdl-list__item-text-body">
+                    {{name.meaning}} <br>
+                    Added by : {{name.addedBy}}
+                  </span>
+                </span>
+                <span class="mdl-list__item-secondary-content"> 
+                  <a class="mdl-list__item-secondary-action like-container" href="">
+                    <span class="like-count">{{name.likes}}</span>
+                    <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                  </a>                                                  
+                </span>
+              </li>
+            </ul>
+      </div>    
+    </div> -->
+
+
+
+  <!--  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+      mdl-layout--fixed-tabs">
+        <header class="mdl-layout__header">
+          <div class="mdl-layout__tab-bar mdl-js-ripple-effect"> 
+            <a href="#all" class="mdl-layout__tab is-active">All</a>
+            <a href="#boys" class="mdl-layout__tab">Boy</a>
+            <a href="#girls" class="mdl-layout__tab">Girl</a>
+          </div>
+        </header> 
+
+        <main class="mdl-layout__content">
+          <section class="mdl-layout__tab-panel is-active" id="all">
+            <div class="page-content">
+              <ul class="demo-list-two mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in namesList">
+                  <span class="mdl-list__item-primary-content">
+                    <span><b>{{name.babyname}}</b></span>
+                    
+                    <span class="mdl-list__item-text-body">
+                      {{name.meaning}} <br>
+                      Added by : {{name.addedBy}}
+                    </span>
+                  </span>
+                  <span class="mdl-list__item-secondary-content"> 
+                    <a class="mdl-list__item-secondary-action like-container" href="">
+                      <span class="like-count">{{name.likes}}</span>
+                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                    </a>                                                  
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>    
+              <section class="mdl-layout__tab-panel" id="boys">
+            <div class="page-content">
+              <ul class="demo-list-two mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in namesList | filter:{name.gender === 'Boy'}">
+                  <span class="mdl-list__item-primary-content">
+                    <span><b>{{name.babyname}}</b></span>
+                    
+                    <span class="mdl-list__item-text-body">
+                      {{name.meaning}} <br>
+                      Added by : {{name.addedBy}}
+                    </span>
+                  </span>
+                  <span class="mdl-list__item-secondary-content"> 
+                    <a class="mdl-list__item-secondary-action like-container" href="">
+                      <span class="like-count">{{name.likes}}</span>
+                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                    </a>                                                  
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>
+          <section class="mdl-layout__tab-panel" id="girls">
+            <div class="page-content">
+              <ul class="demo-list-two mdl-list">
+                <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in namesList | filter:{name.gender === 'Girl'}">
+                  <span class="mdl-list__item-primary-content">
+                    <span><b>{{name.babyname}}</b></span>
+                    
+                    <span class="mdl-list__item-text-body">
+                      {{name.meaning}} <br>
+                      Added by : {{name.addedBy}}
+                    </span>
+                  </span>
+                  <span class="mdl-list__item-secondary-content"> 
+                    <a class="mdl-list__item-secondary-action like-container" href="">
+                      <span class="like-count">{{name.likes}}</span>
+                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                    </a>                                                  
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>   
+        </main>
+      </div> -->
     <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
        mdl-layout--fixed-tabs">
       <header class="mdl-layout__header">
-        <!-- Tabs -->
         <div class="mdl-layout__tab-bar mdl-js-ripple-effect"> 
           <a ng-repeat="tab in tabs" href="#{{tab.name}}" class="mdl-layout__tab" ng-class="{'is-active': $index===0}">{{tab.name}}</a>
         </div>
@@ -29,7 +136,7 @@
 
       <main class="mdl-layout__content">
         <section ng-repeat="tab in tabs" class="mdl-layout__tab-panel" ng-class="{'is-active': $index===0}" id="{{tab.name}}">
-          <div class="page-content"><!-- Your content goes here -->
+          <div class="page-content">
             <ul class="demo-list-two mdl-list">
               <li class="mdl-list__item mdl-list__item--three-line" ng-class="(name.gender==='Boy')? 'border__blue' : 'border__pink' " ng-repeat="name in tab.list">
                 <span class="mdl-list__item-primary-content">
@@ -128,7 +235,12 @@
 
 
 
-
+<section class="section--center mdl-grid site-max-width" >
+   <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored names-suggestion__button"
+   ng-click="showSuggestion()">
+    {{suggestionLabel}}
+  </button>
+</section>
 
 
 
@@ -136,18 +248,61 @@
 
 
 <!---Aplhabet widget | all names search start  should be a directive--> 
-<section class="section--center mdl-grid site-max-width" >
-    <div class="mdl-cell mdl-card mdl-shadow--4dp portfolio-card alphabet-widget__container">
-        <ul class="alphabet-widget">
+<section ng-if="isSuggestionOpen" class="section--center mdl-grid site-max-width" id="namesList">
+       <ul class="alphabet-widget">
           <li ng-repeat="alphabet in alphabets" ng-click="getNamesForLetter(alphabet)">{{alphabet}}</li>          
         </ul>
-    </div>
 
-    <div class="mdl-cell mdl-card mdl-cell--8-col mdl-cell--4-col-tablet  mdl-shadow--4dp portfolio-card">
-      <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+     <div class="mdl-cell mdl-card mdl-cell--12-col mdl-shadow--4dp portfolio-card">
+      <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+        <div class="mdl-tabs__tab-bar">
+            <a href="#allBoys" class="mdl-tabs__tab is-active">Boys</a>
+            <a href="#allGirls" class="mdl-tabs__tab">Girls</a>
+            
+        </div>
+
+        <div class="mdl-tabs__panel is-active" id="allBoys">
+          <ul class="demo-list-two mdl-list">
+            <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in boysList">
+              <span class="mdl-list__item-primary-content">
+                <span><b>{{name.babyname}}</b></span>                    
+                <span class="mdl-list__item-text-body">
+                  {{name.meaning}} 
+                </span>
+              </span>  
+              <span class="mdl-list__item-secondary-content"> 
+                <a class="mdl-list__item-secondary-action like-container" href="">
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    Add
+                  </button>
+                </a>                                                  
+              </span>                
+            </li>
+          </ul>
+        </div>
+        <div class="mdl-tabs__panel" id="allGirls">
+          <ul class="demo-list-two mdl-list">
+            <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in girlsList">
+              <span class="mdl-list__item-primary-content">
+                <span><b>{{name.babyname}}</b></span>                    
+                <span class="mdl-list__item-text-body">
+                  {{name.meaning}} 
+                </span>
+              </span>  
+              <span class="mdl-list__item-secondary-content"> 
+                <a class="mdl-list__item-secondary-action like-container" href="">
+                  <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    Add
+                  </button>
+                </a>                                                  
+              </span>                
+            </li>
+          </ul>
+        </div>
+      </div>
+     <!--  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
       mdl-layout--fixed-tabs">
-        <header class="mdl-layout__header">
-          <!-- Tabs -->
+        <header class="mdl-layout__header">          
           <div class="mdl-layout__tab-bar mdl-js-ripple-effect"> 
             <a href="#allBoys" class="mdl-layout__tab is-active">Boy</a>
             <a href="#allGirls" class="mdl-layout__tab">Girl</a>
@@ -156,53 +311,51 @@
 
         <main class="mdl-layout__content">
           <section class="mdl-layout__tab-panel is-active" id="allBoys">
-            <div class="page-content"><!-- Your content goes here -->
+            <div class="page-content">
               <ul class="demo-list-two mdl-list">
                 <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in boysList">
                   <span class="mdl-list__item-primary-content">
-                    <span><b>{{name.babyname}}</b></span>
-                    
+                    <span><b>{{name.babyname}}</b></span>                    
                     <span class="mdl-list__item-text-body">
-                      {{name.meaning}} <br>
-                      Added by : {{name.addedBy}}
+                      {{name.meaning}} 
                     </span>
-                  </span>
+                  </span>  
                   <span class="mdl-list__item-secondary-content"> 
                     <a class="mdl-list__item-secondary-action like-container" href="">
-                      <span class="like-count">{{name.likes}}</span>
-                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        Add
+                      </button>
                     </a>                                                  
-                  </span>
+                  </span>                
                 </li>
               </ul>
             </div>
           </section>    
           <section class="mdl-layout__tab-panel" id="allGirls">
-            <div class="page-content"><!-- Your content goes here -->
+            <div class="page-content">
               <ul class="demo-list-two mdl-list">
                 <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in girlsList">
                   <span class="mdl-list__item-primary-content">
-                    <span><b>{{name.babyname}}</b></span>
-                    
+                    <span><b>{{name.babyname}}</b></span>                    
                     <span class="mdl-list__item-text-body">
-                      {{name.meaning}} <br>
-                      Added by : {{name.addedBy}}
+                      {{name.meaning}} 
                     </span>
-                  </span>
+                  </span> 
                   <span class="mdl-list__item-secondary-content"> 
                     <a class="mdl-list__item-secondary-action like-container" href="">
-                      <span class="like-count">{{name.likes}}</span>
-                      <i class="material-icons" ng-click="vote(name)">thumb_up </i>
+                      <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                        Add
+                      </button>
                     </a>                                                  
-                  </span>
+                  </span>  
                 </li>
               </ul>
             </div>
           </section>   
         </main>
-      </div>
+      </div> -->
     </div>
 
 </section>
 
-<!---Aplhabet widget | all names search End -->
+<!---Aplhabet widget | all names search End 
