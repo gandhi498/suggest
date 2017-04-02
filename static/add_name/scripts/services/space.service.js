@@ -14,8 +14,9 @@
 		return service;
 
 		function getSpaceDetails (data) {
-
-			var url = 'http://localhost:8081/space/add/getSpaceDetails?spaceid='+data.spaceid;
+			
+			var url = 'http://www.mynewbie.in/space/add/getSpaceDetails?spaceid='+data.spaceid;
+//			var url = 'http://localhost:8081/space/add/getSpaceDetails?spaceid='+data.spaceid;
 			var deferred = $q.defer();
 
 			$http({
@@ -39,7 +40,8 @@
 
 		function createSpace (data) {
 
-			var url = 'http://localhost:8081/space/create/createspace';
+			var url = 'http://www.mynewbie.in/space/create/createspace';
+			//var url = 'http://localhost:8081/space/create/createspace';
 			var deferred = $q.defer();
 
 			$http({

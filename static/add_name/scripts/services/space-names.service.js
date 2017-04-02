@@ -18,7 +18,8 @@
 
 		function getSpaceDetails (data) {
 			// need to check abt url with harshad
-			var url = 'http://localhost:8081/space/add/getSpaceDetails?spaceid='+data.spaceid;
+			var url = 'http://www.mynewbie.in/space/add/getSpaceDetails?spaceid='+data.spaceid;
+			//var url = 'http://localhost:8081/space/add/getSpaceDetails?spaceid='+data.spaceid;
 			//var url = ApiConstants.getSpaceDetails + '?spaceid='+ data.spaceid;
 			var deferred = $q.defer();
 
@@ -45,7 +46,8 @@
 
 			// need to check abt url with harshad
 			//var url = ApiConstants.getNamesFromSpace + '?spaceid='+ data.spaceid;
-			var url = 'http://localhost:8081/space/add/getNamesForSpace?spaceid='+data.spaceid;
+			var url = 'http://www.mynewbie.in/space/add/getNamesFromSpace?spaceid='+data.spaceid;
+			//var url = 'http://localhost:8081/space/add/getNamesForSpace?spaceid='+data.spaceid;
 			var deferred = $q.defer();
 
 			$http({
@@ -71,7 +73,8 @@
 
 			// need to check abt url with harshad
 			//var url = ApiConstants.addname;
-			var url = 'http://localhost:8081/space/add/addname';
+			var url = 'http://www.mynewbie.in/space/add/addname';
+			//var url = 'http://localhost:8081/space/add/addname';
 			var deferred = $q.defer();
 
 			$http({
@@ -98,7 +101,8 @@
 
 			// need to check abt url with harshad
 			//var url = ApiConstants.vote;
-			var url = 'http://localhost:8081/space/add/vote';
+			var url = 'http://www.mynewbie.in/space/add/vote';
+			//var url = 'http://localhost:8081/space/add/vote';
 			var deferred = $q.defer();
 
 			$http({
