@@ -14,7 +14,7 @@
 
 		function getNamesForLetter (data) {
 
-			var url = 'http://www.mynewbie.in/add/getNamesForLetter?letter='+data;
+			var url = 'http://www.mynewbie.in/space/add/getNamesForLetter?letter='+data;
 			//var url = 'http://localhost:8081/space/add/getNamesForLetter?letter='+data;
 			var deferred = $q.defer();
 
