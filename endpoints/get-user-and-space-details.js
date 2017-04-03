@@ -38,7 +38,7 @@ function getUserAndSpaceDetails (req, res) {
       spaceInfo : {}     
     };
     var spaceDetailsColl = req.db.collection(space_collection);
-    spaceDetailsColl.find().toArray(function (err, spaces) {
+    spaceDetailsColl.find({"socialDetails.fbID": userID}).toArray(function (err, spaces) {
         console.log(spaces);
         console.log(spaces.length);
       if(err) {
