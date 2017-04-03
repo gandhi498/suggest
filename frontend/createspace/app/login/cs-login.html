@@ -31,12 +31,17 @@
                 <h2 class="mdl-card__title-text">Register your space here :</h2>
             </div>
             <div class="mdl-card__supporting-text">
+                <div ng-show="login.showManageSpace && login.isLoggedIn">
+                    <p>Welcome, {{login.model.loggedInUser.socialDetails.name}}</p>
+                    <p><img src="{{login.model.loggedInUser.socialDetails.profilePicture}}"></p>
+                    <p><a href="" ui-sref="{{ STATES.MYSPACE }}">Click here to manage your space</a></p>
+                </div>
                 <div ng-show="!login.isLoggedIn">
                     Login with :
                     <fb:login-button scope="public_profile,email" onlogin="checkLoginState()">
                     </fb:login-button>
                 </div>
-                <div ng-show="login.isLoggedIn">
+                <div ng-show="login.isLoggedIn && !login.showManageSpace">
                     <form ng-submit="login.submit(loginForm, $event)" name="loginForm" novalidate class="">
                         <div ng-messages="loginForm.$error">
                             <span ng-message="unknown_error">

@@ -7,7 +7,8 @@ require('./api.module')
 function factory ($http, csCsrf) {
 
     return {
-        login: login
+        login: login,
+        getUserAndSpaceDetailsById:getUserAndSpaceDetailsById
     };
 
 
@@ -20,6 +21,18 @@ function factory ($http, csCsrf) {
             },
             withCredentials: true,
             data: JSON.stringify(userData)
+        }));
+
+    }
+
+    function getUserAndSpaceDetailsById (userData) {
+        return $http(csCsrf.upgradeHttpObject({
+            url: '/space/create/getUserAndSpaceDetailsById?userID='+userData.userID,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
         }));
 
     }

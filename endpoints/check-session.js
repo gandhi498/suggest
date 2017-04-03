@@ -42,30 +42,27 @@ function checkSession(req, res) {
         try {
             payload = JSON.parse(Buffer.concat(buffer).toString());
         } catch (e) {}
-
-        if(req.mynewbiesso && req.mynewbiesso.user.spaceDetails && req.mynewbiesso.user.socialData) {
-            
-            var currentSensorDb = req.db.collection(space_collection);
-            currentSensorDb.find({
+        
+        if(req.mynewbiesso.user && req.mynewbiesso.user.spaceDetails && req.mynewbiesso.user.socialDetails) {
+          
+            var spaceDetailsColl = req.db.collection(space_collection);
+            console.log("checking session for :%s",JSON.stringify(req.mynewbiesso.user));
+            spaceDetailsColl.find({
                 "_id": ObjectId(req.mynewbiesso.user.spaceDetails.spaceID),
             }).toArray(function (err, allMsg) {
+               
                 if (err) {
                     console.log("Error in checking user session");
                     res.writeHead(falseResponse.statusCode, falseResponse.headers);
                     res.end(JSON.stringify({
                         status: "Invalid Session"
                     }));
-                } else if (allMsg.length == 1) {
-                    var tempDateTime = new Date();
+                } else {
+                    console.log(req.mynewbiesso.user.spaceDetails.spaceID);
+                    console.log('%s user session validated', req.mynewbiesso.user.spaceDetails.spaceID);
                     res.writeHead(trueResponse.statusCode, trueResponse.headers);
                     res.end(JSON.stringify(req.mynewbiesso.user));
                     
-                } else {
-                    console.log('%s Space already present.', payload.sensorId);
-                    res.writeHead(falseResponse.statusCode, falseResponse.headers);
-                    res.end(JSON.stringify({
-                        status: "Invalid Session"
-                    }));
                 }
             });
         }

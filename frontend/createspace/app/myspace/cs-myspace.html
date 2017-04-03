@@ -22,12 +22,12 @@
         <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp">
             <div class="mdl-card__title" ng-show="myspace.isSessionValid">
                 <div>
-                    <p>Welcome, {{ myspace.model.socialData.first_name }}</p>
-                    <p><img src="{{myspace.model.socialData.picture.data.url}}"></p>
+                    <p>Welcome, {{ myspace.model.socialDetails.name }}</p>
+                    <p><img src="{{myspace.model.socialDetails.profilePicture}}"></p>
                     <h2 class="mdl-card__title-text">Space Information</h2>
                     <br>
                     <div>
-                        <p>Name: {{ myspace.model.spaceDetails.spaceName }}</p>
+                        <p>Name: {{ myspace.model.spaceDetails.spacename }}</p>
                         <p>Expecting name for : {{ myspace.model.spaceDetails.expectingNameFor }}</p>
                         <p>Expecting on : {{ myspace.model.spaceDetails.expectingOn }}</p>
                         <p>Space URL : {{ myspace.model.spaceDetails.spaceUrl }}</p>

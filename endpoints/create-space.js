@@ -55,20 +55,25 @@ function createSpace(req, res) {
                 } else if (allMsg.length == 0) {
                     var tempDateTime = new Date();
 
-                    req.db.collection(space_collection).insertOne({
-                        "spacename": payload.spaceDetails.spaceName,
-                        "email": payload.socialData.email,
-                        "socialDetails": {
+                    var allData = {};
+                    allData.socialDetails = {
                             "fbID":payload.socialData.userID,
                             "gender":payload.socialData.gender,
                             "profileLink": payload.socialData.link,
                             "profilePicture": payload.socialData.picture.data.url,
-                            "name": payload.socialData.first_name+ " " +payload.socialData.last_name,
-                        },
-                        "expectingNameFor": payload.spaceDetails.expectingNameFor,
-                        "expectingOn": payload.spaceDetails.expectingOn,
-                        "addedOn": tempDateTime,
-                        "active": false
+                            "name": payload.socialData.first_name+ " " +payload.socialData.last_name
+                    }
+                    allData.spaceDetails = {
+                            "spacename": payload.spaceDetails.spaceName,
+                            "email": payload.socialData.email,
+                            "expectingNameFor": payload.spaceDetails.expectingNameFor,
+                            "expectingOn": payload.spaceDetails.expectingOn,
+                            "addedOn": tempDateTime,
+                            "active": true
+                    }
+                    req.db.collection(space_collection).insertOne({
+                        socialDetails:allData.socialDetails,
+                        spaceDetails:allData.spaceDetails  
                     }, function (error, result) {
                         if (error) {
                             console.log('Error while adding data to space table. For space name %s', payload.spacename);
@@ -80,12 +85,13 @@ function createSpace(req, res) {
                             //here appending salt value to original mongodb ID, for security.
                             trueResponse.body.spaceurl = space_hash + config.space_salt_before + result.insertedId + config.space_salt_after;
                             console.log('Space %s created successfully, URL: %s, on %s', payload.spaceDetails.spaceName, trueResponse.body.spaceurl, tempDateTime);
-                            var sessionData = {};
-                            sessionData.socialData = payload.socialData;
-                            payload.spaceDetails.spaceID = result.insertedId;
-                            payload.spaceDetails.spaceUrl = trueResponse.body.spaceurl;
-                            sessionData.spaceDetails = payload.spaceDetails;
-                            req.mynewbiesso.user = sessionData;
+                            
+                            allData.spaceDetails.spaceUrl = trueResponse.body.spaceurl;
+                            allData.spaceDetails.spaceID = result.insertedId;
+                            req.mynewbiesso.user = {
+                                    socialDetails:allData.socialDetails,
+                                    spaceDetails:allData.spaceDetails  
+                            };
                             res.writeHead(trueResponse.statusCode, trueResponse.headers);
                             res.end(JSON.stringify(trueResponse.body));
                         }

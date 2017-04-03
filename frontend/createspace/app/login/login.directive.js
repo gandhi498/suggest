@@ -68,11 +68,28 @@ function csLogin () {
         self.model.expectingNameFor = undefined;
         self.model.expectingOn = undefined;
         self.model.userDetails = {};
+        self.showManageSpace = false;
         var handelFbResponse = function (response) {
-            self.isLoggedIn = true;
-            self.model.userDetails = response;
-            console.log(response);
-            $rootScope.$apply();
+            
+            csApiLogin.getUserAndSpaceDetailsById({userID:response.userID})
+            .then(function(res){
+                //user found in the system
+                console.log(res.data);
+                if(res.data.socialDetails.fbID === response.userID) {
+                    self.showManageSpace = true;
+                    self.isLoggedIn = true; 
+                    self.model.loggedInUser = res.data;
+                    updateRootScope();
+                }
+                
+            },function(){
+                // user not found in the system
+                self.isLoggedIn = true;
+                self.showManageSpace = false;
+                self.model.userDetails = response;
+                console.log(response);
+                updateRootScope();
+            });
         }
 
         var formHandler = csForm({
@@ -143,6 +160,11 @@ function csLogin () {
             };
 
         }
-    }
+        var updateRootScope = function () {
+            setTimeout(function () {
+                $rootScope.$apply();
+            }, 100);
+        }
 
+    }
 }
