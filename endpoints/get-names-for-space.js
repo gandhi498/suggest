@@ -59,7 +59,7 @@ function getNamesForSpace (req, res) {
       }
     });
 
-    req.db.collection(name_collection).find({"spaceid":space}).toArray(function (err, allNames) {
+    req.db.collection(name_collection).find({"spaceid":space}).sort({"addedOn": -1}).toArray(function (err, allNames) {
       if(err) {
           console.log('Error while retrieving list');
           res.writeHead(falseResponse.statusCode, falseResponse.headers);

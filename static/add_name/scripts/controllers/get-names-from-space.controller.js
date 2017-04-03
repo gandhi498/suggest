@@ -32,9 +32,8 @@
 
 			$scope.isSuggestionOpen = !$scope.isSuggestionOpen;
 			$scope.suggestionLabel = $scope.isSuggestionOpen ? 'Hide Suggestion' : 'Do you want some Suggestion ? Click here !!';
-			_scrollTo('namesList');
-			getNamesForLetter('A');
-			componentHandler.upgradeAllRegistered();
+			_scrollTo('allNamesList');
+			getNamesForLetter('A');			
 		}
 
 		function closeAddNameForm () {
@@ -130,7 +129,11 @@
 				console.log('get nmes success controller :'+response.data.nameList);
 				$scope.namesList = response.data.nameList;
 				if($scope.namesList.length) {
-					$scope.tabs = TabsFactory.setTabsView(response.data.nameList, $scope.space.expectingNameFor);
+					var tabName = '';
+					if($scope.space.expectingNameFor === 'na') {
+						tabName = 'either'
+					}
+					$scope.tabs = TabsFactory.setTabsView(response.data.nameList, tabName);
 					console.log('in if'+JSON.stringify($scope.tabs));
 				}
 				console.log('out of if');
@@ -180,22 +183,21 @@
 		function getNamesForLetter (letter) {
 			NamesService.getNamesForLetter(letter)
 				.then(function (success) {
-					$scope.boysList = _filterNamesList(success.data.nameList, 'Boy');
-					$scope.girlsList = _filterNamesList(success.data.nameList, 'Girl')
+					$scope.allNamesList = success.data.nameList;			
 					$timeout(function() {
-		            componentHandler.upgradeAllRegistered();
-		        })
+		            	componentHandler.upgradeAllRegistered();
+		        	})
 				}, function (error) {
 
 				})
 		}
 
 
-		function _filterNamesList (data, gender) {
+	/*	function _filterNamesList (data, gender) {
 			return _.filter(data , function (name) {
 				return name.gender === gender;
 			});
-		}
+		}*/
 //All names logic end
 	};
 

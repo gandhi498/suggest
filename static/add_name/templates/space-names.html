@@ -138,7 +138,7 @@
         <section ng-repeat="tab in tabs" class="mdl-layout__tab-panel" ng-class="{'is-active': $index===0}" id="{{tab.name}}">
           <div class="page-content">
             <ul class="demo-list-two mdl-list">
-              <li class="mdl-list__item mdl-list__item--three-line" ng-class="(name.gender==='Boy')? 'border__blue' : 'border__pink' " ng-repeat="name in tab.list">
+              <li class="mdl-list__item mdl-list__item--three-line" ng-class="(name.gender==='boy')? 'border__blue' : 'border__pink' " ng-repeat="name in tab.list">
                 <span class="mdl-list__item-primary-content">
                   <span><b>{{name.babyname}}</b></span>
                   
@@ -166,8 +166,8 @@
     <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp page-content">
       <i class="material-icons add-form__close" ng-click="closeAddNameForm()">clear</i>
       <div class="mdl-card__title">
-        <h1 ng-if="space.expectingNameFor === 'Either'" class="mdl-card__title-text">Help us name our little baby !!! </h1>
-        <h1 ng-if="space.expectingNameFor !== 'Either'" class="mdl-card__title-text">Help us name our little baby 
+        <h1 ng-if="space.expectingNameFor === 'na'" class="mdl-card__title-text">Help us name our little baby !!! </h1>
+        <h1 ng-if="space.expectingNameFor !== 'na'" class="mdl-card__title-text">Help us name our little baby 
         {{space.expectingNameFor |  lowercase}}!!! </h1>          
       </div>
       <div class="mdl-grid site-copy">
@@ -175,20 +175,20 @@
           <div class="mdl-card__supporting-text"> 
 
           <form ng-submit="addName(datatoAdd)" class="form-contact">
-              <div ng-if="space.expectingNameFor === 'Either'" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <div ng-if="space.expectingNameFor === 'na'" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="boy">
-                  <input type="radio" id="boy" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="Boy" 
+                  <input type="radio" id="boy" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="boy" 
                   ng-required="!gender" checked>
                   <span class="mdl-radio__label">Boy</span>
                 </label>
                 <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="girl">
-                  <input type="radio" id="girl" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="Girl"
+                  <input type="radio" id="girl" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="girl"
                   ng-required="!gender">
                   <span class="mdl-radio__label">Girl</span>
                 </label>             
               </div>
              
-              <input ng-if="space.expectingNameFor !== 'Either'" class="mdl-textfield__input" type="hidden" id="gender" name="gender" ng-model="dataToAdd.gender" ng-init="dataToAdd.gender=space.expectingNameFor" placeholder="Gender" required />
+              <input ng-if="space.expectingNameFor !== 'na'" class="mdl-textfield__input" type="hidden" id="gender" name="gender" ng-model="dataToAdd.gender" ng-init="dataToAdd.gender=space.expectingNameFor" placeholder="Gender" required />
 
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="text" id="Name" name="name" ng-model="dataToAdd.babyname" 
@@ -248,7 +248,7 @@
 
 
 <!---Aplhabet widget | all names search start  should be a directive--> 
-<section ng-if="isSuggestionOpen" class="section--center mdl-grid site-max-width" id="namesList">
+<section ng-if="isSuggestionOpen" class="section--center mdl-grid site-max-width" id="allNamesList">
        <ul class="alphabet-widget">
           <li ng-repeat="alphabet in alphabets" ng-click="getNamesForLetter(alphabet)">{{alphabet}}</li>          
         </ul>
@@ -263,7 +263,7 @@
 
         <div class="mdl-tabs__panel is-active" id="allBoys">
           <ul class="demo-list-two mdl-list">
-            <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in boysList">
+            <li class="mdl-list__item mdl-list__item--three-line border__blue" ng-repeat="name in allNamesList | filter : {gender : 'boy'}">
               <span class="mdl-list__item-primary-content">
                 <span><b>{{name.babyname}}</b></span>                    
                 <span class="mdl-list__item-text-body">
@@ -282,7 +282,7 @@
         </div>
         <div class="mdl-tabs__panel" id="allGirls">
           <ul class="demo-list-two mdl-list">
-            <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in girlsList">
+            <li class="mdl-list__item mdl-list__item--three-line border__pink" ng-repeat="name in allNamesList | filter: {gender : 'girl'}">
               <span class="mdl-list__item-primary-content">
                 <span><b>{{name.babyname}}</b></span>                    
                 <span class="mdl-list__item-text-body">

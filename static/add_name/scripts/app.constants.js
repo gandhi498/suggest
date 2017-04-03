@@ -4,13 +4,15 @@
 	angular.module('newbie')
 	.constant('ApiConstants',  {
 
-		getSpaceDetails: '/getSpaceDetails',
+		getSpaceDetails: '/space/add/getSpaceDetails',
 
-		getNamesFromSpace: '/getNamesForSpace',
+		getNamesFromSpace: '/space/add/getNamesForSpace',
 
-		vote: '/vote',
+		vote: '/space/add/vote',
 
-		addName: '/addname'
+		addName: '/space/add/addName',
+
+		getNamesForLetter: '/space/add/getNamesForLetter'
 
 	});
 
