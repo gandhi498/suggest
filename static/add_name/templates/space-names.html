@@ -177,12 +177,12 @@
           <form ng-submit="addName(datatoAdd)" class="form-contact">
               <div ng-if="space.expectingNameFor === 'na'" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="boy">
-                  <input type="radio" id="boy" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="Boy" 
+                  <input type="radio" id="boy" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="boy" 
                   ng-required="!gender" checked>
                   <span class="mdl-radio__label">Boy</span>
                 </label>
                 <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="girl">
-                  <input type="radio" id="girl" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="Girl"
+                  <input type="radio" id="girl" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="girl"
                   ng-required="!gender">
                   <span class="mdl-radio__label">Girl</span>
                 </label>             
