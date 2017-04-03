@@ -56,10 +56,10 @@ MongoClient.connect(mongoURL, function (err, dbinstance) {
         console.log("Total collections : " + collections.length);
 
         // //code to drop all the collections
-         collections.forEach(function (collValue) {
-         var deleteFlag = collValue.drop();
-         console.log(deleteFlag);
-         });
+        //  collections.forEach(function (collValue) {
+        //  var deleteFlag = collValue.drop();
+        //  console.log(deleteFlag);
+        //  });
     });
 });
 
