@@ -130,7 +130,7 @@
 				$scope.namesList = response.data.nameList;
 				if($scope.namesList.length) {
 					var tabName = '';
-					if($scope.space.expectingNameFor === 'na') {
+					if($scope.space.spaceDetails.expectingNameFor === 'na') {
 						tabName = 'either'
 					}
 					$scope.tabs = TabsFactory.setTabsView(response.data.nameList, tabName);
@@ -183,7 +183,8 @@
 		function getNamesForLetter (letter) {
 			NamesService.getNamesForLetter(letter)
 				.then(function (success) {
-					$scope.allNamesList = success.data.nameList;			
+					$scope.allNamesList = success.data.nameList;	
+					console.log('');		
 					$timeout(function() {
 		            	componentHandler.upgradeAllRegistered();
 		        	})
