@@ -3,7 +3,7 @@
   <div class="demo-card-event mdl-cell mdl-card mdl-shadow--4dp event-card portfolio-card welcome__container" 
   ng-class= "{'mdl-cell--12-col': !namesList.length}">
     <div class="mdl-card__title">
-      <h2 class="mdl-card__title-text"><b>Welcome</b></h2>
+     <!--  <h2 class="mdl-card__title-text"><b>Welcome</b></h2> -->
       </div>
       <div class="mdl-card__supporting-text">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -166,16 +166,16 @@
     <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp page-content">
       <i class="material-icons add-form__close" ng-click="closeAddNameForm()">clear</i>
       <div class="mdl-card__title">
-        <h1 ng-if="space.expectingNameFor === 'na'" class="mdl-card__title-text">Help us name our little baby !!! </h1>
-        <h1 ng-if="space.expectingNameFor !== 'na'" class="mdl-card__title-text">Help us name our little baby 
-        {{space.expectingNameFor |  lowercase}}!!! </h1>          
+        <h1 ng-if="space.spaceDetails.expectingNameFor === 'na'" class="mdl-card__title-text">Help us name our little baby !!! </h1>
+        <h1 ng-if="space.spaceDetails.expectingNameFor !== 'na'" class="mdl-card__title-text">Help us name our little baby 
+        {{space.spaceDetails.expectingNameFor |  lowercase}}!!! </h1>          
       </div>
       <div class="mdl-grid site-copy">
         <div class="mdl-cell mdl-cell--12-col">
           <div class="mdl-card__supporting-text"> 
 
           <form ng-submit="addName(datatoAdd)" class="form-contact">
-              <div ng-if="space.expectingNameFor === 'na'" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+              <div ng-if="space.spaceDetails.expectingNameFor === 'na'" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="boy">
                   <input type="radio" id="boy" class="mdl-radio__button" name="gender" ng-model="dataToAdd.gender" value="boy" 
                   ng-required="!gender" checked>
@@ -188,7 +188,7 @@
                 </label>             
               </div>
              
-              <input ng-if="space.expectingNameFor !== 'na'" class="mdl-textfield__input" type="hidden" id="gender" name="gender" ng-model="dataToAdd.gender" ng-init="dataToAdd.gender=space.expectingNameFor" placeholder="Gender" required />
+              <input ng-if="space.spaceDetails.expectingNameFor !== 'na'" class="mdl-textfield__input" type="hidden" id="gender" name="gender" ng-model="dataToAdd.gender" ng-init="dataToAdd.gender=space.spaceDetails.expectingNameFor" placeholder="Gender" required />
 
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="text" id="Name" name="name" ng-model="dataToAdd.babyname" 
@@ -282,7 +282,7 @@
         </div>
         <div class="mdl-tabs__panel" id="allGirls">
           <ul class="demo-list-two mdl-list">
-            <li class="mdl-list__item mdl-list__item--three-line border__pink" ng-repeat="name in allNamesList | filter: {gender : 'girl'}">
+            <li class="mdl-list__item mdl-list__item--three-line border__pink" ng-repeat="name in allNamesList | filter : {gender : 'girl'}">
               <span class="mdl-list__item-primary-content">
                 <span><b>{{name.babyname}}</b></span>                    
                 <span class="mdl-list__item-text-body">
