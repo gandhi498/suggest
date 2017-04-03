@@ -73,6 +73,7 @@ function csMySpace() {
             setTimeout(function () {
                 $rootScope.$apply();
             }, 100);
+            window.scrollTo(0, 0);
         }
 
     }

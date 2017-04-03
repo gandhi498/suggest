@@ -703,7 +703,7 @@ function csLogin () {
                 $rootScope.$apply();
             }, 100);
         }
-
+        
     }
 }
 
@@ -789,10 +789,12 @@ function csMySpace() {
             setTimeout(function () {
                 $rootScope.$apply();
             }, 100);
+            window.scrollTo(0, 0);
         }
 
     }
 }
+
 },{"./myspace.module":18}],18:[function(require,module,exports){
 'use strict';
 
