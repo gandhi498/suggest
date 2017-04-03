@@ -8,7 +8,7 @@
 
 			//private variables
 			var _tabs = [];
-			var _tabNames = ['Boy', 'Girl'];
+			var _tabNames = ['boy', 'girl'];
 			var _filterNamesList = _filterNamesList; 
 
 			var factory = {};
@@ -24,14 +24,11 @@
 			}
 
 			function setTabsView (tabData, tabName) {
-				_tabs = [];
-								
-				console.log('set tabs view data '+JSON.stringify(tabData));
-				console.log('set tabs view data '+tabName);
+				_tabs = [];			
 
 				_tabs.push({name: tabName, list: tabData});
 
-				if (tabName === 'Either') {
+				if (tabName === 'either') {
 					//show other tabs too
 					_.forEach(_tabNames, function(tab) {
 						(function() {
