@@ -5,9 +5,8 @@ var config = require('./config_values/config');
 module.exports = createSpace;
 
 var space_collection = 'space_collection',
-    name_collection = 'name_collection',
-    space_hash = "/space/add/";
-
+    name_collection = 'name_collection';
+    
 var trueResponse = {
     statusCode: 200,
     headers: {
@@ -83,7 +82,7 @@ function createSpace(req, res) {
                             }));
                         } else {
                             //here appending salt value to original mongodb ID, for security.
-                            trueResponse.body.spaceurl = space_hash + config.space_salt_before + result.insertedId + config.space_salt_after;
+                            trueResponse.body.spaceurl = config.space_hash + config.space_salt_before + result.insertedId + config.space_salt_after;
                             console.log('Space %s created successfully, URL: %s, on %s', payload.spaceDetails.spaceName, trueResponse.body.spaceurl, tempDateTime);
                             
                             allData.spaceDetails.spaceUrl = trueResponse.body.spaceurl;

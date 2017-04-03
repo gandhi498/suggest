@@ -9,8 +9,6 @@ module.exports = getUserAndSpaceDetails;
 
 var space_collection = 'space_collection';
 var name_collection = 'name_collection';
-var space_hash = "/space/add/";
-
 
 var trueResponse =  { statusCode: 200,
     headers: {
@@ -55,7 +53,7 @@ function getUserAndSpaceDetails (req, res) {
       }
       else {        
         //create cookie here:
-        spaces[0].spaceDetails.spaceUrl = space_hash + config.space_salt_before + spaces[0]._id + config.space_salt_after
+        spaces[0].spaceDetails.spaceUrl = config.space_hash + config.space_salt_before + spaces[0]._id + config.space_salt_after
         req.mynewbiesso.user = spaces[0];
         console.log('user and Space details for ID %s  retrieved successfully \n %s',userID,JSON.stringify(spaces[0]));
         res.writeHead(trueResponse.statusCode, trueResponse.headers);
