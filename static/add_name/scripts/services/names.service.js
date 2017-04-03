@@ -4,7 +4,7 @@
 	angular.module('newbie')
 	.service('NamesService', NamesService)
 
-	function NamesService ($http, $q) {
+	function NamesService ($http, $q, ApiConstants) {
 
 		var service = {}
 
@@ -13,9 +13,8 @@
 		return service;
 
 		function getNamesForLetter (data) {
-
-			var url = 'http://www.mynewbie.in/space/add/getNamesForLetter?letter='+data;
-			//var url = 'http://localhost:8081/space/add/getNamesForLetter?letter='+data;
+			
+			var url = ApiConstants.getNamesForLetter + '?letter='+data;
 			var deferred = $q.defer();
 
 			$http({
@@ -39,7 +38,7 @@
 		
 	}
 
-	NamesService.$inject = ['$http', '$q'];
+	NamesService.$inject = ['$http', '$q', 'ApiConstants'];
 
 })();
 
