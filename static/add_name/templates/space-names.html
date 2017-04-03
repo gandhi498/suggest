@@ -263,7 +263,7 @@
 
         <div class="mdl-tabs__panel is-active" id="allBoys">
           <ul class="demo-list-two mdl-list">
-            <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in allNamesList | filter : {gender : 'boy'}">
+            <li class="mdl-list__item mdl-list__item--three-line border__blue" ng-repeat="name in allNamesList | filter : {gender : 'boy'}">
               <span class="mdl-list__item-primary-content">
                 <span><b>{{name.babyname}}</b></span>                    
                 <span class="mdl-list__item-text-body">
@@ -282,7 +282,7 @@
         </div>
         <div class="mdl-tabs__panel" id="allGirls">
           <ul class="demo-list-two mdl-list">
-            <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in allNamesList | filter: {gender : 'girl'}">
+            <li class="mdl-list__item mdl-list__item--three-line border__pink" ng-repeat="name in allNamesList | filter: {gender : 'girl'}">
               <span class="mdl-list__item-primary-content">
                 <span><b>{{name.babyname}}</b></span>                    
                 <span class="mdl-list__item-text-body">

@@ -33,8 +33,7 @@
 			$scope.isSuggestionOpen = !$scope.isSuggestionOpen;
 			$scope.suggestionLabel = $scope.isSuggestionOpen ? 'Hide Suggestion' : 'Do you want some Suggestion ? Click here !!';
 			_scrollTo('allNamesList');
-			getNamesForLetter('A');
-			componentHandler.upgradeAllRegistered();
+			getNamesForLetter('A');			
 		}
 
 		function closeAddNameForm () {
@@ -184,12 +183,10 @@
 		function getNamesForLetter (letter) {
 			NamesService.getNamesForLetter(letter)
 				.then(function (success) {
-					$scope.allNamesList = success.data.nameList;
-					/*$scope.boysList = _filterNamesList(success.data.nameList, 'Boy');
-					$scope.girlsList = _filterNamesList(success.data.nameList, 'Girl')*/
+					$scope.allNamesList = success.data.nameList;			
 					$timeout(function() {
-		            componentHandler.upgradeAllRegistered();
-		        })
+		            	componentHandler.upgradeAllRegistered();
+		        	})
 				}, function (error) {
 
 				})
