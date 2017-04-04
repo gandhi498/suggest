@@ -130,13 +130,11 @@
 
 						console.log('get nmes success controller :'+response.data.nameList);
 						vm.model.spaceNamesList = response.data.nameList;
-						if(vm.model.spaceNamesList.length) {
-							var filter = '';
-							if(vm.model.space.spaceDetails.expectingNameFor === 'na') {
-								filter = 'either';
-							}
+						if(vm.model.spaceNamesList.length) {	
+											
+							var filter = vm.model.space.spaceDetails.expectingNameFor === 'na' ? 'either' : vm.model.space.spaceDetails.expectingNameFor;
 							vm.model.spaceNames.tabsView = TabsFactory.setTabsView(vm.model.spaceNamesList, filter);
-							//console.log('in if'+JSON.stringify(vm.model.spaceNames.tabsView));
+							
 						}
 						
 						$timeout(function() {
