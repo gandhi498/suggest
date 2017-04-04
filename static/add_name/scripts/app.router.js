@@ -8,6 +8,7 @@
 			.when('/:spaceId', {			
 				templateUrl: '/space/add/templates/space-names.html',
 				controller: 'GetNamesFromSpaceController',
+				controllerAs: 'getNamesForSpace'
 			});
 	});
 

@@ -4,13 +4,13 @@
 
 	angular.module('newbie')
 	.controller('GetNamesFromSpaceController', GetNamesFromSpaceController)
-
 	
 
 	function GetNamesFromSpaceController($scope, _, $routeParams, $timeout, $window, $document, $anchorScroll, SpaceService, SpaceNamesService, NamesService, TabsFactory) {
 		console.log('GetNamesFromSpaceController');
+	
 
-		var _init =  _init;
+/*		var _init =  _init;
 		var _getNames = _getNames;
 		var _spaceId = $routeParams.spaceId;
 		console.log('routeParams : '+$routeParams.spaceId);
@@ -81,9 +81,9 @@
 				name.likes -- ;
 				alert('Server error');
 			});
-		}
+		}*/
 
-		function addName () {
+/*		function addName () {
 			console.log('getnamesfromspace controller add name :'+$scope.dataToAdd.gender);
 			
 		    //check if name alreday exists.. 
@@ -116,10 +116,10 @@
 			}, function(error) {
 				//handle error scenario
 			});
-		};
+		};*/
 	
 
-		function _getNames () {
+/*		function _getNames () {
 
 			$scope.tabs = [];
 		
@@ -146,9 +146,9 @@
 
 			});
 
-		}
+		}*/
 
-		function _getSpaceDetails () {
+	/*	function _getSpaceDetails () {
 			console.log('spaceId :'+_spaceId);
 			SpaceService.getSpaceDetails({'spaceid': _spaceId})
 			.then(function(response) {	
@@ -170,28 +170,28 @@
 
 		};
 
-		_init();	
+		_init();*/	
 
 
 
 
 //All names logic start
-		$scope.alphabets = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+	/*	$scope.alphabets = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 
 		$scope.getNamesForLetter = getNamesForLetter;
 
 		function getNamesForLetter (letter) {
 			NamesService.getNamesForLetter(letter)
-				.then(function (success) {
-					$scope.allNamesList = success.data.nameList;	
-					console.log('');		
-					$timeout(function() {
-		            	componentHandler.upgradeAllRegistered();
-		        	})
-				}, function (error) {
+			.then(function (success) {
+				$scope.allNamesList = success.data.nameList;	
+				console.log('');		
+				$timeout(function() {
+	            	componentHandler.upgradeAllRegistered();
+	        	})
+			}, function (error) {
 
-				})
-		}
+			})
+		}*/
 
 
 	/*	function _filterNamesList (data, gender) {

@@ -8,7 +8,7 @@
 
 			//private variables
 			var _tabs = [];
-			var _tabNames = ['boy', 'girl'];
+			//var _tabNames = ['boy', 'girl'];
 			var _filterNamesList = _filterNamesList; 
 
 			var factory = {};
@@ -17,22 +17,22 @@
 
 			return factory;
 
-			function _filterNamesList (data, gender) {
-				return _.filter(data , function (name) {
+			function _filterNamesList (list, gender) {
+				return _.filter(list , function (name) {
 					return name.gender === gender;
 				});
 			}
 
-			function setTabsView (tabData, tabName) {
+			function setTabsView (namesList, filter) {
 				_tabs = [];			
 
-				_tabs.push({name: tabName, list: tabData});
+				_tabs.push({name: filter, list: namesList});
 
-				if (tabName === 'either') {
+				if (filter === 'either') {
 					//show other tabs too
-					_.forEach(_tabNames, function(tab) {
+					_.forEach(['boy', 'girl'], function(type) {
 						(function() {
-							_tabs.push({name: tab, list: _filterNamesList(tabData, tab)} );
+							_tabs.push({name: type, list: _filterNamesList(namesList, type)} );
 						})()
 					})
 

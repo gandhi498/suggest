@@ -1,0 +1,119 @@
+<!---Aplhabet widget | all names search start  should be a directive--> 
+
+<section class="section--center mdl-grid site-max-width" >
+   <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored names-suggestion__button"
+   ng-click="allNames.showSuggestion()">
+    {{allNames.model.suggestionLabel}}
+  </button>
+</section>
+
+
+<section ng-if="allNames.model.isSuggestionOpen" class="section--center mdl-grid site-max-width" id="allNamesList">
+  <ul class="alphabet-widget">
+    <li ng-repeat="alphabet in allNames.model.alphabets" ng-click="allNames.getNamesForLetter(alphabet)">{{alphabet}}</li>          
+  </ul>
+
+  <div class="mdl-cell mdl-card mdl-cell--12-col mdl-shadow--4dp portfolio-card">
+    <div class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+      <div class="mdl-tabs__tab-bar">
+          <a href="#allBoys" class="mdl-tabs__tab is-active">Boys</a>
+          <a href="#allGirls" class="mdl-tabs__tab">Girls</a>          
+      </div>
+
+      <div class="mdl-tabs__panel is-active" id="allBoys">
+        <ul class="demo-list-two mdl-list">
+          <li class="mdl-list__item mdl-list__item--three-line border__blue" ng-repeat="name in allNames.model.namesList | filter : {gender : 'boy'}">
+            <span class="mdl-list__item-primary-content">
+              <span><b>{{name.babyname}}</b></span>                    
+              <span class="mdl-list__item-text-body">
+                {{name.meaning}} 
+              </span>
+            </span>  
+            <span class="mdl-list__item-secondary-content"> 
+              <a class="mdl-list__item-secondary-action like-container" href="">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                  Add
+                </button>
+              </a>                                                  
+            </span>                
+          </li>
+        </ul>
+      </div>
+      <div class="mdl-tabs__panel" id="allGirls">
+        <ul class="demo-list-two mdl-list">
+          <li class="mdl-list__item mdl-list__item--three-line border__pink" ng-repeat="name in allNames.model.namesList | filter : {gender : 'girl'}">
+            <span class="mdl-list__item-primary-content">
+              <span><b>{{name.babyname}}</b></span>                    
+              <span class="mdl-list__item-text-body">
+                {{name.meaning}} 
+              </span>
+            </span>  
+            <span class="mdl-list__item-secondary-content"> 
+              <a class="mdl-list__item-secondary-action like-container" href="">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                  Add
+                </button>
+              </a>                                                  
+            </span>                
+          </li>
+        </ul>
+      </div>
+  </div>
+   <!--  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+    mdl-layout--fixed-tabs">
+      <header class="mdl-layout__header">          
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect"> 
+          <a href="#allBoys" class="mdl-layout__tab is-active">Boy</a>
+          <a href="#allGirls" class="mdl-layout__tab">Girl</a>
+        </div>
+      </header> 
+
+      <main class="mdl-layout__content">
+        <section class="mdl-layout__tab-panel is-active" id="allBoys">
+          <div class="page-content">
+            <ul class="demo-list-two mdl-list">
+              <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in boysList">
+                <span class="mdl-list__item-primary-content">
+                  <span><b>{{name.babyname}}</b></span>                    
+                  <span class="mdl-list__item-text-body">
+                    {{name.meaning}} 
+                  </span>
+                </span>  
+                <span class="mdl-list__item-secondary-content"> 
+                  <a class="mdl-list__item-secondary-action like-container" href="">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                      Add
+                    </button>
+                  </a>                                                  
+                </span>                
+              </li>
+            </ul>
+          </div>
+        </section>    
+        <section class="mdl-layout__tab-panel" id="allGirls">
+          <div class="page-content">
+            <ul class="demo-list-two mdl-list">
+              <li class="mdl-list__item mdl-list__item--three-line" ng-repeat="name in girlsList">
+                <span class="mdl-list__item-primary-content">
+                  <span><b>{{name.babyname}}</b></span>                    
+                  <span class="mdl-list__item-text-body">
+                    {{name.meaning}} 
+                  </span>
+                </span> 
+                <span class="mdl-list__item-secondary-content"> 
+                  <a class="mdl-list__item-secondary-action like-container" href="">
+                    <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                      Add
+                    </button>
+                  </a>                                                  
+                </span>  
+              </li>
+            </ul>
+          </div>
+        </section>   
+      </main>
+    </div> -->
+  </div>
+</section>
+
+<!---Aplhabet widget | all names search End 
