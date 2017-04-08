@@ -1,9 +1,61 @@
 /* istanbul ignore next */(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.yes = f()}})(function(){var define,module,exports;return /* istanbul ignore next */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+require('./all-names.module')
+    .directive('csAllNames', csAllNames);
+
+function csAllNames() {
+
+    Controller.$inject = ["$state", "csApiMySpace", "$rootScope", "$timeout"];
+    return {
+        restrict: 'EA',
+        templateUrl: 'all-names/cs-all-names.html',
+        replace: true,
+        controller: Controller,
+        controllerAs: 'allNames'
+    };
+
+    /* @ngInject */
+    function Controller(
+        $state,
+        csApiMySpace,
+        $rootScope,
+        $timeout
+    ) {
+
+        var vm = this;
+
+        vm.model = {};
+        vm.model.alphabets = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+        vm.model.namesList = [];
+        vm.getNamesForLetter = getNamesForLetter;
+
+        function getNamesForLetter(letter) {
+            csApiMySpace.getNamesForLetter(letter)
+                .then(function (success) {
+                    vm.model.namesList = success.data.nameList;
+                    $timeout(function () {
+                        componentHandler.upgradeAllRegistered();
+                    })
+                }, function (error) {
+                    console.log("Error occurred while getting names by letter: %s",JSON.stringify(error));
+                })
+        }
+
+
+    }
+}
+},{"./all-names.module":2}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = angular.module('cs.allnames', []);
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
 module.exports = angular.module('cs.api', []);
 
-},{}],2:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 factory.$inject = ["$http", "csCsrf"];
@@ -46,7 +98,7 @@ function factory ($http, csCsrf) {
 
 }
 
-},{"./api.module":1}],3:[function(require,module,exports){
+},{"./api.module":3}],5:[function(require,module,exports){
 'use strict';
 
 factory.$inject = ["$http", "csCsrf"];
@@ -57,7 +109,8 @@ require('./api.module')
 function factory ($http, csCsrf) {
 
     return {
-        addName: addName
+        addName: addName,
+        getNamesForLetter: getNamesForLetter
     };
 
 
@@ -74,9 +127,21 @@ function factory ($http, csCsrf) {
 
     }
 
+    function getNamesForLetter (letter) {
+       
+        return $http(csCsrf.upgradeHttpObject({
+            url: '/space/add/getNamesForLetter?letter='+letter,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }));
+    }
+
 }
 
-},{"./api.module":1}],4:[function(require,module,exports){
+},{"./api.module":3}],6:[function(require,module,exports){
 'use strict';
 
 factory.$inject = ["$http", "csCsrf"];
@@ -105,7 +170,7 @@ function factory ($http, csCsrf) {
 
 }
 
-},{"./api.module":1}],5:[function(require,module,exports){
+},{"./api.module":3}],7:[function(require,module,exports){
 'use strict';
 
 config.$inject = ["$stateProvider", "csCoreStates"];
@@ -139,7 +204,7 @@ function config ($stateProvider, csCoreStates) {
 
 }
 
-},{"./core.module":7}],6:[function(require,module,exports){
+},{"./core.module":9}],8:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -156,7 +221,7 @@ function csCoreContainer () {
 
 }
 
-},{"./core.module":7}],7:[function(require,module,exports){
+},{"./core.module":9}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.core', [
@@ -167,9 +232,10 @@ module.exports = angular.module('cs.core', [
     require('./../csrf/csrf.module').name,
     require('./../form/form.module').name,
     require('./../myspace/myspace.module').name,
+    require('./../all-names/all-names.module').name,
 ]);
 
-},{"./../api/api.module":1,"./../csrf/csrf.module":12,"./../form/form.module":14,"./../login/login.module":16,"./../myspace/myspace.module":18}],8:[function(require,module,exports){
+},{"./../all-names/all-names.module":2,"./../api/api.module":3,"./../csrf/csrf.module":14,"./../form/form.module":16,"./../login/login.module":18,"./../myspace/myspace.module":20}],10:[function(require,module,exports){
 'use strict';
 
 require('./core.module')
@@ -205,7 +271,7 @@ function csCoreModel () {
 }
 
 
-},{"./core.module":7}],9:[function(require,module,exports){
+},{"./core.module":9}],11:[function(require,module,exports){
 'use strict';
 
 run.$inject = ["$rootScope", "csCoreStates"];
@@ -219,7 +285,7 @@ function run ($rootScope, csCoreStates) {
 
 }
 
-},{"./core.module":7}],10:[function(require,module,exports){
+},{"./core.module":9}],12:[function(require,module,exports){
 'use strict';
 
 require('./core.module.js')
@@ -241,7 +307,7 @@ function csCoreStates () {
 
 }
 
-},{"./core.module.js":7}],11:[function(require,module,exports){
+},{"./core.module.js":9}],13:[function(require,module,exports){
 'use strict';
 
 require('./csrf.module')
@@ -280,12 +346,12 @@ function csCsrf () {
 
 }
 
-},{"./csrf.module":12}],12:[function(require,module,exports){
+},{"./csrf.module":14}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.csrf', []);
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 csForm.$inject = ["$rootScope", "$q"];
@@ -529,12 +595,12 @@ function csForm ($rootScope, $q) {
 
 }
 
-},{"./form.module":14}],14:[function(require,module,exports){
+},{"./form.module":16}],16:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.form', []);
 
-},{}],15:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 require('./login.module')
@@ -707,12 +773,12 @@ function csLogin () {
     }
 }
 
-},{"./login.module":16}],16:[function(require,module,exports){
+},{"./login.module":18}],18:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.login', []);
 
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 require('./myspace.module')
@@ -795,10 +861,10 @@ function csMySpace() {
     }
 }
 
-},{"./myspace.module":18}],18:[function(require,module,exports){
+},{"./myspace.module":20}],20:[function(require,module,exports){
 'use strict';
 
 module.exports = angular.module('cs.myspace', []);
 
-},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18])(18)
+},{}]},{},[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])(20)
 });

@@ -8,4 +8,5 @@ module.exports = angular.module('cs.core', [
     require('./../csrf/csrf.module').name,
     require('./../form/form.module').name,
     require('./../myspace/myspace.module').name,
+    require('./../all-names/all-names.module').name,
 ]);

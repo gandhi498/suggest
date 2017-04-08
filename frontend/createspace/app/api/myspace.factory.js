@@ -7,7 +7,8 @@ require('./api.module')
 function factory ($http, csCsrf) {
 
     return {
-        addName: addName
+        addName: addName,
+        getNamesForLetter: getNamesForLetter
     };
 
 
@@ -22,6 +23,18 @@ function factory ($http, csCsrf) {
             data: JSON.stringify(userData)
         }));
 
+    }
+
+    function getNamesForLetter (letter) {
+       
+        return $http(csCsrf.upgradeHttpObject({
+            url: '/space/add/getNamesForLetter?letter='+letter,
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }));
     }
 
 }
