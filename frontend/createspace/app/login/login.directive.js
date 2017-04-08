@@ -3,7 +3,7 @@
 require('./login.module')
     .directive('csLogin', csLogin);
 
-function csLogin () {
+function csLogin() {
 
     return {
         restrict: 'EA',
@@ -14,7 +14,7 @@ function csLogin () {
     };
 
     /* @ngInject */
-    function Controller (
+    function Controller(
         $state,
         csCoreStates,
         csCoreModel,
@@ -27,33 +27,57 @@ function csLogin () {
         self.isLoggedIn = false;
         self.loading = false;
         window.logoutUser = function () {
-            FB.logout(function(response) {
+            FB.logout(function (response) {
                 console.log("User logged out successfully");
             });
         }
+        var fbSdkChckTmr;
+
+        function checkFbSdk() {
+            fbSdkChckTmr = setTimeout(function () {
+                if (FB) {
+                    (function () {
+                        FB.init({
+                            appId: '1885200375089223',
+                            xfbml: true,
+                            version: 'v2.8'
+                        });
+                        FB.AppEvents.logPageView();
+                        stopFbTimerFunction();
+                        window.checkLoginState();
+                    })();
+                }
+            }, 1000);
+        }
+
+        function stopFbTimerFunction() {
+            clearTimeout(fbSdkChckTmr);
+        }
+
+        checkFbSdk();
+
         window.checkLoginState = function () {
-            FB.getLoginStatus(function(response) {
+            FB.getLoginStatus(function (response) {
                 console.log(response);
 
-                if(response.status == 'connected' && response.authResponse.userID != "") {
+                if (response.status == 'connected' && response.authResponse.userID != "") {
                     var userID = response.authResponse.userID;
                     FB.api(
-                        "/"+response.authResponse.userID+"?fields=email,first_name,last_name,gender,link,picture",
+                        "/" + response.authResponse.userID + "?fields=email,first_name,last_name,gender,link,picture",
                         function (response) {
-                          if (response && !response.error) {
-                            /* handle the result */
-                            response.userID = userID;
-                            handelFbResponse(response);
-                          } 
-                          else {
-                            alert("Sorry, error occured while fetching your data from facebook, please try again");
-                          }
+                            if (response && !response.error) {
+                                /* handle the result */
+                                response.userID = userID;
+                                handelFbResponse(response);
+                            } else {
+                                alert("Sorry, error occured while fetching your data from facebook, please try again");
+                            }
 
                         }
                     );
                 }
-              });
-        }      
+            });
+        }
 
         var reForNumber = /^[0-9]+$/;
         var reForFbNumber = /^\d{10,12}$/;
@@ -70,26 +94,28 @@ function csLogin () {
         self.model.userDetails = {};
         self.showManageSpace = false;
         var handelFbResponse = function (response) {
-            
-            csApiLogin.getUserAndSpaceDetailsById({userID:response.userID})
-            .then(function(res){
-                //user found in the system
-                console.log(res.data);
-                if(res.data.socialDetails.fbID === response.userID) {
-                    self.showManageSpace = true;
-                    self.isLoggedIn = true; 
-                    self.model.loggedInUser = res.data;
+
+            csApiLogin.getUserAndSpaceDetailsById({
+                    userID: response.userID
+                })
+                .then(function (res) {
+                    //user found in the system
+                    console.log(res.data);
+                    if (res.data.socialDetails.fbID === response.userID) {
+                        self.showManageSpace = true;
+                        self.isLoggedIn = true;
+                        self.model.loggedInUser = res.data;
+                        updateRootScope();
+                    }
+
+                }, function () {
+                    // user not found in the system
+                    self.isLoggedIn = true;
+                    self.showManageSpace = false;
+                    self.model.userDetails = response;
+                    console.log(response);
                     updateRootScope();
-                }
-                
-            },function(){
-                // user not found in the system
-                self.isLoggedIn = true;
-                self.showManageSpace = false;
-                self.model.userDetails = response;
-                console.log(response);
-                updateRootScope();
-            });
+                });
         }
 
         var formHandler = csForm({
@@ -136,13 +162,13 @@ function csLogin () {
 
         self.submit = formHandler.submit;
 
-        function submit (form) {
+        function submit(form) {
 
             var userData = {};
             userData.socialData = self.model.userDetails;
             userData.spaceDetails = self.model;
             self.loading = true;
-            
+
             return csApiLogin.login(userData)
                 .then(_submitSuccess(form), formHandler.submitFailed(form))
                 .finally(function () {
@@ -150,12 +176,12 @@ function csLogin () {
                 });
         }
 
-        function _submitSuccess () {
+        function _submitSuccess() {
 
             return function (res) {
-                console.log("Space created successfully: %s",JSON.stringify(res.data));
+                console.log("Space created successfully: %s", JSON.stringify(res.data));
                 console.log("Now need to send user to next screen");
-                
+
                 $state.go(csCoreStates.MYSPACE);
             };
 
@@ -165,6 +191,6 @@ function csLogin () {
                 $rootScope.$apply();
             }, 100);
         }
-        
+
     }
 }

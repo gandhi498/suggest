@@ -34,9 +34,15 @@
                     </div>
                 </div>
             </div>
-             <div class="mdl-card__title" ng-show="!myspace.isSessionValid">
-                <fb:login-button scope="public_profile,email" onlogin="myspace.checkLoginState()">
+            <div class="mdl-card__title" ng-show="!myspace.showRegisterLink">
+                <fb:login-button scope="public_profile,email" onlogin="checkLoginStateMySpace()">
                 </fb:login-button>
+            </div>
+            <div class="mdl-card__title" ng-show="myspace.showRegisterLink">
+                <div class="mdl-card--border"><img src="{{myspace.model.fb.profilepic}}"></div>
+                <div class="mdl-card__supporting-text mdl-card--border">
+                    <p>Sorry, {{ myspace.model.fb.username  }} no space found on our system, please create one <a href="" ui-sref="{{ STATES.LOGIN }}">here</a></p>
+                </div>
             </div>
             <!--<div class="mdl-card__supporting-text">
             </div>-->

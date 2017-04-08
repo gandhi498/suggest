@@ -21,14 +21,16 @@ function csMySpace() {
         csForm,
         csApiMySpace,
         csApiSession,
+        csApiLogin,
         $rootScope
     ) {
         var self = this;
 
         self.model = csCoreModel.model;
         self.isSessionValid = false;
-
-        self.checkLoginState = function () {
+        self.showRegisterLink = false;
+        self.model.fb = {username: "", profilepic:""};
+        window.checkLoginStateMySpace = function () {
             FB.getLoginStatus(function (response) {
                 console.log(response);
 
@@ -54,6 +56,25 @@ function csMySpace() {
         var handelFbResponse = function (response) {
             // Call here backend to get deatils of logged-in user
             console.log(JSON.stringify(response));
+            csApiLogin.getUserAndSpaceDetailsById({userID:response.userID})
+            .then(function(res){
+                //user found in the system
+                console.log(res.data);
+                if(res.data.socialDetails.fbID === response.userID) {
+                    self.model = res.data;
+                    self.isSessionValid = true;
+                    self.showRegisterLink = false;
+                    updateRootScope();
+                }
+                
+            },function(error){
+                // user not found in the system
+                self.model.fb.username = response.first_name + ' ' +response.last_name;
+                self.model.fb.profilepic = response.picture.data.url;
+                self.showRegisterLink = true;
+                console.log(error);
+                updateRootScope();
+            });
         }
 
         csApiSession.checkSession()
@@ -66,6 +87,16 @@ function csMySpace() {
             }, function (res) {
                 console.log("Session Check Failed : %s", JSON.stringify(res.data));
                 self.isSessionValid = false;
+                //Init FB
+                (function () {
+                FB.init({
+                    appId: '1885200375089223',
+                    xfbml: true,
+                    version: 'v2.8'
+                });
+                FB.AppEvents.logPageView();
+                checkLoginStateMySpace();
+                })();
                 updateRootScope();
             });
 

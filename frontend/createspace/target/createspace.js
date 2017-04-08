@@ -934,7 +934,7 @@ module.exports = angular.module('cs.form', []);
 require('./login.module')
     .directive('csLogin', csLogin);
 
-function csLogin () {
+function csLogin() {
 
     Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiLogin", "$rootScope"];
     return {
@@ -946,7 +946,7 @@ function csLogin () {
     };
 
     /* @ngInject */
-    function Controller (
+    function Controller(
         $state,
         csCoreStates,
         csCoreModel,
@@ -959,33 +959,57 @@ function csLogin () {
         self.isLoggedIn = false;
         self.loading = false;
         window.logoutUser = function () {
-            FB.logout(function(response) {
+            FB.logout(function (response) {
                 console.log("User logged out successfully");
             });
         }
+        var fbSdkChckTmr;
+
+        function checkFbSdk() {
+            fbSdkChckTmr = setTimeout(function () {
+                if (FB) {
+                    (function () {
+                        FB.init({
+                            appId: '1885200375089223',
+                            xfbml: true,
+                            version: 'v2.8'
+                        });
+                        FB.AppEvents.logPageView();
+                        stopFbTimerFunction();
+                        window.checkLoginState();
+                    })();
+                }
+            }, 1000);
+        }
+
+        function stopFbTimerFunction() {
+            clearTimeout(fbSdkChckTmr);
+        }
+
+        checkFbSdk();
+
         window.checkLoginState = function () {
-            FB.getLoginStatus(function(response) {
+            FB.getLoginStatus(function (response) {
                 console.log(response);
 
-                if(response.status == 'connected' && response.authResponse.userID != "") {
+                if (response.status == 'connected' && response.authResponse.userID != "") {
                     var userID = response.authResponse.userID;
                     FB.api(
-                        "/"+response.authResponse.userID+"?fields=email,first_name,last_name,gender,link,picture",
+                        "/" + response.authResponse.userID + "?fields=email,first_name,last_name,gender,link,picture",
                         function (response) {
-                          if (response && !response.error) {
-                            /* handle the result */
-                            response.userID = userID;
-                            handelFbResponse(response);
-                          } 
-                          else {
-                            alert("Sorry, error occured while fetching your data from facebook, please try again");
-                          }
+                            if (response && !response.error) {
+                                /* handle the result */
+                                response.userID = userID;
+                                handelFbResponse(response);
+                            } else {
+                                alert("Sorry, error occured while fetching your data from facebook, please try again");
+                            }
 
                         }
                     );
                 }
-              });
-        }      
+            });
+        }
 
         var reForNumber = /^[0-9]+$/;
         var reForFbNumber = /^\d{10,12}$/;
@@ -1002,26 +1026,28 @@ function csLogin () {
         self.model.userDetails = {};
         self.showManageSpace = false;
         var handelFbResponse = function (response) {
-            
-            csApiLogin.getUserAndSpaceDetailsById({userID:response.userID})
-            .then(function(res){
-                //user found in the system
-                console.log(res.data);
-                if(res.data.socialDetails.fbID === response.userID) {
-                    self.showManageSpace = true;
-                    self.isLoggedIn = true; 
-                    self.model.loggedInUser = res.data;
+
+            csApiLogin.getUserAndSpaceDetailsById({
+                    userID: response.userID
+                })
+                .then(function (res) {
+                    //user found in the system
+                    console.log(res.data);
+                    if (res.data.socialDetails.fbID === response.userID) {
+                        self.showManageSpace = true;
+                        self.isLoggedIn = true;
+                        self.model.loggedInUser = res.data;
+                        updateRootScope();
+                    }
+
+                }, function () {
+                    // user not found in the system
+                    self.isLoggedIn = true;
+                    self.showManageSpace = false;
+                    self.model.userDetails = response;
+                    console.log(response);
                     updateRootScope();
-                }
-                
-            },function(){
-                // user not found in the system
-                self.isLoggedIn = true;
-                self.showManageSpace = false;
-                self.model.userDetails = response;
-                console.log(response);
-                updateRootScope();
-            });
+                });
         }
 
         var formHandler = csForm({
@@ -1068,13 +1094,13 @@ function csLogin () {
 
         self.submit = formHandler.submit;
 
-        function submit (form) {
+        function submit(form) {
 
             var userData = {};
             userData.socialData = self.model.userDetails;
             userData.spaceDetails = self.model;
             self.loading = true;
-            
+
             return csApiLogin.login(userData)
                 .then(_submitSuccess(form), formHandler.submitFailed(form))
                 .finally(function () {
@@ -1082,12 +1108,12 @@ function csLogin () {
                 });
         }
 
-        function _submitSuccess () {
+        function _submitSuccess() {
 
             return function (res) {
-                console.log("Space created successfully: %s",JSON.stringify(res.data));
+                console.log("Space created successfully: %s", JSON.stringify(res.data));
                 console.log("Now need to send user to next screen");
-                
+
                 $state.go(csCoreStates.MYSPACE);
             };
 
@@ -1097,10 +1123,9 @@ function csLogin () {
                 $rootScope.$apply();
             }, 100);
         }
-        
+
     }
 }
-
 },{"./login.module":18}],18:[function(require,module,exports){
 'use strict';
 
@@ -1114,7 +1139,7 @@ require('./myspace.module')
 
 function csMySpace() {
 
-    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "csApiSession", "$rootScope"];
+    Controller.$inject = ["$state", "csCoreStates", "csCoreModel", "csForm", "csApiMySpace", "csApiSession", "csApiLogin", "$rootScope"];
     return {
         restrict: 'EA',
         templateUrl: 'myspace/cs-myspace.html',
@@ -1131,14 +1156,16 @@ function csMySpace() {
         csForm,
         csApiMySpace,
         csApiSession,
+        csApiLogin,
         $rootScope
     ) {
         var self = this;
 
         self.model = csCoreModel.model;
         self.isSessionValid = false;
-
-        self.checkLoginState = function () {
+        self.showRegisterLink = false;
+        self.model.fb = {username: "", profilepic:""};
+        window.checkLoginStateMySpace = function () {
             FB.getLoginStatus(function (response) {
                 console.log(response);
 
@@ -1164,6 +1191,25 @@ function csMySpace() {
         var handelFbResponse = function (response) {
             // Call here backend to get deatils of logged-in user
             console.log(JSON.stringify(response));
+            csApiLogin.getUserAndSpaceDetailsById({userID:response.userID})
+            .then(function(res){
+                //user found in the system
+                console.log(res.data);
+                if(res.data.socialDetails.fbID === response.userID) {
+                    self.model = res.data;
+                    self.isSessionValid = true;
+                    self.showRegisterLink = false;
+                    updateRootScope();
+                }
+                
+            },function(error){
+                // user not found in the system
+                self.model.fb.username = response.first_name + ' ' +response.last_name;
+                self.model.fb.profilepic = response.picture.data.url;
+                self.showRegisterLink = true;
+                console.log(error);
+                updateRootScope();
+            });
         }
 
         csApiSession.checkSession()
@@ -1176,6 +1222,16 @@ function csMySpace() {
             }, function (res) {
                 console.log("Session Check Failed : %s", JSON.stringify(res.data));
                 self.isSessionValid = false;
+                //Init FB
+                (function () {
+                FB.init({
+                    appId: '1885200375089223',
+                    xfbml: true,
+                    version: 'v2.8'
+                });
+                FB.AppEvents.logPageView();
+                checkLoginStateMySpace();
+                })();
                 updateRootScope();
             });
 
@@ -1213,4 +1269,4 @@ module.exports = angular.module('cs.myspace', []);
 
         }
 
-    }({"all-names/cs-all-names.html":"<section class=\"section--center mdl-grid site-max-width\" id=\"allNamesList\">\n    <div class=\"mdl-cell mdl-card mdl-cell--12-col mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-tabs mdl-js-tabs mdl-js-ripple-effect\">\n            <ul class=\"alphabet-widget\">\n                <li ng-repeat=\"alphabet in allNames.model.alphabets\" ng-click=\"allNames.getNamesForLetter(alphabet)\">{{alphabet}}</li>\n            </ul>\n            <div class=\"alphabet-border mdl-tabs__tab-bar\">\n                <a href=\"#allBoys\" class=\"mdl-tabs__tab is-active\">Boys</a>\n                <a href=\"#allGirls\" class=\"mdl-tabs__tab\">Girls</a>\n            </div>\n\n            <div class=\"mdl-tabs__panel is-active\" id=\"allBoys\">\n                <ul class=\"demo-list-two mdl-list\">\n                    <li class=\"mdl-list__item mdl-list__item--three-line border__blue\" ng-repeat=\"name in allNames.model.namesList | filter : {gender : 'boy'}\">\n                        <span class=\"mdl-list__item-primary-content\">\n              <span><b>{{name.babyname}}</b></span>\n                        <span class=\"mdl-list__item-text-body\">\n                {{name.meaning}} \n              </span>\n                        </span>\n                        <span class=\"mdl-list__item-secondary-content\"> \n              <a class=\"mdl-list__item-secondary-action like-container\" href=\"\">\n                <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\">\n                  Add\n                </button>\n              </a>                                                  \n            </span>\n                    </li>\n                </ul>\n            </div>\n            <div class=\"mdl-tabs__panel\" id=\"allGirls\">\n                <ul class=\"demo-list-two mdl-list\">\n                    <li class=\"mdl-list__item mdl-list__item--three-line border__pink\" ng-repeat=\"name in allNames.model.namesList | filter : {gender : 'girl'}\">\n                        <span class=\"mdl-list__item-primary-content\">\n              <span><b>{{name.babyname}}</b></span>\n                        <span class=\"mdl-list__item-text-body\">\n                {{name.meaning}} \n              </span>\n                        </span>\n                        <!--<span class=\"mdl-list__item-secondary-content\"> \n              <a class=\"mdl-list__item-secondary-action like-container\" href=\"\">\n                <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\">\n                  Add\n                </button>\n              </a>                                                  \n            </span>-->\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n</section>","core/cs-core-container.html":"<div class=\"awl-container\">\n\t<div class=\"cs-container__panel\">\n\t\t<div class=\"cs-container__panel__content\" ui-view></div>\n\t</div>\n</div>","login/cs-login.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title home-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <nav>\n                    <ol class=\"cd-multi-steps text-bottom count\">\n                        <li class=\"current\"><em href=\"\">Social Login</em></li>\n                        <li class=\"current\"><em href=\"\">Create Space</em></li>\n                        <li class=\"current\"><em>Share link</em></li>\n                        <!--<li><em>Review</em></li>-->\n                    </ol>\n                </nav>\n            </div>\n            <div class=\"mdl-card__actions mdl-card--border\">\n                <!--<a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>-->\n                <p class=\"cd-multi-steps\">Follow above steps and get name suggesstions for your baby from all well wishers!</p>\n            </div>\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Register your space here :</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <div ng-show=\"login.showManageSpace && login.isLoggedIn\">\n                    <p>Welcome, {{login.model.loggedInUser.socialDetails.name}}</p>\n                    <p><img src=\"{{login.model.loggedInUser.socialDetails.profilePicture}}\"></p>\n                    <p><a href=\"\" ui-sref=\"{{ STATES.MYSPACE }}\">Click here to manage your space</a></p>\n                </div>\n                <div ng-show=\"!login.isLoggedIn\">\n                    Login with :\n                    <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState()\">\n                    </fb:login-button>\n                </div>\n                <div ng-show=\"login.isLoggedIn && !login.showManageSpace\">\n                    <form ng-submit=\"login.submit(loginForm, $event)\" name=\"loginForm\" novalidate class=\"\">\n                        <div ng-messages=\"loginForm.$error\">\n                            <span ng-message=\"unknown_error\">\n                    <span aria-role=\"alert\">Sorry, unknown technical error occured</span>\n                            </span>\n                            <span ng-message=\"001\">\n                    <span aria-role=\"alert\">Sorry, space with same name already exists</span>\n                            </span>\n                        </div>\n                        <p>Welcome, {{ login.model.userDetails.first_name }}</p>\n                        <div ng-if=\"!login.model.userDetails.email\" class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.userEmail\" class=\"mdl-textfield__input\" type=\"text\" id=\"userEmail\" name=\"userEmail\">\n                            <label class=\"mdl-textfield__label\" for=\"userEmail\">Please enter your email</label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.spaceName\" class=\"mdl-textfield__input\" type=\"text\" id=\"spaceName\" name=\"spaceName\">\n                            <label class=\"mdl-textfield__label\" for=\"spaceName\">\n                                <span ng-hide=\"loginForm.spaceName.$invalid && loginForm.$submitted\"\n                                id=\"username-label\">Please enter space name\n                                </span>\n\n                                <span id=\"username-label-error\"\n                                    ng-messages=\"loginForm.spaceName.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please enter space name</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield\">\n                            <label for=\"expectingNameFor\">\n                                <span ng-hide=\"loginForm.expectingNameFor.$invalid && loginForm.$submitted\"\n                                id=\"expectingNameFor-label\">For:</span>\n\n                                <span id=\"expectingNameFor-label-error\"\n                                    ng-messages=\"loginForm.expectingNameFor.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please select expecting name for</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-0\">\n                            <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-0\" ng-model=\"login.model.expectingNameFor\" value=\"boy\">\n                                Boy\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-1\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-1\" ng-model=\"login.model.expectingNameFor\" value=\"girl\" checked=\"checked\">\n                                Girl\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-2\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-2\" ng-model=\"login.model.expectingNameFor\" value=\"na\">\n                                Don't know\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.expectingOn\" class=\"mdl-textfield__input\" type=\"date\" id=\"expectingOn\" name=\"expectingOn\">\n                            <label class=\"mdl-textfield__label\" for=\"expectingOn\">\n                                <span ng-hide=\"loginForm.expectingOnexpectingOn.$invalid && loginForm.$submitted\"\n                                id=\"expectingOn-label\"> </span>\n\n                                <span id=\"expectingOn-label-error\"\n                                    ng-messages=\"loginForm.expectingOn.$error\">\n                                    <span ng-message=\"invalid\">\n                                        <span aria-role=\"alert\">Invalid date</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <p>\n                            <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\" type=\"submit\">\n                                Create<img ng-show=\"loading\" width=\"24px\" src=\"/space/create/img/spinner.gif\">\n                            </button>\n                        </p>\n                    </form>\n                </div>\n            </div>\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n         <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n    </section>\n    <div cs-all-names></div>\n    <!--<section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>-->\n\n    <!--<section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>-->\n</div>","myspace/cs-myspace.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title myspace-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n                Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.\n            </div>-->\n            <!--<div class=\"mdl-card__actions mdl-card--border\">\n                <a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>\n\n            </div>-->\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\" ng-show=\"myspace.isSessionValid\">\n                <div>\n                    <p>Welcome, {{ myspace.model.socialDetails.name }}</p>\n                    <p><img src=\"{{myspace.model.socialDetails.profilePicture}}\"></p>\n                    <h2 class=\"mdl-card__title-text\">Space Information</h2>\n                    <br>\n                    <div>\n                        <p>Name: {{ myspace.model.spaceDetails.spacename }}</p>\n                        <p>Expecting name for : {{ myspace.model.spaceDetails.expectingNameFor }}</p>\n                        <p>Expecting on : {{ myspace.model.spaceDetails.expectingOn }}</p>\n                        <p>Space URL : <a href=\"{{ myspace.model.spaceDetails.spaceUrl }}\">{{ myspace.model.spaceDetails.spaceUrl }}</a></p>\n                    </div>\n                </div>\n            </div>\n             <div class=\"mdl-card__title\" ng-show=\"!myspace.isSessionValid\">\n                <fb:login-button scope=\"public_profile,email\" onlogin=\"myspace.checkLoginState()\">\n                </fb:login-button>\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n            </div>-->\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n         <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n    </section>\n    <div cs-all-names></div>\n    <!--<section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>\n\n    <section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>-->\n</div>"}));
+    }({"all-names/cs-all-names.html":"<section class=\"section--center mdl-grid site-max-width\" id=\"allNamesList\">\n    <div class=\"mdl-cell mdl-card mdl-cell--12-col mdl-shadow--4dp portfolio-card\">\n        <div class=\"mdl-tabs mdl-js-tabs mdl-js-ripple-effect\">\n            <ul class=\"alphabet-widget\">\n                <li ng-repeat=\"alphabet in allNames.model.alphabets\" ng-click=\"allNames.getNamesForLetter(alphabet)\">{{alphabet}}</li>\n            </ul>\n            <div class=\"alphabet-border mdl-tabs__tab-bar\">\n                <a href=\"#allBoys\" class=\"mdl-tabs__tab is-active\">Boys</a>\n                <a href=\"#allGirls\" class=\"mdl-tabs__tab\">Girls</a>\n            </div>\n\n            <div class=\"mdl-tabs__panel is-active\" id=\"allBoys\">\n                <ul class=\"demo-list-two mdl-list\">\n                    <li class=\"mdl-list__item mdl-list__item--three-line border__blue\" ng-repeat=\"name in allNames.model.namesList | filter : {gender : 'boy'}\">\n                        <span class=\"mdl-list__item-primary-content\">\n              <span><b>{{name.babyname}}</b></span>\n                        <span class=\"mdl-list__item-text-body\">\n                {{name.meaning}} \n              </span>\n                        </span>\n                        <span class=\"mdl-list__item-secondary-content\"> \n              <a class=\"mdl-list__item-secondary-action like-container\" href=\"\">\n                <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\">\n                  Add\n                </button>\n              </a>                                                  \n            </span>\n                    </li>\n                </ul>\n            </div>\n            <div class=\"mdl-tabs__panel\" id=\"allGirls\">\n                <ul class=\"demo-list-two mdl-list\">\n                    <li class=\"mdl-list__item mdl-list__item--three-line border__pink\" ng-repeat=\"name in allNames.model.namesList | filter : {gender : 'girl'}\">\n                        <span class=\"mdl-list__item-primary-content\">\n              <span><b>{{name.babyname}}</b></span>\n                        <span class=\"mdl-list__item-text-body\">\n                {{name.meaning}} \n              </span>\n                        </span>\n                        <!--<span class=\"mdl-list__item-secondary-content\"> \n              <a class=\"mdl-list__item-secondary-action like-container\" href=\"\">\n                <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\">\n                  Add\n                </button>\n              </a>                                                  \n            </span>-->\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n</section>","core/cs-core-container.html":"<div class=\"awl-container\">\n\t<div class=\"cs-container__panel\">\n\t\t<div class=\"cs-container__panel__content\" ui-view></div>\n\t</div>\n</div>","login/cs-login.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title home-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <nav>\n                    <ol class=\"cd-multi-steps text-bottom count\">\n                        <li class=\"current\"><em href=\"\">Social Login</em></li>\n                        <li class=\"current\"><em href=\"\">Create Space</em></li>\n                        <li class=\"current\"><em>Share link</em></li>\n                        <!--<li><em>Review</em></li>-->\n                    </ol>\n                </nav>\n            </div>\n            <div class=\"mdl-card__actions mdl-card--border\">\n                <!--<a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>-->\n                <p class=\"cd-multi-steps\">Follow above steps and get name suggesstions for your baby from all well wishers!</p>\n            </div>\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Register your space here :</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                <div ng-show=\"login.showManageSpace && login.isLoggedIn\">\n                    <p>Welcome, {{login.model.loggedInUser.socialDetails.name}}</p>\n                    <p><img src=\"{{login.model.loggedInUser.socialDetails.profilePicture}}\"></p>\n                    <p><a href=\"\" ui-sref=\"{{ STATES.MYSPACE }}\">Click here to manage your space</a></p>\n                </div>\n                <div ng-show=\"!login.isLoggedIn\">\n                    <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginState()\">\n                    </fb:login-button>\n                </div>\n                <div ng-show=\"login.isLoggedIn && !login.showManageSpace\">\n                    <form ng-submit=\"login.submit(loginForm, $event)\" name=\"loginForm\" novalidate class=\"\">\n                        <div ng-messages=\"loginForm.$error\">\n                            <span ng-message=\"unknown_error\">\n                    <span aria-role=\"alert\">Sorry, unknown technical error occured</span>\n                            </span>\n                            <span ng-message=\"001\">\n                    <span aria-role=\"alert\">Sorry, space with same name already exists</span>\n                            </span>\n                        </div>\n                        <p>Welcome, {{ login.model.userDetails.first_name }}</p>\n                        <div ng-if=\"!login.model.userDetails.email\" class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.userEmail\" class=\"mdl-textfield__input\" type=\"text\" id=\"userEmail\" name=\"userEmail\">\n                            <label class=\"mdl-textfield__label\" for=\"userEmail\">Please enter your email</label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.spaceName\" class=\"mdl-textfield__input\" type=\"text\" id=\"spaceName\" name=\"spaceName\">\n                            <label class=\"mdl-textfield__label\" for=\"spaceName\">\n                                <span ng-hide=\"loginForm.spaceName.$invalid && loginForm.$submitted\"\n                                id=\"username-label\">Please enter space name\n                                </span>\n\n                                <span id=\"username-label-error\"\n                                    ng-messages=\"loginForm.spaceName.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please enter space name</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield\">\n                            <label for=\"expectingNameFor\">\n                                <span ng-hide=\"loginForm.expectingNameFor.$invalid && loginForm.$submitted\"\n                                id=\"expectingNameFor-label\">For:</span>\n\n                                <span id=\"expectingNameFor-label-error\"\n                                    ng-messages=\"loginForm.expectingNameFor.$error\">\n                                    <span ng-message=\"required\">\n                                        <span aria-role=\"alert\">Please select expecting name for</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-0\">\n                            <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-0\" ng-model=\"login.model.expectingNameFor\" value=\"boy\">\n                                Boy\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-1\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-1\" ng-model=\"login.model.expectingNameFor\" value=\"girl\" checked=\"checked\">\n                                Girl\n                            </label>\n                            <label class=\"radio-inline\" for=\"radios-2\">\n                                <input type=\"radio\" name=\"expectingNameFor\" id=\"radios-2\" ng-model=\"login.model.expectingNameFor\" value=\"na\">\n                                Don't know\n                            </label>\n                        </div>\n                        <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\">\n                            <input ng-model=\"login.model.expectingOn\" class=\"mdl-textfield__input\" type=\"date\" id=\"expectingOn\" name=\"expectingOn\">\n                            <label class=\"mdl-textfield__label\" for=\"expectingOn\">\n                                <span ng-hide=\"loginForm.expectingOnexpectingOn.$invalid && loginForm.$submitted\"\n                                id=\"expectingOn-label\"> </span>\n\n                                <span id=\"expectingOn-label-error\"\n                                    ng-messages=\"loginForm.expectingOn.$error\">\n                                    <span ng-message=\"invalid\">\n                                        <span aria-role=\"alert\">Invalid date</span>\n                                    </span>\n                                \n                                </span>\n                            </label>\n                        </div>\n                        <p>\n                            <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent\" type=\"submit\">\n                                Create<img ng-show=\"loading\" width=\"24px\" src=\"/space/create/img/spinner.gif\">\n                            </button>\n                        </p>\n                    </form>\n                </div>\n            </div>\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n         <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n    </section>\n    <div cs-all-names></div>\n    <!--<section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>-->\n\n    <!--<section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>-->\n</div>","myspace/cs-myspace.html":"<div class=\"container\">\n    <div class=\"mdl-grid site-max-width\">\n\n        <div class=\"mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp welcome-card portfolio-card\">\n            <div class=\"mdl-card__title myspace-baby\">\n                <!--<h2 class=\"mdl-card__title-text\">Welcome</h2>-->\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n                Demo of Material Design Portfolio Template by TemplateFlip. Click on &quot;Download&quot; button below to download the template.\n            </div>-->\n            <!--<div class=\"mdl-card__actions mdl-card--border\">\n                <a class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\" https://templateflip.com/templates/material-portfolio/\"\n                    target=\"_blank\">\n            Download\n          </a>\n\n            </div>-->\n        </div>\n    </div>\n\n    <section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp\">\n            <div class=\"mdl-card__title\" ng-show=\"myspace.isSessionValid\">\n                <div>\n                    <p>Welcome, {{ myspace.model.socialDetails.name }}</p>\n                    <p><img src=\"{{myspace.model.socialDetails.profilePicture}}\"></p>\n                    <h2 class=\"mdl-card__title-text\">Space Information</h2>\n                    <br>\n                    <div>\n                        <p>Name: {{ myspace.model.spaceDetails.spacename }}</p>\n                        <p>Expecting name for : {{ myspace.model.spaceDetails.expectingNameFor }}</p>\n                        <p>Expecting on : {{ myspace.model.spaceDetails.expectingOn }}</p>\n                        <p>Space URL : <a href=\"{{ myspace.model.spaceDetails.spaceUrl }}\">{{ myspace.model.spaceDetails.spaceUrl }}</a></p>\n                    </div>\n                </div>\n            </div>\n            <div class=\"mdl-card__title\" ng-show=\"!myspace.showRegisterLink\">\n                <fb:login-button scope=\"public_profile,email\" onlogin=\"checkLoginStateMySpace()\">\n                </fb:login-button>\n            </div>\n            <div class=\"mdl-card__title\" ng-show=\"myspace.showRegisterLink\">\n                <div class=\"mdl-card--border\"><img src=\"{{myspace.model.fb.profilepic}}\"></div>\n                <div class=\"mdl-card__supporting-text mdl-card--border\">\n                    <p>Sorry, {{ myspace.model.fb.username  }} no space found on our system, please create one <a href=\"\" ui-sref=\"{{ STATES.LOGIN }}\">here</a></p>\n                </div>\n            </div>\n            <!--<div class=\"mdl-card__supporting-text\">\n            </div>-->\n            <!--<div class=\"mdl-card__actions  mdl-card--border\">\n                 <a href=\"#\" class=\"mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--accent\">Watch Intro</a> \n            </div>-->\n        </div>\n         <header class=\"section__play-btn mdl-cell mdl-cell--3-col-desktop mdl-cell--2-col-tablet mdl-cell--4-col-phone mdl-color--teal-100 mdl-color-text--white  mdl-shadow--4dp\">\n            <i class=\"material-icons\">play_circle_filled</i>\n        </header>\n    </section>\n    <div cs-all-names></div>\n    <!--<section class=\"section--center mdl-grid site-max-width\">\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio1.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Rocky Peak</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio2.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Night Shadow</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n        <div class=\"mdl-cell mdl-card mdl-shadow--4dp portfolio-card\">\n            <div class=\"mdl-card__media\">\n                <img class=\"article-image\" src=\"/space/create/img/portfolio3.jpg\" border=\"0\" alt=\"\">\n            </div>\n            <div class=\"mdl-card__title\">\n                <h2 class=\"mdl-card__title-text\">Sky Reach</h2>\n            </div>\n            <div class=\"mdl-card__supporting-text\">\n                Enim labore aliqua consequat ut quis ad occaecat aliquip incididunt. Sunt nulla eu enim irure enim nostrud aliqua consectetur\n                ad consectetur sunt ullamco officia. Ex officia laborum et consequat duis.\n            </div>\n        </div>\n    </section>\n\n    <section class=\"section--center mdl-grid site-max-width homepage-portfolio\">\n        <a class=\"mdl-button mdl-button--raised mdl-js-button mdl-js-ripple-effect mdl-button--accent\" href=\"/space/create/portfolio.html\">View All Names</a>\n    </section>-->\n</div>"}));

@@ -37,7 +37,6 @@
                     <p><a href="" ui-sref="{{ STATES.MYSPACE }}">Click here to manage your space</a></p>
                 </div>
                 <div ng-show="!login.isLoggedIn">
-                    Login with :
                     <fb:login-button scope="public_profile,email" onlogin="checkLoginState()">
                     </fb:login-button>
                 </div>
