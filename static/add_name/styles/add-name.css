@@ -3,8 +3,9 @@
 }
 
 .event-card .mdl-card__title {
-	height : 200px;
-	background: url('../img/add-name-event-card.jpg');
+	height: 226px;
+    background: url(../img/add-name-event-card.jpg) no-repeat;
+    background-size: 100% 105%;
 }
 
 .welcome__container, .space-names__container {
