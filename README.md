@@ -52,3 +52,7 @@ Endpoints :
 					{"status":"OK"}
 			c. Error responses =
 				/*yet to map error responses*/			
+
+	4. GET: /logout :
+			a. payload: not required
+			b. successs response : 302, redirect to home page

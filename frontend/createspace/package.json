@@ -5,8 +5,8 @@
   "description": "CREATE space",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run watch && npm run start",
-    "start": "node /../../server.js",
+    "dev": "npm run watch",
+    "start": "node ../../server.js",
     "bundle": "node scripts/bundle.js",
     "prewatch": "npm run bundle",
     "watch": "node scripts/watch.js",

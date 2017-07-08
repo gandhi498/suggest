@@ -39,7 +39,7 @@ if(process.env.PROD_MONGODB != undefined) {
 else {
     mongoURL = 'mongodb://localhost:27017/'+databaseName;
 }
-console.log("mongoURL: "+mongoURL);
+console.log("mongoURL: "+ mongoURL);
 
 var space_collection = 'space_collection';
 var name_collection = 'name_collection';
@@ -112,6 +112,7 @@ app.use("/", function (request, response, next) {
 });
 
 var $createspace = require('./endpoints/create-space');
+var $logout = require('./endpoints/logout');
 var $checksession = require('./endpoints/check-session');
 var $getSpaceDetails = require('./endpoints/get-space-details');
 var $getUserAndSpaceDetailsById = require('./endpoints/get-user-and-space-details');
@@ -129,6 +130,7 @@ createSpacejunctionRouter.use('/', $express.static('static/create_space')); // s
 
 createSpacejunctionRouter.post('/createspace', $createspace); // Now endpoint will be : /space/create/createspace
 createSpacejunctionRouter.get('/checksession', $checksession);
+createSpacejunctionRouter.get('/logout', $logout);
 createSpacejunctionRouter.get('/getUserAndSpaceDetailsById',$getUserAndSpaceDetailsById);
 
 app.use('/space/create', createSpacejunctionRouter);

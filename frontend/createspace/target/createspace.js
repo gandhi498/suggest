@@ -976,7 +976,6 @@ function csLogin() {
                         });
                         FB.AppEvents.logPageView();
                         stopFbTimerFunction();
-                        window.checkLoginState();
                     })();
                 }
             }, 1000);
