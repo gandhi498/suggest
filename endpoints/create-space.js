@@ -104,5 +104,11 @@ function createSpace(req, res) {
                 }
             });
         }
+        else {
+            res.writeHead(falseResponse.statusCode, falseResponse.headers);
+            res.end(JSON.stringify({
+                    status: "Please provide valid data"
+            }));
+        }
     });
 }
