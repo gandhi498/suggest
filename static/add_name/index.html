@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
+
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-102239687-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>My Newbie</title>
      <script src="https://code.getmdl.io/1.3.0/material.min.js" defer></script>
-    <meta name="description" content="Demo of Material design portfolio template by TemplateFlip.com."/>    
+    <meta name="description" content="Demo of Material design portfolio template by TemplateFlip.com."/>
     <link href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css" rel="stylesheet">
      <link href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;amp;lang=en" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -30,10 +42,10 @@
         <!--<a class="mdl-navigation__link" href="about.html">About</a><a class="mdl-navigation__link" href="contact.html">Contact</a>-->
         </nav>
       </div>
-       
+
       <main class="mdl-layout__content">
         <div class="site-content">
-          <div class="container">              
+          <div class="container">
             <div ng-view ></div>
           </div>
         </div>
@@ -49,7 +61,7 @@
 
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-route.js"></script>
-     
+
       <script type="text/javascript" src="scripts/libs/ng-lodash.js"></script>
      <!-- <script type="text/javascript" src="scripts/libs/mdl-selectfield.min.js"></script> -->
       <script type="text/javascript" src="scripts/app.js"></script>
@@ -59,17 +71,17 @@
       <!-- Servcies -->
       <script type="text/javascript" src="scripts/services/space-names.service.js"></script>
       <script type="text/javascript" src="scripts/services/space.service.js"></script>
-      <script type="text/javascript" src="scripts/services/names.service.js"></script>    
+      <script type="text/javascript" src="scripts/services/names.service.js"></script>
 
       <!-- factories -->
-      <script type="text/javascript" src="scripts/factories/tabs.factory.js"></script>     
+      <script type="text/javascript" src="scripts/factories/tabs.factory.js"></script>
 
-      <!-- Controllers-->     
+      <!-- Controllers-->
       <script type="text/javascript" src="scripts/controllers/get-names-from-space.controller.js"></script>
       <script type="text/javascript" src="scripts/add-name/add-name.directive.js"></script>
       <script type="text/javascript" src="scripts/all-names/all-names.directive.js"></script>
 
-     
+
     </div>
   </body>
 </html>
