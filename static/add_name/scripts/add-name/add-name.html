@@ -3,11 +3,10 @@
   <div class="demo-card-event mdl-cell mdl-card mdl-shadow--4dp event-card portfolio-card welcome__container" 
   ng-class= "{'mdl-cell--12-col': !addName.model.spaceNamesList.length}">
     <div class="mdl-card__title">
-      <!--   <h2 class="mdl-card__title-text"><b>Welcome</b></h2> -->
+        <h1 class="mdl-card__title-text"><b>Welcome to space {{addName.model.space.spaceDetails.spacename}}</b></h1>
     </div>
     <div class="mdl-card__supporting-text">
-      <!--Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Mauris sagittis pellentesque lacus eleifend lacinia...-->
+      Click on add name for adding new suggestions or vote for the already suggested names !!
     </div>
     <div class="mdl-card__actions mdl-card--border">
       <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" ng-click="addName.showAddNameForm()">
@@ -193,17 +192,17 @@
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="text" id="Name" name="name" ng-model="addName.model.dataToAdd.babyname" 
                   placeholder="Baby name" required/>           
-              </div>
+              </div>             
 
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                  <input class="mdl-textfield__input" type="text" id="meaning" name="meaning" ng-model="addName.model.dataToAdd.meaning"
+                  placeholder="Meaning" required>                
+              </div>   
+
+               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="email" id="Email" name="email" ng-model="addName.model.dataToAdd.email" 
                   placeholder="Email" required>               
-              </div>
-
-              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                  <input class="mdl-textfield__input" type="text" id="meaning" name="meaning" ng-model="addName.model.dataToAdd.meaning" 
-                  placeholder="Meaning" required>                
-              </div>           
+              </div>        
 
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                   <input class="mdl-textfield__input" type="text" id="addedBy" name="addedBy" ng-model="addName.model.dataToAdd.addedBy" 

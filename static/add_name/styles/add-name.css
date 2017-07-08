@@ -2,10 +2,25 @@
 	background: #fff;
 }
 
-.event-card .mdl-card__title {
-	height: 226px;
-    background: url(../img/add-name-event-card.jpg) no-repeat;
-    background-size: 100% 105%;
+.welcome__container .mdl-card__supporting-text {
+	color: rgba(0,0,0,.70)	
+	margin-top: 10px;
+	font-size: 1.2rem;
+}
+
+.welcome__container .mdl-card__title-text {
+	align-self: flex-start;
+}
+
+.welcome__container .mdl-card__actions {
+	position: absolute;
+	bottom: 10px;
+}
+
+.welcome__container .mdl-card__actions a {
+	background: rgba(0,0,0,0.10);
+    width: 100%;
+    padding: 5% 0%;
 }
 
 .welcome__container, .space-names__container {
@@ -13,9 +28,6 @@
 	max-height: 400px;
 }
 
-.names__container .mdl-card__title {
-	
-}
 
 .mdl-card__title {
 	color: rgba(0,0,0,.87) !important;
@@ -74,3 +86,13 @@
 	margin: 35px auto 5px auto
 
 }
+
+
+
+
+@media (max-width: 380px) {
+
+	.welcome__container {
+		min-height: 280px;
+	}
+} 

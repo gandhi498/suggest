@@ -18,6 +18,7 @@
 		}
 
 		function allNamesController() {
+			
 			console.log('all names controller');
 			var vm = this;
 			var _scrollTo = _scrollTo;
@@ -40,6 +41,7 @@
 			}
 
 			function showSuggestion() {
+
 				console.log('showSuggestion');
 				vm.model.isSuggestionOpen = !vm.model.isSuggestionOpen;
 				console.log(vm.model.isSuggestionOpen);
@@ -51,6 +53,7 @@
 
 		
 			function getNamesForLetter(letter) {
+
 				NamesService.getNamesForLetter(letter)
 				.then(function (success) {
 					vm.model.namesList = success.data.nameList;								
@@ -59,7 +62,8 @@
 		        	})
 				}, function (error) {
 
-				})
+				});
+
 			}
 			
 		}
