@@ -44,7 +44,6 @@
             <div class="mdl-card__supporting-text">
                 <div ng-show="login.showManageSpace && login.isLoggedIn">
                     <p>Welcome, {{login.model.loggedInUser.socialDetails.name}}</p>
-                    <p><img ng-src="{{login.model.loggedInUser.socialDetails.profilePicture}}"></p>
                     <p><a href="" ui-sref="{{ STATES.MYSPACE }}">Click here to manage your space</a></p>
                 </div>
                 <div ng-show="!login.isLoggedIn">
