@@ -1,9 +1,15 @@
 # Created by .ignore support plugin (hsz.mobi)
+# mongodb
+mongod
+
 ### Node template
 # Logs
 logs
 *.log
 npm-debug.log*
+
+#mongo
+mongod
 
 # Runtime data
 pids

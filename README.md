@@ -1,5 +1,10 @@
 # suggest
 
+# front end
+front end split in multiple npm packages. so go to each folder inside 'FRONTEND'f older and do npm i and npm run watch if you want to change anything there
+
+
+# heroku
 heroku login
 gandhi498@gmail.com
 
@@ -28,6 +33,8 @@ Success scenario : Show confirmation of space created and option to copy link.
 
 Error scenario : Needs to be handled. need proper error response from BE. TBD with harshad
 
+######## mongod local - do follwoing to start mongodb in local before starting server
+mongod --dbpath <pathtoproject>/suggest/mongod
 
 ######## Backend notes :
 
