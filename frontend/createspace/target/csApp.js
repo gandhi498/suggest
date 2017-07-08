@@ -638,8 +638,8 @@ function csLogin() {
         var fbSdkChckTmr;
 
         function checkFbSdk() {
-            fbSdkChckTmr = setTimeout(function () {
-                if (FB) {
+            fbSdkChckTmr = setInterval(function () {
+                if (window.FB) {
                     (function () {
                         FB.init({
                             appId: '1885200375089223',
@@ -730,18 +730,6 @@ function csLogin() {
                     },
                     '001': function (form) {
                         form.$setValidity('001', false);
-                    },
-                    530: function (form) {
-
-                    },
-                    531: function (form) {
-
-                    },
-                    9001: function (form) {
-                        form.$setValidity('9001', false);
-                    },
-                    532: function (form) {
-                        form.$setValidity('532', false);
                     },
                     required: 'required'
                 },

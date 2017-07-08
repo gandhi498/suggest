@@ -27,13 +27,10 @@
 
     <section class="section--center mdl-grid site-max-width">
         <div class="mdl-card mdl-cell mdl-cell--9-col-desktop mdl-cell--6-col-tablet mdl-cell--4-col-phone  mdl-shadow--4dp">
-            <div class="mdl-card__title">
-                <h2 class="mdl-card__title-text">Register your space here :</h2>
-            </div>
             <div class="mdl-card__supporting-text">
                 <div ng-show="login.showManageSpace && login.isLoggedIn">
                     <p>Welcome, {{login.model.loggedInUser.socialDetails.name}}</p>
-                    <p><img src="{{login.model.loggedInUser.socialDetails.profilePicture}}"></p>
+                    <p><img ng-src="{{login.model.loggedInUser.socialDetails.profilePicture}}"></p>
                     <p><a href="" ui-sref="{{ STATES.MYSPACE }}">Click here to manage your space</a></p>
                 </div>
                 <div ng-show="!login.isLoggedIn">
@@ -41,16 +38,24 @@
                     </fb:login-button>
                 </div>
                 <div ng-show="login.isLoggedIn && !login.showManageSpace">
+                    <div class="">
+                        <h2 class="">
+                            <p>Welcome, {{ login.model.userDetails.first_name }} <img ng-src="{{login.model.userDetails.picture.data.url}}"></p>
+                        </h2>
+                    </div>
                     <form ng-submit="login.submit(loginForm, $event)" name="loginForm" novalidate class="">
+                        <p>Register:</p>
                         <div ng-messages="loginForm.$error">
                             <span ng-message="unknown_error">
-                    <span aria-role="alert">Sorry, unknown technical error occured</span>
+                                <span aria-role="alert">Sorry, unknown technical error occured</span>
                             </span>
                             <span ng-message="001">
-                    <span aria-role="alert">Sorry, space with same name already exists</span>
+                                <span aria-role="alert">Sorry, space with same name already exists</span>
+                            </span>
+                            <span ng-message="required">
+                                <span aria-role="alert">Please enter mandatory field</span>
                             </span>
                         </div>
-                        <p>Welcome, {{ login.model.userDetails.first_name }}</p>
                         <div ng-if="!login.model.userDetails.email" class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                             <input ng-model="login.model.userEmail" class="mdl-textfield__input" type="text" id="userEmail" name="userEmail">
                             <label class="mdl-textfield__label" for="userEmail">Please enter your email</label>
@@ -114,7 +119,7 @@
                         </div>
                         <p>
                             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" type="submit">
-                                Create<img ng-show="loading" width="24px" src="/space/create/img/spinner.gif">
+                                Create<img ng-show="login.loading" width="24px" src="/space/create/img/spinner.gif">
                             </button>
                         </p>
                     </form>
