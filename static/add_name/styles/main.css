@@ -14,10 +14,10 @@ img {
 
 .site-description {
   display: block;
-  font-size: 14px;
+  font-size: 11px;
+  margin-top: -3px;
   text-align: center;
   font-weight: 400;
-  margin-bottom: 10px;
 }
 
 .is-compact .mdl-layout__title span {
@@ -25,7 +25,7 @@ img {
 }
 
 .site-logo-row {
-  min-height: 200px;
+  min-height: 80px;
 }
 
 .is-compact .site-logo-row {
@@ -35,15 +35,15 @@ img {
 .site-logo {
   background: url(../img/site-logo.png) 50% no-repeat;
   background-size: cover;
-  height: 120px;
-  width: 120px;
-  margin: 15px auto;
+  height: 60px;
+  width: 60px;
+  margin: 0px auto;
 }
 
 .is-compact .site-logo {
   height: 50px;
   width: 50px;
-  margin: 7px auto;
+  margin: 0px auto;
 }
 
 .site-navigation-row {

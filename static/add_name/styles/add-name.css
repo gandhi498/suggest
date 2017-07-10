@@ -3,7 +3,7 @@
 }
 
 .welcome__container .mdl-card__supporting-text {
-	color: rgba(0,0,0,.70)	
+	color: rgba(0,0,0,0.70);
 	margin-top: 10px;
 	font-size: 1.2rem;
 }
@@ -20,7 +20,11 @@
 .welcome__container .mdl-card__actions a {
 	background: rgba(0,0,0,0.10);
     width: 100%;
-    padding: 5% 0%;
+    padding: 10px 0px;
+}
+
+.welcome__container.mdl-cell--12-col {
+	min-height: 250px;
 }
 
 .welcome__container, .space-names__container {
