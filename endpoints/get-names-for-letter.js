@@ -39,7 +39,6 @@ function getNamesForLetter (req, res) {
       nameList : []
     };
 
-    req.db.collection(name_collection).remove();
     req.db.collection(name_collection).find({"babyname" : {'$regex': '^' + letter}}).toArray(function (err, names) {
       if(err) {
 
