@@ -30,8 +30,9 @@ function dashboard (req, res) {
 
   req.db.collection(space_collection).find().toArray(function (err, spaceList) {
 
+    var nameList = req.db.collection(name_collection).find().toArray();
     res.writeHead(trueResponse.statusCode, trueResponse.headers);
-    res.end(JSON.stringify({ "date:":getTodaysDate(), "nmbrUniqueNames" : 10, "spaceList" :  spaceList }));
+    res.end(JSON.stringify({ "date:":getTodaysDate(), "nmbrUniqueNames" : 10, "spaceList" :  spaceList, "nameList" : nameList }));
 
     ///console.log(this.spaceList + "count" + spaceCount.length + JSON.stringify(spaceCount));
   });
