@@ -105,10 +105,10 @@ app.use(session({
 app.use("/", function (request, response, next) {
     if(request.path === "/") {
         response.redirect('/space/create');
-    }  
+    }
     else {
         next();
-    } 
+    }
 });
 
 var $createspace = require('./endpoints/create-space');
@@ -122,7 +122,7 @@ var $getNamesForSpace = require('./endpoints/get-names-for-space');
 var $dashboard = require('./endpoints/dashboard');
 var $getNamesForLetter = require('./endpoints/get-names-for-letter');
 
-// Create Space Junction router 
+// Create Space Junction router
 var createSpacejunctionRouter = $express.Router();
 
 createSpacejunctionRouter.use('/',_serveCreateSpaceIndex);
@@ -136,7 +136,7 @@ createSpacejunctionRouter.get('/getUserAndSpaceDetailsById',$getUserAndSpaceDeta
 app.use('/space/create', createSpacejunctionRouter);
 
 
-// Add name Junction router 
+// Add name Junction router
 var addNameJunctionRouter = $express.Router();
 addNameJunctionRouter.use('/',_serveAddSpaceIndex);
 addNameJunctionRouter.use('/', $express.static('static/add_name')); // serve from add_name folder
@@ -150,7 +150,7 @@ addNameJunctionRouter.get('/getNamesForLetter', $getNamesForLetter)
 
 app.use('/space/add', addNameJunctionRouter);
 
-// Admin Junction router 
+// Admin Junction router
 var dashboardJunctionRouter = $express.Router();
 dashboardJunctionRouter.use('/',_serveAdminSpaceIndex);
 dashboardJunctionRouter.use('/', $express.static('static/admin_space')); // serve from admin_space folder

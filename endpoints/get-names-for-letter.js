@@ -36,8 +36,8 @@ function getNamesForLetter (req, res) {
   if (letter !== '' && letter !== undefined) {
 
     var namesOverview = {
-      nameList : []   
-    };    
+      nameList : []
+    };
 
     req.db.collection(name_collection).find({"babyname" : {'$regex': '^' + letter}}).toArray(function (err, names) {
       if(err) {
@@ -45,9 +45,9 @@ function getNamesForLetter (req, res) {
           console.log('Error while retrieving names starting with '+letter);
           res.writeHead(falseResponse.statusCode, falseResponse.headers);
           res.end(JSON.stringify({status:"Error in mongo DB"}));
-          
+
       } else {
-        
+
         namesOverview.nameList = names;
         console.log('Names retrieved successfully \n %s',JSON.stringify(namesOverview));
         res.writeHead(trueResponse.statusCode, trueResponse.headers);
@@ -63,5 +63,5 @@ function getNamesForLetter (req, res) {
     res.end(JSON.stringify({status:"Letter missing"}));
 
   }
- 
+
 }
