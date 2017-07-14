@@ -34,7 +34,7 @@
     "util": "^0.10.3"
   },
   "engines": {
-    "node": "6.3.x",
+    "node": "6.11.1",
     "npm": "2.14.x"
   },
   "devDependencies": {
